@@ -29,9 +29,13 @@ INT_PTR CALLBACK LookCallback(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK InputCallback(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK InputCallbackEx(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK ComputeDeepthCallback(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK ComputeEatWaterCallback(HWND, UINT, WPARAM, LPARAM);
 
 void updateResultOne(HWND hDlg, bool needSave = true);
 void updateResultTwo(HWND hDlg, bool needSave = true);
+
+void updateWaterHeightResultOne(HWND hDlg, bool needSave = true);
+void updateWaterHeightResultTwo(HWND hDlg, bool needSave = true);
 
 //
 // Framework Functions
@@ -145,8 +149,16 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		else if (wParam == ID_HELP) {
 
 			// 帮助菜单
+/*
 			game.fileId = Game::FILE_HELP;
 			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
+*/
+			wchar_t fullPath[MAX_PATH] = {0, };
+			GetModuleFileNameW(0, fullPath, MAX_PATH);
+			PathRemoveFileSpecW(fullPath);
+			PathAppend(fullPath, L"航运小帮手.chm");
+			// 打开航行小帮手.chm
+			ShellExecute(NULL, _T("open"), _T("hh.exe"), fullPath, NULL, SW_SHOWNORMAL);
 		}
 		else if (wParam == IDM_BOAT_INFO)
 		{
@@ -196,6 +208,11 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		else if (wParam == ID_COMPUTER_DEEPTH) {
 			// 计算富裕水深
 			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTE), hwnd, ComputeDeepthCallback);
+		}
+
+		else if (wParam == ID_COMPUTER_EAT_WATER) {
+			// 计算最大吃水
+			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTER_EAT_WATER), hwnd, ComputeEatWaterCallback);
 		}
 
 		else if (LOWORD(wParam) >= MENU_ID_START && LOWORD(wParam) < MENU_ID_START + game.getMenuMax()) {
@@ -450,7 +467,7 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 				MessageBox(hDlg, errInfo, L"恭喜", MB_OK);
 			}
 
-			for (int i = 0; i < clearIndex.size(); i++) {
+			for (size_t i = 0; i < clearIndex.size(); i++) {
 				SetDlgItemText(hDlg, IDC_DATE1 + clearIndex[i], L"");
 				SetDlgItemText(hDlg, IDC_DATA1 + clearIndex[i], L"");
 			}
@@ -782,6 +799,184 @@ void updateResultTwo(HWND hDlg, bool needSave)
 	}
 
 	SetDlgItemText(hDlg, IDC_RESULT_TWO, strResult);
+}
+
+// Message handler for computer Eat Water box.
+INT_PTR CALLBACK ComputeEatWaterCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message) {
+	case WM_INITDIALOG: {
+		HWND parent = ::GetParent(hDlg);
+		RECT rcParent = {0,0,0,0};
+		RECT rcDlg = {0,0,0,0};
+		::GetWindowRect(parent, &rcParent);
+		::GetWindowRect(hDlg, &rcDlg);
+
+		int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+		int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+
+		::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+
+		// 设定初值
+		CStringW place;
+		int tide = 0;
+		int water = 0;
+		int sea = 0;
+
+		game.getWaterHeight(true, place, tide, sea, water);
+		SetDlgItemText(hDlg, IDC_CEW_PLACE_ONE, place);
+		SetDlgItemInt(hDlg, IDC_CEW_TIDE_ONE, tide, true);
+		SetDlgItemInt(hDlg, IDC_CEW_SEA_ONE, sea, true);
+		SetDlgItemInt(hDlg, IDC_CEW_WATER_ONE, water, true);
+
+		game.getWaterHeight(false, place, tide, sea, water);
+		SetDlgItemText(hDlg, IDC_CEW_PLACE_TWO, place);
+		SetDlgItemInt(hDlg, IDC_CEW_TIDE_TWO, tide, true);
+		SetDlgItemInt(hDlg, IDC_CEW_SEA_TWO, sea, true);
+		SetDlgItemInt(hDlg, IDC_CEW_WATER_TWO, water, true);
+
+		// 更新结果
+		updateWaterHeightResultOne(hDlg, false);
+		updateWaterHeightResultTwo(hDlg, false);
+	}
+
+	return(INT_PTR) TRUE;
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDCANCEL) {
+			EndDialog(hDlg, LOWORD(wParam));
+			return(INT_PTR) TRUE;
+		}
+
+		else if (LOWORD(wParam) == IDC_CEW_COMPUTER_ONE)
+		{
+			updateWaterHeightResultOne(hDlg);
+		}
+		else if (LOWORD(wParam) == IDC_CEW_COMPUTER_TWO)
+		{
+			updateWaterHeightResultTwo(hDlg);
+		}
+
+		else if(LOWORD(wParam) == IDOK )
+		{
+			updateWaterHeightResultOne(hDlg);
+			updateWaterHeightResultTwo(hDlg);
+		}
+
+		break;
+	}
+
+	return(INT_PTR) FALSE;
+}
+
+void updateWaterHeightResultOne(HWND hDlg, bool needSave)
+{
+	wchar_t*  wc = new wchar_t[MAX_PATH];
+	wmemset(wc, 0, MAX_PATH);
+
+	const int UNKOWN = -10000;
+	int water = UNKOWN;
+	int tide = UNKOWN;
+	int sea = UNKOWN;
+	int result = 0;
+	CStringW strResult(L"");
+	CStringW place(L"");
+
+	GetDlgItemText(hDlg, IDC_CEW_PLACE_ONE, wc, MAX_PATH);
+	place.Format(L"%s", wc);
+	wmemset(wc, 0, MAX_PATH);
+
+	GetDlgItemText(hDlg, IDC_CEW_TIDE_ONE, wc, MAX_PATH);
+	if(wcslen(wc) > 0)
+	{
+		tide = _wtoi(wc);
+		wmemset(wc, 0, MAX_PATH);
+	}
+
+	GetDlgItemText(hDlg, IDC_CEW_SEA_ONE, wc, MAX_PATH);
+	if(wcslen(wc) > 0)
+	{
+		sea = _wtoi(wc);
+		wmemset(wc, 0, MAX_PATH);
+	}
+
+	GetDlgItemText(hDlg, IDC_CEW_WATER_ONE, wc, MAX_PATH);
+	if(wcslen(wc) > 0)
+	{
+		water = _wtoi(wc);
+		wmemset(wc, 0, MAX_PATH);
+	}
+
+	delete[] wc;
+	wc = NULL;
+
+	if (tide != UNKOWN && sea != UNKOWN && water != UNKOWN)
+	{
+		result =  int((tide + sea) * 100 / water);
+		strResult.Format(L"%d", result);
+
+		if (needSave)
+		{
+			game.setWaterHeight(true, place, tide, sea, water);
+		}
+	}
+
+	SetDlgItemText(hDlg, IDC_CEW_RESULT_ONE, strResult);
+}
+
+void updateWaterHeightResultTwo(HWND hDlg, bool needSave)
+{
+	wchar_t*  wc = new wchar_t[MAX_PATH];
+	wmemset(wc, 0, MAX_PATH);
+
+	const int UNKOWN = -10000;
+	int tide = UNKOWN;
+	int water = UNKOWN;
+	int sea = UNKOWN;
+	int result = 0;
+	CStringW strResult(L"");
+	CStringW place(L"");
+
+	GetDlgItemText(hDlg, IDC_CEW_PLACE_TWO, wc, MAX_PATH);
+	place.Format(L"%s", wc);
+	wmemset(wc, 0, MAX_PATH);
+
+	GetDlgItemText(hDlg, IDC_CEW_TIDE_TWO, wc, MAX_PATH);
+	if(wcslen(wc) > 0)
+	{
+		tide = _wtoi(wc);
+		wmemset(wc, 0, MAX_PATH);
+	}
+
+	GetDlgItemText(hDlg, IDC_CEW_SEA_TWO, wc, MAX_PATH);
+	if(wcslen(wc) > 0)
+	{
+		sea = _wtoi(wc);
+		wmemset(wc, 0, MAX_PATH);
+	}
+
+	GetDlgItemText(hDlg, IDC_CEW_WATER_TWO, wc, MAX_PATH);
+	if(wcslen(wc) > 0)
+	{
+		water = _wtoi(wc);
+		wmemset(wc, 0, MAX_PATH);
+	}
+
+	delete[] wc;
+	wc = NULL;
+
+	if (tide != UNKOWN && sea != UNKOWN && water != UNKOWN)
+	{
+		result = int(tide + sea - water);
+		strResult.Format(L"%d", result);
+
+		if (needSave)
+		{
+			game.setWaterHeight(false, place, tide, sea, water);
+		}
+	}
+
+	SetDlgItemText(hDlg, IDC_CEW_RESULT_TWO, strResult);
 }
 
 // Message handler for about box.

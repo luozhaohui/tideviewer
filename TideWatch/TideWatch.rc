@@ -73,15 +73,17 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 // Dialog
 //
 
-IDD_ABOUT DIALOGEX 0, 0, 186, 84
+IDD_ABOUT DIALOGEX 0, 0, 186, 97
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "关于"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "确定",IDOK,65,61,50,14
-    LTEXT           "制作者：飘飘白云(l_zhaohui@163.com)",IDC_STATIC,31,29,134,8
-    LTEXT           "制作日期：2008年11月30日",IDC_STATIC,24,45,107,8
-    LTEXT           "软件名称：电子潮汐图表",IDC_STATIC,24,13,93,8
+    DEFPUSHBUTTON   "确定",IDOK,65,73,50,14
+    LTEXT           "开发：罗朝辉(l_zhaohui@163.com)",IDC_STATIC,30,46,118,8
+    LTEXT           "制作日期：2008年11月30日",IDC_STATIC,24,58,107,8
+    LTEXT           "软件名称：电子潮汐图表",IDC_STATIC,24,10,93,8
+    LTEXT           "构思：周弘文(pilothong@163.com)",IDC_STATIC,29,21,146,8
+    LTEXT           "胡坤(captainhukun2@163.com)",IDC_STATIC,53,33,107,8
 END
 
 IDD_LOGIN DIALOGEX 0, 0, 186, 90
@@ -175,10 +177,10 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "计算富裕水深"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    DEFPUSHBUTTON   "计 算",IDOK,88,86,50,14
-    PUSHBUTTON      "退出",IDCANCEL,209,87,50,14
+    DEFPUSHBUTTON   "计　算",IDOK,88,86,50,14
+    PUSHBUTTON      "退　出",IDCANCEL,209,87,50,14
     LTEXT           "地点",IDC_STATIC,22,18,17,8
-    LTEXT           "船舶吃水(厘米)",IDC_STATIC,58,18,57,8
+    LTEXT           "船舶吃水(厘米)",IDC_STATIC,61,18,57,8
     LTEXT           "富裕量/富裕水深(厘米)",IDC_STATIC,136,15,49,20
     LTEXT           "海图水深(厘米)",IDC_STATIC,204,18,62,8
     LTEXT           "结果潮高(厘米)",IDC_STATIC,289,18,62,8
@@ -201,6 +203,39 @@ BEGIN
     PUSHBUTTON      "=",IDC_COMPUTE_TWO,262,59,26,14
 END
 
+IDD_COMPUTER_EAT_WATER DIALOGEX 0, 0, 357, 115
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "计算最大吃水"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "计　算",IDOK,82,88,50,14
+    PUSHBUTTON      "退　出",IDCANCEL,204,88,50,14
+    LTEXT           "地点",IDC_STATIC,22,17,16,8
+    LTEXT           "所设潮高(厘米)",IDC_STATIC,59,17,54,8
+    LTEXT           "海图水深(厘米)",IDC_STATIC,130,17,54,8
+    CTEXT           "富裕量/富裕水深(厘米)",IDC_STATIC,211,13,46,20
+    LTEXT           "船舶吃水(厘米)",IDC_STATIC,292,17,54,8
+    EDITTEXT        IDC_CEW_PLACE_ONE,7,36,40,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_PLACE_TWO,7,61,40,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_TIDE_ONE,61,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_TIDE_TWO,61,61,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_SEA_ONE,130,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_SEA_TWO,130,61,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_WATER_ONE,231,36,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_WATER_TWO,209,61,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_RESULT_ONE,297,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_CEW_RESULT_TWO,297,61,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,191,39,8,10
+    LTEXT           "减",IDC_STATIC,190,63,8,10
+    LTEXT           "加",IDC_STATIC,114,39,8,10
+    LTEXT           "加",IDC_STATIC,114,63,8,10
+    LTEXT           "（",IDC_STATIC,52,39,9,8
+    LTEXT           "）",IDC_STATIC,179,39,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE,263,37,25,14
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_TWO,263,60,25,14
+    LTEXT           "百分之",IDC_STATIC,206,39,24,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -215,7 +250,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 179
         TOPMARGIN, 7
-        BOTTOMMARGIN, 77
+        BOTTOMMARGIN, 90
     END
 
     IDD_LOGIN, DIALOG
@@ -273,6 +308,14 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 108
     END
+
+    IDD_COMPUTER_EAT_WATER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 350
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -297,13 +340,14 @@ BEGIN
         MENUITEM "指定日期",                        ID_LOOK
     END
     MENUITEM "计算器",                         ID_CALCU
-    MENUITEM "计算富裕水深",                      ID_COMPUTER_DEEPTH
+    POPUP "计算"
+    BEGIN
+        MENUITEM "富裕水深",                        ID_COMPUTER_DEEPTH
+        MENUITEM "最大吃水",                        ID_COMPUTER_EAT_WATER
+    END
     POPUP "帮助"
     BEGIN
-        MENUITEM "拖轮情况",                        40027
-        MENUITEM "码头情况",                        40028
-        MENUITEM "航道情况",                        40029
-        MENUITEM "帮助",                          ID_HELP
+        MENUITEM "航运小帮手",                       ID_HELP
         MENUITEM "关于",                          40007
     END
 END

@@ -24,6 +24,7 @@ const static int MAX_SIZE = 1024;
 const static float timeW = 28.0f;
 const static float tideH = 30.0f;
 
+const static float OFFSET_Y = -50.0f;
 const static float TIDE_STEP = 50.0f;
 const static int countTime = 26;
 const static int countTide = 16;
@@ -94,6 +95,12 @@ Game::Game() :
 	waterTwo(0),
 	seaOne(0),
 	seaTwo(0),
+	cewTideOne(0),
+	cewTideTwo(0),
+	cewSeaOne(0),
+	cewSeaTwo(0),
+	cewWaterOne(0),
+	cewWaterTwo(0),
 	isShowTime(true),
 	isShowCurrentTide(true),
 	fileId(0)
@@ -108,6 +115,11 @@ Game::Game() :
 	ZeroMemory(&md5, MAX_PATH * sizeof(wchar_t));
 	ZeroMemory(&placeOne, MAX_PATH * sizeof(wchar_t));
 	ZeroMemory(&placeTwo, MAX_PATH * sizeof(wchar_t));
+	ZeroMemory(&cewPlaceOne, MAX_PATH * sizeof(wchar_t));
+	ZeroMemory(&cewPlaceTwo, MAX_PATH * sizeof(wchar_t));
+
+	ZeroMemory(&strForbidTimeOne, MAX_PATH * sizeof(wchar_t));
+	ZeroMemory(&strForbidTimeTwo, MAX_PATH * sizeof(wchar_t));
 
 	ZeroMemory(&fullPath, MAX_PATH * sizeof(wchar_t));
 }
@@ -153,7 +165,7 @@ bool Game::init(HWND _hWnd)
 
 	mousePoint.X = mousePoint.Y = 0;
 	zeroPoint.X = mainRect.left + 40.0f;
-	zeroPoint.Y = mainRect.bottom - 40.0f;
+	zeroPoint.Y = mainRect.bottom - 42.0f;
 
 	Gdiplus::FontFamily fontFamily(L"MS Shell Dlg");
 	gdiFont = ::new Gdiplus::Font(&fontFamily, 14, Gdiplus::FontStyleRegular, Gdiplus::UnitPixel);
@@ -237,6 +249,51 @@ void Game::setRichness(bool isPlaceOne, const CStringW& place, int boat, int wat
 	}
 }
 
+void Game::getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water)
+{
+	if (isPlaceOne)
+	{
+		place.Format(L"%s", cewPlaceOne);
+		tide = cewTideOne;
+		water = waterOne;
+		sea = seaOne;
+	}
+	else {
+		place.Format(L"%s", cewPlaceTwo);
+		tide = cewTideTwo;
+		water = cewWaterTwo;
+		sea = cewSeaTwo;
+	}	
+}
+
+void Game::setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water)
+{
+	if (isPlaceOne)
+	{
+		swprintf_s(cewPlaceOne, MAX_PATH, place);
+		cewTideOne = tide;
+		cewWaterOne = water;
+		cewSeaOne = sea;
+
+		ScriptExporter::modifyString(fullPath, L"system.lzh", L"cew_place_one", place);
+		ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"cew_tide_one", tide);
+		ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"cew_water_one", water);
+		ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"cew_sea_one", sea);
+	}
+	else
+	{
+		swprintf_s(cewPlaceTwo, MAX_PATH, place);
+		cewTideTwo = tide;
+		cewWaterTwo = water;
+		cewSeaTwo = sea;
+
+		ScriptExporter::modifyString(fullPath, L"system.lzh", L"cew_place_two", place);
+		ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"cew_tide_two", tide);
+		ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"cew_water_two", water);
+		ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"cew_sea_two", sea);
+	}
+}
+
 void Game::start(LPCWSTR string)
 {
 	if (!isInited) {
@@ -255,7 +312,7 @@ void Game::start(LPCWSTR string)
 	PathAppendW(fullPath, L"data");
 
 	ScriptManager scriptManager;
-
+/*
 	// Get password information
 	CStringW serial(L"");
 	if (scriptManager.open(path, L"dat")){
@@ -270,14 +327,14 @@ void Game::start(LPCWSTR string)
 		return;
 #endif
 	}
-
+*/
 	// Get information from script.
 	CStringW strPlaceOne(L"");
 	CStringW strPlaceTwo(L"");
 	if (scriptManager.open(fullPath, L"system.lzh")){
 		scriptManager.getString(place, L"default_place");
 		scriptManager.getString(places, L"places");
-		scriptManager.getString(serial, L"serial");
+		//scriptManager.getString(serial, L"serial");
 
 		scriptManager.getUint32(boatOne, "boat_one");
 		scriptManager.getUint32(boatTwo, "boat_two");
@@ -290,6 +347,18 @@ void Game::start(LPCWSTR string)
 
 		swprintf_s(placeOne, MAX_PATH, strPlaceOne);
 		swprintf_s(placeTwo, MAX_PATH, strPlaceTwo);
+
+		scriptManager.getUint32(cewTideOne, "cew_tide_one");
+		scriptManager.getUint32(cewTideTwo, "cew_tide_two");
+		scriptManager.getUint32(cewSeaOne,"cew_sea_one");
+		scriptManager.getUint32(cewSeaTwo,"cew_sea_two");
+		scriptManager.getUint32(cewWaterOne, "cew_water_one");
+		scriptManager.getUint32(cewWaterTwo, "cew_water_two");
+		scriptManager.getString(strPlaceOne, L"cew_place_one");
+		scriptManager.getString(strPlaceTwo, L"cew_place_two");
+
+		swprintf_s(cewPlaceOne, MAX_PATH, strPlaceOne);
+		swprintf_s(cewPlaceTwo, MAX_PATH, strPlaceTwo);
 
 		scriptManager.close();
 	}
@@ -314,7 +383,7 @@ void Game::start(LPCWSTR string)
 	else if(place.IsEmpty()){
 		place = places[0];
 	}
-	
+/*	
 	if (serial.GetLength() == 0){
 		CStringW pwd(L"123456");
 		CStringA pwdA = WinUtility::convertStringW2A(pwd);
@@ -330,7 +399,7 @@ void Game::start(LPCWSTR string)
 	else{
 		swprintf_s(md5, MAX_PATH, serial);
 	}
-
+*/
 	CStringW dateString = getDateString();	
 	swprintf_s(today, MAX_PATH, L"%s", dateString.Left(8));
 	swprintf_s(strDate, MAX_PATH, L"%s", dateString.Left(8));
@@ -384,6 +453,8 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
 	memcpy_s(sptPath, MAX_PATH, fullPath, MAX_PATH);
 	PathAppendW(sptPath, place);
 	PathAppendW(sptPath, dateString.Left(4));
+
+	getForbidTime(sptPath, dateString);
 
 	std::vector<int> sptData;
 	ScriptManager scriptManager;
@@ -455,6 +526,61 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
 		if(index >= 1 && index <= 31){
 			swprintf_s(strLongLi, MAX_PATH, L"%s", strNums[index - 1]);
 		}
+	}
+}
+
+void Game::getForbidTime(const CStringW& path, const CStringW& dateStr)
+{
+	// 初始化
+	ZeroMemory(&strForbidTimeOne, MAX_PATH * sizeof(wchar_t));
+	ZeroMemory(&strForbidTimeTwo, MAX_PATH * sizeof(wchar_t));
+
+	// 取得路径
+	wchar_t filePath[MAX_PATH];
+	swprintf_s(filePath, MAX_PATH, L"%s", path);
+	PathAppendW(filePath, L"gz.lzh");
+
+	// 读取文件
+	FILE* fp = NULL;
+	_tsetlocale(LC_ALL, _T("chinese-simplified"));
+	errno_t err = _wfopen_s(&fp, filePath, L"rt");
+	if (err == 0 && fp ){
+		CStringW date(dateStr);
+		date.Insert(4, L'-');
+		date.Insert(7, L'-');
+
+		CLog::output("\n\n---- date:[%s], path:[%s] ----\n\n", date, filePath);
+		
+		static const int MAX_URL = 1024;
+		wchar_t readBytes[MAX_URL] = {0, };
+		CStringW readString(L"");
+		wmemset(readBytes, 0, MAX_URL);
+
+		int index = 0;
+		while (fgetws(readBytes, MAX_URL, fp) != NULL) {
+			readString.Format(L"%s", readBytes);
+			if (readString.Find(date) == 0)
+			{
+				readString = readString.Right(readString.GetLength() - 11);
+				readString.Trim();
+				if (index == 0)
+				{
+					index = 1;
+					swprintf_s(strForbidTimeOne, MAX_PATH, L"%s", readString);
+				}
+				else if(index == 1)
+				{
+					swprintf_s(strForbidTimeTwo, MAX_PATH, L"%s", readString);
+					break;
+				}
+			}
+		}
+	}
+
+	if(fp)
+	{
+		fclose(fp);
+		fp = NULL;
 	}
 }
 
@@ -579,18 +705,19 @@ void Game::draw()
 		info.Format(L"%d", i);
 		drawTideString(&g, gdiFont, crBlack, info, pt1.X - 8, -8, true);
 
-		info.Format(L"%d", (int)tideData[i].tide);
-		drawTideString(&g, gdiFont, crBlack, info, pt1.X - 12, -20, true);
+		int value = getTideByTime(i * 100);
+		info.Format(L"%d", value);
+		drawTideString(&g, gdiFont, crBlack, info, pt1.X - 12, -22, true);
 	}
 
-	for (int i = 1; i < countTide; i++){
+	for (int i = 0; i < countTide; i++){
 		pt1.Y = pt2.Y = i * tideH;
 		pt1.X = 2;
 		pt2.X = -2;
 
 		drawTideLine(&g, &blackPen, pt1, pt2);
 
-		info.Format(L"%d", int(i * TIDE_STEP));
+		info.Format(L"%d", int(OFFSET_Y + i * TIDE_STEP));
 		drawTideString(&g, gdiFont, crBlack, info, -30, pt1.Y + 8, true);
 	}
 
@@ -640,13 +767,13 @@ void Game::draw()
 			float tideValue = getTideByTime(timeValue);
 
 			float x = 50;
-			float y = yLen;
+			float y = yLen - 5;
 			info.Format(L"现在时间：%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
 			
 			drawTideString(&g, gdiFont, crBlack, info, x, y, true);
 			info.Format(L"现在潮高：%d cm", int(tideValue));
 	
-			y = yLen - 20;
+			y = y - 20;
 			drawTideString(&g, gdiFont, crBlack, info, x, y, true);
 
 			TIDE_DATA data;
@@ -667,6 +794,38 @@ void Game::draw()
 				pt1.Y += 3;
 				drawTideEllipse(&g, &redPen, &brRed, pt1, 6, 6);
 			}
+		}
+
+		// 描绘管制时间
+		float x = 220;
+		float y = yLen - 5;
+		CStringW forbidOne(strForbidTimeOne);
+		if(!forbidOne.IsEmpty() && forbidOne != L"")
+		{
+			int pos1 = forbidOne.Find(L'-');
+			pos1 = forbidOne.Find(L' ', pos1 + 2);
+			int pos2 = forbidOne.Find(L' ', pos1 + 1);
+			forbidOne.Format(L"管制时段：%s  允许最大吃水：进 %s，出 %s",
+				forbidOne.Left(pos1), 
+				forbidOne.Mid(pos1 + 1, pos2 - pos1 - 1),
+				forbidOne.Mid(pos2 + 1));
+
+			drawTideString(&g, gdiFont, crBlack, forbidOne, x, y, false);
+			y -= 20;
+		}
+
+		forbidOne.Format(L"%s", strForbidTimeTwo);
+		if(!forbidOne.IsEmpty() && forbidOne != L"")
+		{
+			int pos1 = forbidOne.Find(L'-');
+			pos1 = forbidOne.Find(L' ', pos1 + 2);
+			int pos2 = forbidOne.Find(L' ', pos1 + 1);
+			forbidOne.Format(L"管制时段：%s  允许最大吃水：进 %s，出 %s",
+				forbidOne.Left(pos1), 
+				forbidOne.Mid(pos1 + 1, pos2 - pos1 - 1),
+				forbidOne.Mid(pos2 + 1));
+
+			drawTideString(&g, gdiFont, crBlack, forbidOne, x, y, false);
 		}
 	}
 	
@@ -691,7 +850,7 @@ void Game::draw()
 
 		if(loginFlag && tideData.size() > 0){
 			// draw info;
-			if (int(currentTime) >= 0 && int(currentTime) <= 2400 && currentTide >= 0 && currentTide < (countTide -1) * TIDE_STEP){
+			if (int(currentTime) >= 0 && int(currentTime) <= 2400 && currentTide >= 0 + OFFSET_Y && currentTide < OFFSET_Y + (countTide -1) * TIDE_STEP){
 				TIDE_DATA data;
 				data.time = currentTime;
 				data.tide = currentTide;
@@ -862,14 +1021,14 @@ PointF Game::getPosition(const TIDE_DATA& data)
 	PointF pt(0.0f, 0.0f);
 
 	pt.X = ((int(data.time / 100) * timeW + (int(data.time) % 100 / 60.0f) * timeW));
-	pt.Y = (data.tide * tideH / TIDE_STEP);
+	pt.Y = ((data.tide - OFFSET_Y)* tideH / TIDE_STEP);
 
 	return pt;
 }
 
 float Game::getTide(float y)
 {
-	return (y * TIDE_STEP / tideH);
+	return (y * TIDE_STEP / tideH + OFFSET_Y);
 }
 
 float Game::getTime(float x)

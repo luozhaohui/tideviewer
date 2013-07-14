@@ -13,6 +13,7 @@
 #define IDD_INPUT_DATA                  113
 #define IDD_INPUT_DATA_EX               114
 #define IDD_COMPUTE                     115
+#define IDD_COMPUTER_EAT_WATER          116
 #define IDC_PWD                         1001
 #define IDC_OLD_PWD                     1002
 #define IDC_NEW_PWD                     1003
@@ -53,6 +54,19 @@
 #define IDC_COMPUTE_ONE                 1041
 #define IDC_COMPUTER_TWO                1042
 #define IDC_COMPUTE_TWO                 1042
+#define IDC_CEW_PLACE_ONE               1043
+#define IDC_CEW_PLACE_TWO               1044
+#define IDC_CEW_TIDE_ONE                1045
+#define IDC_CEW_TIDE_HEIGHT_TWO         1046
+#define IDC_CEW_TIDE_TWO                1046
+#define IDC_CEW_SEA_ONE                 1047
+#define IDC_CEW_SEA_TWO                 1048
+#define IDC_CEW_WATER_ONE               1049
+#define IDC_CEW_WATER_TWO               1050
+#define IDC_CEW_COMPUTER_ONE            1054
+#define IDC_CEW_COMPUTER_TWO            1055
+#define IDC_CEW_RESULT_ONE              1056
+#define IDC_CEW_RESULT_TWO              1057
 #define ID_40001                        40001
 #define ID_40002                        40002
 #define ID_START                        40003
@@ -82,14 +96,17 @@
 #define IDM_BOAT_INFO                   40027
 #define IDM_MATOU_INFO                  40028
 #define IDM_HANGDAO_INFO                40029
+#define ID_COMPUTER                     40030
+#define ID_COMPUTER_MAX_WATER           40031
+#define ID_COMPUTER_EAT_WATER           40032
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        116
-#define _APS_NEXT_COMMAND_VALUE         40030
-#define _APS_NEXT_CONTROL_VALUE         1043
+#define _APS_NEXT_RESOURCE_VALUE        117
+#define _APS_NEXT_COMMAND_VALUE         40033
+#define _APS_NEXT_CONTROL_VALUE         1058
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

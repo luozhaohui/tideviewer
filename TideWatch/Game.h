@@ -102,6 +102,9 @@ public:
 	void setRichness(bool isPlaceOne, const CStringW& place, int boat, int water, int sea);
 	void getRichness(bool isPlaceOne, CStringW& place, int& boat, int& water, int& sea);
 
+	void setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water);
+	void getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water);
+
 	enum
 	{
 		FILE_NONE,
@@ -163,6 +166,19 @@ private:
 	int waterTwo;
 	int seaTwo;
 
+	wchar_t cewPlaceOne[MAX_PATH];
+	int cewTideOne;
+	int cewWaterOne;
+	int cewSeaOne;
+
+	wchar_t cewPlaceTwo[MAX_PATH];
+	int cewTideTwo;
+	int cewWaterTwo;
+	int cewSeaTwo;
+
+	wchar_t strForbidTimeOne[MAX_PATH];
+	wchar_t strForbidTimeTwo[MAX_PATH];
+
 	float lastTime;
 	float curTime;
 
@@ -179,6 +195,7 @@ private:
 	float getTime(float x);
 
 	float getTideByTime(int time);
+	void getForbidTime(const CStringW& path, const CStringW& dateStr);
 
 	void drawTideLine(Gdiplus::Graphics* g, const Pen *pen, const PointF &pt1, const PointF &pt2);
 	void drawTideEllipse(Gdiplus::Graphics* g, const Pen *pen, Gdiplus::Brush * brush, const PointF &pt1, float r1, float r2);

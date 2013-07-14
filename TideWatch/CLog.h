@@ -15,7 +15,7 @@ public:
 
 	static void output(const char* fmt, ...)
 	{
-#ifdef _DEBUG
+#ifndef _DEBUG
 		va_list ap;
 		char buf[MAX_STRING_LENGTH] = {0,};
 

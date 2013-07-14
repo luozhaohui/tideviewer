@@ -61,6 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				IgnoreImportLibrary="true"
 				AdditionalDependencies="Winmm.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
