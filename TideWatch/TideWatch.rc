@@ -1,0 +1,325 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Japanese resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
+#ifdef _WIN32
+LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
+#pragma code_page(932)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_ICON2               ICON                    "icon.ico"
+#endif    // Japanese resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUT DIALOGEX 0, 0, 186, 84
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,65,61,50,14
+    LTEXT           "制作者：飘飘白云(l_zhaohui@163.com)",IDC_STATIC,31,29,134,8
+    LTEXT           "制作日期：2008年11月30日",IDC_STATIC,24,45,107,8
+    LTEXT           "软件名称：电子潮汐图表",IDC_STATIC,24,13,93,8
+END
+
+IDD_LOGIN DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "登录"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,31,56,50,14
+    PUSHBUTTON      "取消",IDCANCEL,103,56,50,14
+    LTEXT           "密码：",IDC_STATIC,25,25,37,8
+    EDITTEXT        IDC_PWD,71,23,84,14,ES_PASSWORD | ES_AUTOHSCROLL
+END
+
+IDD_MODIFY DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "修改密码"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,32,60,50,14
+    PUSHBUTTON      "取消",IDCANCEL,98,60,50,14
+    LTEXT           "原密码：",IDC_STATIC,35,17,33,8
+    LTEXT           "新密码：",IDC_STATIC,35,36,33,8
+    EDITTEXT        IDC_OLD_PWD,72,14,75,14,ES_PASSWORD | ES_AUTOHSCROLL
+    EDITTEXT        IDC_NEW_PWD,72,34,75,14,ES_PASSWORD | ES_AUTOHSCROLL
+END
+
+IDD_LOOK DIALOGEX 0, 0, 186, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "查看"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,31,58,50,14
+    PUSHBUTTON      "取消",IDCANCEL,103,58,50,14
+    EDITTEXT        IDC_DATE,56,32,63,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "请输入要查看的日期（格式：20080602）。",IDC_STATIC,17,14,154,8
+END
+
+IDD_HELP DIALOGEX 0, 0, 260, 222
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "帮助"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,97,201,50,14
+    EDITTEXT        IDC_HELP_TXT,7,7,246,188,ES_MULTILINE | ES_AUTOVSCROLL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL | NOT WS_TABSTOP
+END
+
+IDD_INPUT_DATA DIALOGEX 0, 0, 312, 401
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "录入数据"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,77,380,50,14
+    PUSHBUTTON      "取消",IDCANCEL,187,380,50,14
+    RTEXT           "输入观测点：",IDC_STATIC,24,9,63,8
+    RTEXT           "输入观测月份：",IDC_STATIC,24,28,63,8
+    LTEXT           "(格式：200808)",IDC_STATIC,186,29,54,8
+    LTEXT           "输入日期与潮高数据：\n\t潮高数据格式：前8个数据依次为第一，二次高潮与低潮发生的时间与潮高值；其后25个数据为0点至24点的整点潮高值。)",IDC_STATIC,20,44,275,31
+    EDITTEXT        IDC_PLACE,95,7,152,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_INPUT_DATE,95,26,80,14,ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_DATE1,11,75,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DATE2,61,75,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DATE3,111,75,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DATE4,161,75,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DATE5,211,75,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DATE6,261,75,40,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_DATA1,11,95,40,280,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN
+    EDITTEXT        IDC_DATA2,61,95,40,280,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | ES_NUMBER
+    EDITTEXT        IDC_DATA3,111,95,40,280,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | ES_NUMBER
+    EDITTEXT        IDC_DATA4,161,95,40,280,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | ES_NUMBER
+    EDITTEXT        IDC_DATA5,211,95,40,280,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | ES_NUMBER
+    EDITTEXT        IDC_DATA6,261,95,40,280,ES_MULTILINE | ES_AUTOVSCROLL | ES_WANTRETURN | ES_NUMBER
+END
+
+IDD_INPUT_DATA_EX DIALOGEX 0, 0, 362, 156
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "录入数据"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "录入数据",IDE_INPUT_DATA_EX,108,50,50,14
+    PUSHBUTTON      "退出",IDCANCEL,199,50,50,14
+    RTEXT           "导入数据文件：",IDC_STATIC,10,30,57,8
+    EDITTEXT        IDC_DATA_FILE,67,28,226,13,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "浏览...",IDC_SEARCH_DATA_FILE,302,28,43,13
+    EDITTEXT        IDC_PLACE,67,8,226,13,ES_AUTOHSCROLL
+    RTEXT           "潮站名：",IDC_STATIC,18,11,49,8
+    EDITTEXT        IDC_INFO,22,72,313,76,ES_MULTILINE | ES_READONLY
+END
+
+IDD_COMPUTE DIALOGEX 0, 0, 357, 115
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "计算富裕水深"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "计 算",IDOK,88,86,50,14
+    PUSHBUTTON      "退出",IDCANCEL,209,87,50,14
+    LTEXT           "地点",IDC_STATIC,22,18,17,8
+    LTEXT           "船舶吃水(厘米)",IDC_STATIC,58,18,57,8
+    LTEXT           "富裕量/富裕水深(厘米)",IDC_STATIC,136,15,49,20
+    LTEXT           "海图水深(厘米)",IDC_STATIC,204,18,62,8
+    LTEXT           "结果潮高(厘米)",IDC_STATIC,289,18,62,8
+    EDITTEXT        IDC_PLACE_ONE,7,35,43,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_BOAT_ONE,62,35,45,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_WATER_ONE,158,35,23,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_SEA_ONE,208,35,45,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_RESULT_ONE,295,35,45,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    CTEXT           "乘",IDC_STATIC,116,38,9,8
+    CTEXT           "减",IDC_STATIC,190,38,9,8
+    LTEXT           "百分之",IDC_STATIC,132,38,25,8
+    EDITTEXT        IDC_PLACE_TWO,7,59,43,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_BOAT_TWO,62,59,45,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    CTEXT           "加",IDC_STATIC,115,61,9,8
+    EDITTEXT        IDC_WATER_TWO,133,59,48,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    CTEXT           "减",IDC_STATIC,190,61,9,8
+    EDITTEXT        IDC_SEA_TWO,208,59,45,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        IDC_RESULT_TWO,295,59,45,14,ES_CENTER | ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "=",IDC_COMPUTE_ONE,262,35,26,14
+    PUSHBUTTON      "=",IDC_COMPUTE_TWO,262,59,26,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 77
+    END
+
+    IDD_LOGIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 6
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_MODIFY, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_LOOK, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_HELP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 253
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 215
+    END
+
+    IDD_INPUT_DATA, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 305
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 394
+    END
+
+    IDD_INPUT_DATA_EX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 355
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 148
+    END
+
+    IDD_COMPUTE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 349
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU 
+BEGIN
+    POPUP "系统"
+    BEGIN
+        MENUITEM "录入数据",                        ID_INPUT_DATA
+        MENUITEM "退出",                          ID_START
+    END
+    POPUP "查看"
+    BEGIN
+        MENUITEM "今天",                          ID_TODAY
+        MENUITEM "前一天",                         ID_PREV
+        MENUITEM "后一天",                         ID_NEXT
+        MENUITEM "指定日期",                        ID_LOOK
+    END
+    MENUITEM "计算器",                         ID_CALCU
+    MENUITEM "计算富裕水深",                      ID_COMPUTER_DEEPTH
+    POPUP "帮助"
+    BEGIN
+        MENUITEM "拖轮情况",                        40027
+        MENUITEM "码头情况",                        40028
+        MENUITEM "航道情况",                        40029
+        MENUITEM "帮助",                          ID_HELP
+        MENUITEM "关于",                          40007
+    END
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
