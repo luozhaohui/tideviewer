@@ -1,262 +1,256 @@
-/*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)   
-*   All rights reserved.   
-*     
-*   ÎÄ¼şÃû³Æ£ºGame.h   
-*   Õª    Òª£ºÂß¼­¿ò¼ÜÍ·ÎÄ¼ş
-*     
-*   µ±Ç°°æ±¾£º1.1   
-*   ×÷    Õß£ºÆ®Æ®°×ÔÆ   
-*   Íê³ÉÈÕÆÚ£º2008/11/30
-*/
+/*
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   All rights reserved.
+ *
+ *   æ–‡ä»¶åç§°ï¼šGame.h
+ *   æ‘˜    è¦ï¼šé€»è¾‘æ¡†æ¶å¤´æ–‡ä»¶
+ *
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ */
 
 #pragma once
 #include "WinUtility.h"
+
 using namespace Gdiplus;
+
 class Game
 {
 public:
-	Game();
-	~Game();
+    Game();
+    ~Game();
 
-	bool init(HWND hWnd);
-	void clear();
+    bool init(HWND hWnd);
+    void clear();
 
-	bool enter();
+    bool enter();
 
-	//////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////
 
-	/* ÏìÓ¦¼üÅÌ°´¼üÏûÏ¢ */
-	void onKeyDown(int keyCode, const Point& pt);
+    /* å“åº”é”®ç›˜æŒ‰é”®æ¶ˆæ¯ */
+    void onKeyDown(int keyCode, const Point& pt);
 
-	/* ÏìÓ¦Êó±ê×ó¼üÏûÏ¢ */
-	void onLeftButtonDown(const Point& pt);
-	
-	/* ÏìÓ¦Êó±êÓÒ¼üÏûÏ¢ */
-	void onRightButtonDown(const Point& pt);
-	
-	/* ÏìÓ¦Êó±êÒÆ¶¯ÏûÏ¢ */
-	void onMouseMove(const Point& pt);
+    /* å“åº”é¼ æ ‡å·¦é”®æ¶ˆæ¯ */
+    void onLeftButtonDown(const Point& pt);
 
-	/* Ãè»æ */
-	void draw();
+    /* å“åº”é¼ æ ‡å³é”®æ¶ˆæ¯ */
+    void onRightButtonDown(const Point& pt);
 
-	/* ÍË³öÓ¦ÓÃ³ÌĞò */
-	void exit();
+    /* å“åº”é¼ æ ‡ç§»åŠ¨æ¶ˆæ¯ */
+    void onMouseMove(const Point& pt);
 
-	/* ÔØÈë½ñÌìµÄ³±¸ßÊı¾İ */
-	void loadToday();
+    /* æç»˜ */
+    void draw();
 
-	/* ÔØÈëÇ°Ò»ÌìµÄ³±¸ßÊı¾İ */
-	void loadPrev();
+    /* é€€å‡ºåº”ç”¨ç¨‹åº */
+    void exit();
 
-	/* ÔØÈëºóÒ»ÌìµÄ³±¸ßÊı¾İ*/
-	void loadNext();
+    /* è½½å…¥ä»Šå¤©çš„æ½®é«˜æ•°æ® */
+    void loadToday();
 
-	/* ÔØÈëÖ¸¶¨ÈÕÆÚµÄ³±¸ßÊı¾İ */
-	void loadDay(const CStringW& dateString);
-	
-	/* ÏÔÊ¾³±¸ßÊı¾İ */
-	void start(LPCWSTR dateString = NULL);
+    /* è½½å…¥å‰ä¸€å¤©çš„æ½®é«˜æ•°æ® */
+    void loadPrev();
 
-	/* È¡µÃÓÒ¼ü²Ëµ¥µÄ²Ëµ¥ÊıÄ¿ */
-	int getMenuMax(){
-		return (int)(MENU_ID_START + places.size());
-	}
+    /* è½½å…¥åä¸€å¤©çš„æ½®é«˜æ•°æ®*/
+    void loadNext();
 
-	/* ¼ì²éÃÜÂëÊ¦¸µÆ¥Åä */
-	bool checkPassword(const CStringW& password);
-	
-	/* ¼ì²éÈÕÆÚµÄºÏ·¨ĞÔ */
-	bool checkDate(const CStringW& date);
+    /* è½½å…¥æŒ‡å®šæ—¥æœŸçš„æ½®é«˜æ•°æ® */
+    void loadDay(const CStringW& dateString);
 
-	/* ²åÈëÍùµØÖ·±íÖĞ²åÈëµØÖ· */
-	bool inputPlace(const CStringW& place);
-	
-	/* ¸ñÊ½»¯Â¼ÈëÊı¾İ */
-	bool formatInputData(CStringW& inputData);
-	
-	/* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ */
-	bool checkInputData(const CStringW& inputData);
-	
-	/* Â¼ÈëÊı¾İ */
-	bool inputData(const CStringW& place, const CStringW& date, const CStringW& data);
+    /* æ˜¾ç¤ºæ½®é«˜æ•°æ® */
+    void start(LPCWSTR dateString = NULL);
 
-	/* ĞŞ¸ÄÃÜÂë */
-	void modifyPassword(const CStringW& password);
+    /* å–å¾—å³é”®èœå•çš„èœå•æ•°ç›® */
+    int getMenuMax()
+    {
+        return (int)(MENU_ID_START + places.size());
+    }
 
-	/* ÅĞ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼ */
-	bool isLogined()
-	{
-		return loginFlag;
-	}
+    /* æ£€æŸ¥å¯†ç å¸ˆå‚…åŒ¹é… */
+    bool checkPassword(const CStringW& password);
 
-	/* ÔØÈëÓÒ¼ü²Ëµ¥Ö¸¶¨µØµãµÄ³±¸ßÊı¾İ */
-	void processMenu(int menuId);
+    /* æ£€æŸ¥æ—¥æœŸçš„åˆæ³•æ€§ */
+    bool checkDate(const CStringW& date);
 
-	/* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ:ex */
-	bool checkInputDataEx(const CStringW& filePath, CStringW& place, CStringW& date, CStringW& resultInfo);
-	/* Â¼ÈëÊı¾İ:ex */
-	bool inputDataEx(const CStringW& filePath, const CStringW& place, CStringW& resultInfo);
+    /* æ’å…¥å¾€åœ°å€è¡¨ä¸­æ’å…¥åœ°å€ */
+    bool inputPlace(const CStringW& place);
 
-	void setRichness(bool isPlaceOne, const CStringW& place, int boat, int water, int sea);
-	void getRichness(bool isPlaceOne, CStringW& place, int& boat, int& water, int& sea);
+    /* æ ¼å¼åŒ–å½•å…¥æ•°æ® */
+    bool formatInputData(CStringW& inputData);
 
-	void setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water);
-	void getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water);
+    /* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§ */
+    bool checkInputData(const CStringW& inputData);
 
-	enum
-	{
-		FILE_NONE,
-		FILE_HELP,
-		FILE_TUOLUN,
-		FILE_MATOU,
-		FILE_HANGDAO,
-	};
-	int fileId;	// ²é¿´ÎÄ±¾ÎÄ¼şµÄË÷Òı
+    /* å½•å…¥æ•°æ® */
+    bool inputData(const CStringW& place, const CStringW& date, const CStringW& data);
+
+    /* ä¿®æ”¹å¯†ç  */
+    void modifyPassword(const CStringW& password);
+
+    /* åˆ¤æ–­æ˜¯å¦å·²ç»ç™»å½• */
+    bool isLogined()
+    {
+        return loginFlag;
+    }
+
+    /* è½½å…¥å³é”®èœå•æŒ‡å®šåœ°ç‚¹çš„æ½®é«˜æ•°æ® */
+    void processMenu(int menuId);
+
+    /* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§:ex */
+    bool checkInputDataEx(const CStringW& filePath, CStringW& place, CStringW& date, CStringW& resultInfo);
+    /* å½•å…¥æ•°æ®:ex */
+    bool inputDataEx(const CStringW& filePath, const CStringW& place, CStringW& resultInfo);
+
+    void setRichness(bool isPlaceOne, const CStringW& place, int boat, int water, int sea);
+    void getRichness(bool isPlaceOne, CStringW& place, int& boat, int& water, int& sea);
+
+    void setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water);
+    void getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water);
+
+    enum
+    {
+        FILE_NONE,
+        FILE_HELP,
+        FILE_TUOLUN,
+        FILE_MATOU,
+        FILE_HANGDAO,
+    };
+    int fileId;  // æŸ¥çœ‹æ–‡æœ¬æ–‡ä»¶çš„ç´¢å¼•
 
 protected:
-	bool writeToScript(const CStringW& place, const CStringW& date, std::vector<std::vector<int> > data);
+    bool writeToScript(const CStringW& place, const CStringW& date, std::vector<std::vector<int>> data);
+
 private:
-	HWND hWnd;
-	HDC hdcFront;
-	HDC hdcBack;
-	HBITMAP backBmp;
+    HWND hWnd;
+    HDC hdcFront;
+    HDC hdcBack;
+    HBITMAP backBmp;
 
-	::RECT mainRect;
-	bool isInited;
-	bool isExit;
-	bool isShowTime;
-	bool isShowCurrentTide;
+    ::RECT mainRect;
+    bool isInited;
+    bool isExit;
+    bool isShowTime;
+    bool isShowCurrentTide;
 
-	PointF mousePoint;
-	PointF zeroPoint;
+    PointF mousePoint;
+    PointF zeroPoint;
 
-	Gdiplus::Font * gdiFont;
-	Gdiplus::Font * gdiBigFont;
-	
-	struct TIDE_DATA {
-		TIDE_DATA():
-			tide(0),
-			time(0){
-		};
+    Gdiplus::Font* gdiFont;
+    Gdiplus::Font* gdiBigFont;
 
-		float tide;
-		float time;
-	};
+    struct TIDE_DATA
+    {
+        TIDE_DATA() : tide(0), time(0){};
 
-	struct ChangeXinDraftData {
-		ChangeXinDraftData():
-			time(0),
-			upDraftOne(0),
-			upDraftTwo(0),
-			upDWTDraftOne(0),
-			upDWTDraftTwo(0),
-			downDraftOne(0),
-			downDraftTwo(0)
-		{
-		};
+        float tide;
+        float time;
+    };
 
-		float time;
-		float upDraftOne;
-		float upDraftTwo;
-		float upDWTDraftOne;
-		float upDWTDraftTwo;
-		float downDraftOne;
-		float downDraftTwo;
-	};
-	
-	std::vector<ChangeXinDraftData> changeXinDraftData;
+    struct ChangeXinDraftData
+    {
+        ChangeXinDraftData()
+            : time(0),
+              upDraftOne(0),
+              upDraftTwo(0),
+              upDWTDraftOne(0),
+              upDWTDraftTwo(0),
+              downDraftOne(0),
+              downDraftTwo(0){};
 
-	std::vector<TIDE_DATA> tideData;
-	float maxMinTide[8];
+        float time;
+        float upDraftOne;
+        float upDraftTwo;
+        float upDWTDraftOne;
+        float upDWTDraftTwo;
+        float downDraftOne;
+        float downDraftTwo;
+    };
 
-	wchar_t strLongLi[MAX_PATH];
-	wchar_t today[MAX_PATH];
-	wchar_t strDate[MAX_PATH];
-	wchar_t strPlace[MAX_PATH];
-	wchar_t md5[MAX_PATH];
+    std::vector<ChangeXinDraftData> changeXinDraftData;
 
-	wchar_t fullPath[MAX_PATH];
+    std::vector<TIDE_DATA> tideData;
+    float maxMinTide[8];
 
-	wchar_t placeOne[MAX_PATH];
-	int boatOne;
-	int waterOne;
-	int seaOne;
+    wchar_t strLongLi[MAX_PATH];
+    wchar_t today[MAX_PATH];
+    wchar_t strDate[MAX_PATH];
+    wchar_t strPlace[MAX_PATH];
+    wchar_t md5[MAX_PATH];
 
-	wchar_t placeTwo[MAX_PATH];
-	int boatTwo;
-	int waterTwo;
-	int seaTwo;
+    wchar_t fullPath[MAX_PATH];
 
-	wchar_t cewPlaceOne[MAX_PATH];
-	int cewTideOne;
-	int cewWaterOne;
-	int cewSeaOne;
+    wchar_t placeOne[MAX_PATH];
+    int boatOne;
+    int waterOne;
+    int seaOne;
 
-	wchar_t cewPlaceTwo[MAX_PATH];
-	int cewTideTwo;
-	int cewWaterTwo;
-	int cewSeaTwo;
+    wchar_t placeTwo[MAX_PATH];
+    int boatTwo;
+    int waterTwo;
+    int seaTwo;
 
-	wchar_t strForbidTimeOne[MAX_PATH];
-	wchar_t strForbidTimeTwo[MAX_PATH];
+    wchar_t cewPlaceOne[MAX_PATH];
+    int cewTideOne;
+    int cewWaterOne;
+    int cewSeaOne;
 
-	float lastTime;
-	float curTime;
+    wchar_t cewPlaceTwo[MAX_PATH];
+    int cewTideTwo;
+    int cewWaterTwo;
+    int cewSeaTwo;
 
-	float currentTime;
-	float currentTide;
+    wchar_t strForbidTimeOne[MAX_PATH];
+    wchar_t strForbidTimeTwo[MAX_PATH];
 
-	bool reloadRequest;
+    float lastTime;
+    float curTime;
 
-	static bool less(const TIDE_DATA& a, const TIDE_DATA& b);
+    float currentTime;
+    float currentTide;
 
-	PointF getPosition(const TIDE_DATA& data);
+    bool reloadRequest;
 
-	float getTide(float y);
-	float getTime(float x);
+    static bool less(const TIDE_DATA& a, const TIDE_DATA& b);
 
-	float getTideByTime(int time);
-	void getForbidTime(const CStringW& path, const CStringW& dateStr);
+    PointF getPosition(const TIDE_DATA& data);
 
-	void drawTideLine(Gdiplus::Graphics* g, const Pen *pen, const PointF &pt1, const PointF &pt2);
-	void drawTideEllipse(Gdiplus::Graphics* g, const Pen *pen, Gdiplus::Brush * brush, const PointF &pt1, float r1, float r2);
-	void drawTideString(
-		Gdiplus::Graphics * g,
-		Gdiplus::Font * font,
-		Gdiplus::Color color,
-		const CStringW& string,
-		float x,
-		float y,
-		bool bAlignLeft = true);
+    float getTide(float y);
+    float getTime(float x);
 
-	void drawString(
-		Gdiplus::Graphics * g,
-		Gdiplus::Font * font,
-		Gdiplus::Color color,
-		const CStringW& string,
-		float x,
-		float y,
-		bool bAlignLeft = true);
+    float getTideByTime(int time);
+    void getForbidTime(const CStringW& path, const CStringW& dateStr);
 
-	void drawCenterString(
-		Gdiplus::Graphics * g,
-		Gdiplus::Font * font,
-		Gdiplus::Color color,
-		const CStringW& string,
-		float y);
+    void drawTideLine(Gdiplus::Graphics* g, const Pen* pen, const PointF& pt1, const PointF& pt2);
+    void drawTideEllipse(Gdiplus::Graphics* g, const Pen* pen, Gdiplus::Brush* brush, const PointF& pt1, float r1, float r2);
+    void drawTideString(Gdiplus::Graphics* g,
+                        Gdiplus::Font* font,
+                        Gdiplus::Color color,
+                        const CStringW& string,
+                        float x,
+                        float y,
+                        bool bAlignLeft = true);
 
-	bool Game::isPointInRect(const PointF& pt, const RectF& rect);
+    void drawString(Gdiplus::Graphics* g,
+                    Gdiplus::Font* font,
+                    Gdiplus::Color color,
+                    const CStringW& string,
+                    float x,
+                    float y,
+                    bool bAlignLeft = true);
 
-	CStringW getDateString();
+    void drawCenterString(Gdiplus::Graphics* g, Gdiplus::Font* font, Gdiplus::Color color, const CStringW& string, float y);
 
-	CStringW getCurrentTimeString();
+    bool Game::isPointInRect(const PointF& pt, const RectF& rect);
 
-	void loadData(const CStringW& dateString, const CStringW& place);
+    CStringW getDateString();
 
-	std::vector<CStringW> places;
-	
-	bool loginFlag;
-	int getDaysOfMonth(int year, int month);
+    CStringW getCurrentTimeString();
+
+    void loadData(const CStringW& dateString, const CStringW& place);
+
+    std::vector<CStringW> places;
+
+    bool loginFlag;
+    int getDaysOfMonth(int year, int month);
 };

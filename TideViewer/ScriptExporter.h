@@ -1,44 +1,49 @@
-/*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)   
-*   All rights reserved.   
-*     
-*   ÎÄ¼şÃû³Æ£ºScriptExporter.h   
-*   Õª    Òª£º½Å±¾±à¼­Í·ÎÄ¼ş
-*     
-*   µ±Ç°°æ±¾£º1.1   
-*   ×÷    Õß£ºÆ®Æ®°×ÔÆ   
-*   Íê³ÉÈÕÆÚ£º2008/11/30
-*/
+/*
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   All rights reserved.
+ *
+ *   æ–‡ä»¶åç§°ï¼šScriptExporter.h
+ *   æ‘˜    è¦ï¼šè„šæœ¬ç¼–è¾‘å¤´æ–‡ä»¶
+ *
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ */
 
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////
-class ScriptExporter {
+class ScriptExporter
+{
 public:
-	ScriptExporter();
-	~ ScriptExporter(void);
+    ScriptExporter();
+    ~ScriptExporter();
 
-	bool open(const CStringW& fullPath, const CStringW& fileName, const CStringW& mode);
-	void close();
+    bool open(const CStringW& fullPath, const CStringW& fileName, const CStringW& mode);
+    void close();
 
-	void setUint32(int& v, const CStringW& name);
-	void setUint32(std::vector<int> &v, const CStringW& name);
+    void setUint32(int& v, const CStringW& name);
+    void setUint32(std::vector<int>& v, const CStringW& name);
 
-	void setString(CStringW& v, const CStringW& name);
-	void setString(std::vector<CStringW> &v, const CStringW& name);
+    void setString(CStringW& v, const CStringW& name);
+    void setString(std::vector<CStringW>& v, const CStringW& name);
 
-	void writeString(LPCSTR string);
-	void writeString(const CStringW& string);
+    void writeString(LPCSTR string);
+    void writeString(const CStringW& string);
 
-	static bool modifyUint32(const CStringW& fullPath, const CStringW& fileName, const CStringW& item, int& v);
-	static bool modifyUint32(const CStringW& fullPath, const CStringW& fileName, const CStringW& item, std::vector<int> &v);
-	static bool modifyString(const CStringW& fullPath, const CStringW& fileName, const CStringW& item, const CStringW& string);
-	static bool modifyString(const CStringW& fullPath, const CStringW& fileName, const CStringW& item,  const std::vector<CStringW>& string);
+    static bool modifyUint32(const CStringW& fullPath, const CStringW& fileName, const CStringW& item, int& v);
+    static bool modifyUint32(const CStringW& fullPath, const CStringW& fileName,
+                             const CStringW& item, std::vector<int>& v);
+    static bool modifyString(const CStringW& fullPath, const CStringW& fileName,
+                             const CStringW& item, const CStringW& string);
+    static bool modifyString(const CStringW& fullPath, const CStringW& fileName,
+                             const CStringW& item, const std::vector<CStringW>& string);
 
 private:
-	static bool modify(const CStringW& fullPath, const CStringW& fileName, const CStringW& item, const CStringW& string);
-	
-	void*  handle;
+    static bool modify(const CStringW& fullPath, const CStringW& fileName, const CStringW& item,
+                       const CStringW& string);
 
-	CStringW strPath;
+    void* handle;
+
+    CStringW strPath;
 };

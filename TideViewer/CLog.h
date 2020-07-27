@@ -1,42 +1,42 @@
-/*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)   
-*   All rights reserved.   
-*     
-*   ÎÄ¼þÃû³Æ£ºCLog.h   
-*   Õª    Òª£ºLogÀàÊµÏÖ
-*     
-*   µ±Ç°°æ±¾£º1.1   
-*   ×÷    Õß£ºÆ®Æ®°×ÔÆ   
-*   Íê³ÉÈÕÆÚ£º2008/11/30
-*/
+/*
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   All rights reserved.
+ *
+ *   æ–‡ä»¶åç§°ï¼šCLog.h
+ *   æ‘˜    è¦ï¼šLogç±»å®žçŽ°
+ *
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ */
 
-class CLog {
+class CLog
+{
 public:
-
-	static void output(const char* fmt, ...)
-	{
+    static void output(const char* fmt, ...)
+    {
 #ifndef _DEBUG
-		va_list ap;
-		char buf[MAX_STRING_LENGTH] = {0,};
+        va_list ap;
+        char buf[MAX_STRING_LENGTH] = {
+            0,
+        };
 
-		va_start(ap, fmt);
+        va_start(ap, fmt);
 
-		size_t len = _vscprintf(fmt, ap);
+        size_t len = _vscprintf(fmt, ap);
 
-		if (len >= MAX_STRING_LENGTH) {
-			return;
-		}
+        if (len >= MAX_STRING_LENGTH)
+        {
+            return;
+        }
 
-		vsprintf_s(buf, len + 1, fmt, ap);
-		va_end(ap);
+        vsprintf_s(buf, len + 1, fmt, ap);
+        va_end(ap);
 
-		OutputDebugStringA(buf);
+        OutputDebugStringA(buf);
 #endif
-	}
+    }
 
 protected:
-
-
 private:
-
 };

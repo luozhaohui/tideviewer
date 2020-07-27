@@ -1,14 +1,14 @@
-/*   
-*   Copyright (c) 2008, ∆Æ∆Æ∞◊‘∆(kesalin@gmail.com)   
-*   All rights reserved.   
-*     
-*   Œƒº˛√˚≥∆£∫GameMain.cpp   
-*   ’™    “™£∫÷˜øÚº‹Œƒº˛
-*     
-*   µ±«∞∞Ê±æ£∫1.1   
-*   ◊˜    ’ﬂ£∫∆Æ∆Æ∞◊‘∆   
-*   ÕÍ≥…»’∆⁄£∫2008/11/30
-*/
+/*
+ *   Copyright (c) 2008, È£òÈ£òÁôΩ‰∫ë(kesalin@gmail.com)
+ *   All rights reserved.
+ *
+ *   Êñá‰ª∂ÂêçÁß∞ÔºöGameMain.cpp
+ *   Êëò    Ë¶ÅÔºö‰∏ªÊ°ÜÊû∂Êñá‰ª∂
+ *
+ *   ÂΩìÂâçÁâàÊú¨Ôºö1.1
+ *   ‰Ωú    ËÄÖÔºöÈ£òÈ£òÁôΩ‰∫ë
+ *   ÂÆåÊàêÊó•ÊúüÔºö2008/11/30
+ */
 #include "WinUtility.h"
 #include "Game.h"
 #include "CLog.h"
@@ -16,7 +16,7 @@
 //
 // Globals
 //
-HINSTANCE hInst;	// current instance
+HINSTANCE hInst;  // current instance
 ULONG_PTR token_;
 Game game;
 
@@ -45,34 +45,35 @@ void updateWaterHeightResultTwo(HWND hDlg, bool needSave = true);
 //
 bool Setup(HWND hwnd)
 {
-	// Init GDI++
-	Gdiplus::GdiplusStartupInput input;
-	Gdiplus::GdiplusStartupOutput output = { 0, 0};
-	Gdiplus::Status ret = Gdiplus::GdiplusStartup(&token_, &input, &output);
-	if (ret != Gdiplus::Ok) {
-		MessageBox(NULL, _T("Fail to init GDI++!"), _T("I am sorry~"), MB_OK);
-		return false;
-	}
+    // Init GDI++
+    Gdiplus::GdiplusStartupInput input;
+    Gdiplus::GdiplusStartupOutput output = {0, 0};
+    Gdiplus::Status ret = Gdiplus::GdiplusStartup(&token_, &input, &output);
+    if (ret != Gdiplus::Ok)
+    {
+        MessageBox(NULL, _T("Fail to init GDI++!"), _T("I am sorry~"), MB_OK);
+        return false;
+    }
 
-	game.init(hwnd);
+    game.init(hwnd);
 
-	return true;
+    return true;
 }
 
 void Cleanup()
 {
-	game.clear();
+    game.clear();
 
-	// Shut down GDI++
-	Gdiplus::GdiplusShutdown(token_);
+    // Shut down GDI++
+    Gdiplus::GdiplusShutdown(token_);
 }
 
 bool Display(float timeDelta)
 {
-	game.enter();
-	game.draw();
+    game.enter();
+    game.draw();
 
-	return true;
+    return true;
 }
 
 //
@@ -80,1246 +81,1333 @@ bool Display(float timeDelta)
 //
 LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
-	switch (msg) {
-	case WM_DESTROY:
-		// πÿ±’¥∞ø⁄
-		::PostQuitMessage(WM_QUIT);
-		break;
-	case WM_INITMENUPOPUP:
-		// œµÕ≥≤Àµ•
-		if (lParam == 0) {
+    switch (msg)
+    {
+    case WM_DESTROY:
+        // ÂÖ≥Èó≠Á™óÂè£
+        ::PostQuitMessage(WM_QUIT);
+        break;
+    case WM_INITMENUPOPUP:
+        // Á≥ªÁªüËèúÂçï
+        if (lParam == 0)
+        {
+            // Â∑≤ÁôªÂΩï
+            if (game.isLogined())
+            {
+                EnableMenuItem((HMENU)wParam, ID_LOGIN, MF_GRAYED);
+                EnableMenuItem((HMENU)wParam, ID_MODIFY_PWD, MF_ENABLED);
+                EnableMenuItem((HMENU)wParam, ID_INPUT_DATA, MF_ENABLED);
+            }
 
-			// “—µ«¬º
-			if (game.isLogined()) {
-				EnableMenuItem((HMENU) wParam, ID_LOGIN, MF_GRAYED);
-				EnableMenuItem((HMENU) wParam, ID_MODIFY_PWD, MF_ENABLED);
-				EnableMenuItem((HMENU) wParam, ID_INPUT_DATA, MF_ENABLED);
-			}
+            // Êú™ÁôªÂΩï
+            else
+            {
+                EnableMenuItem((HMENU)wParam, ID_MODIFY_PWD, MF_GRAYED);
+                EnableMenuItem((HMENU)wParam, ID_INPUT_DATA, MF_GRAYED);
+            }
+        }
 
-			// Œ¥µ«¬º
-			else {
-				EnableMenuItem((HMENU) wParam, ID_MODIFY_PWD, MF_GRAYED);
-				EnableMenuItem((HMENU) wParam, ID_INPUT_DATA, MF_GRAYED);
-			}
-		}
+        // Êü•ÁúãËèúÂçï
+        else if (lParam == 1)
+        {
+            // Êú™ÁôªÂΩïÔºå‰ª•‰∏ãËèúÂçïÁ¶ÅÊ≠¢Êìç‰Ωú
+            if (!game.isLogined())
+            {
+                EnableMenuItem((HMENU)wParam, ID_TODAY, MF_GRAYED);
+                EnableMenuItem((HMENU)wParam, ID_PREV, MF_GRAYED);
+                EnableMenuItem((HMENU)wParam, ID_NEXT, MF_GRAYED);
+                EnableMenuItem((HMENU)wParam, ID_LOOK, MF_GRAYED);
+            }
+            else
+            {
+                // Â∑≤ÁôªÂΩï
+                EnableMenuItem((HMENU)wParam, ID_TODAY, MF_ENABLED);
+                EnableMenuItem((HMENU)wParam, ID_PREV, MF_ENABLED);
+                EnableMenuItem((HMENU)wParam, ID_NEXT, MF_ENABLED);
+                EnableMenuItem((HMENU)wParam, ID_LOOK, MF_ENABLED);
+            }
+        }
+        break;
+    case WM_COMMAND:
+        if (wParam == ID_START)
+        {
+            // ÈÄÄÂá∫ËèúÂçï
+            game.exit();
+        }
+        else if (wParam == ID_LOGIN)
+        {
+            // ÁôªÂΩïËèúÂçï
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_LOGIN), hwnd, LoginCallback);
+        }
+        else if (wParam == ID_LOOK)
+        {
+            //Êü•ÁúãËèúÂçï
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_LOOK), hwnd, LookCallback);
+        }
+        else if (wParam == ID_MODIFY_PWD)
+        {
+            // ‰øÆÊîπÂØÜÁ†ÅËèúÂçï
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_MODIFY), hwnd, ModifyCallback);
+        }
+        else if (wParam == ID_ABOUT)
+        {
+            // ÂÖ≥‰∫éËèúÂçï
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_ABOUT), hwnd, AboutCallback);
+        }
+        else if (wParam == ID_HELP)
+        {
+            // Â∏ÆÂä©ËèúÂçï
+            /*
+                        game.fileId = Game::FILE_HELP;
+                        DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
+            */
+            wchar_t fullPath[MAX_PATH] = {
+                0,
+            };
+            GetModuleFileNameW(0, fullPath, MAX_PATH);
+            PathRemoveFileSpecW(fullPath);
+            PathAppend(fullPath, L"Ëà™ËøêÂ∞èÂ∏ÆÊâã.chm");
+            // ÊâìÂºÄËà™Ë°åÂ∞èÂ∏ÆÊâã.chm
+            ShellExecute(NULL, _T("open"), _T("hh.exe"), fullPath, NULL, SW_SHOWNORMAL);
+        }
+        else if (wParam == IDM_BOAT_INFO)
+        {
+            // ÊãñËΩÆÊÉÖÂÜµËèúÂçï
+            game.fileId = Game::FILE_TUOLUN;
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
+        }
+        else if (wParam == IDM_MATOU_INFO)
+        {
+            // Á†ÅÂ§¥ÊÉÖÂÜµËèúÂçï
+            game.fileId = Game::FILE_MATOU;
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
+        }
+        else if (wParam == IDM_HANGDAO_INFO)
+        {
+            // Ëà™ÈÅìÊÉÖÂÜµËèúÂçï
+            game.fileId = Game::FILE_HANGDAO;
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
+        }
+        else if (wParam == ID_INPUT_DATA)
+        {
+            // Êï∞ÊçÆÂΩïÂÖ•ËèúÂçï
+            // DialogBoxW(hInst, MAKEINTRESOURCE(IDD_INPUT_DATA), hwnd, InputCallback);
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_INPUT_DATA_EX), hwnd, InputCallbackEx);
+        }
+        else if (wParam == ID_TODAY)
+        {
+            // Êü•Áúã‰ªäÂ§©
+            game.loadToday();
+        }
+        else if (wParam == ID_PREV)
+        {
+            // Êü•ÁúãÂâç‰∏ÄÂ§©
+            game.loadPrev();
+        }
+        else if (wParam == ID_NEXT)
+        {
+            // Êü•ÁúãÂêé‰∏ÄÂ§©
+            game.loadNext();
+        }
+        else if (wParam == ID_CALCU)
+        {
+            // ÂºπÂá∫ËÆ°ÁÆóÂô®
+            ShellExecute(NULL, _T("open"), _T("calc.exe"), NULL, NULL, SW_SHOWNORMAL);
+        }
 
-		// ≤Èø¥≤Àµ•
-		else if (lParam == 1) {
+        else if (wParam == ID_COMPUTER_DEEPTH)
+        {
+            // ËÆ°ÁÆóÂØåË£ïÊ∞¥Ê∑±
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTE), hwnd, ComputeDeepthCallback);
+        }
 
-			// Œ¥µ«¬º£¨“‘œ¬≤Àµ•Ω˚÷π≤Ÿ◊˜
-			if (!game.isLogined()) {
-				EnableMenuItem((HMENU) wParam, ID_TODAY, MF_GRAYED);
-				EnableMenuItem((HMENU) wParam, ID_PREV, MF_GRAYED);
-				EnableMenuItem((HMENU) wParam, ID_NEXT, MF_GRAYED);
-				EnableMenuItem((HMENU) wParam, ID_LOOK, MF_GRAYED);
-			}
-			else {
+        else if (wParam == ID_COMPUTER_EAT_WATER)
+        {
+            // ËÆ°ÁÆóÊúÄÂ§ßÂêÉÊ∞¥
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTER_EAT_WATER), hwnd, ComputeEatWaterCallback);
+        }
 
-				// “—µ«¬º
-				EnableMenuItem((HMENU) wParam, ID_TODAY, MF_ENABLED);
-				EnableMenuItem((HMENU) wParam, ID_PREV, MF_ENABLED);
-				EnableMenuItem((HMENU) wParam, ID_NEXT, MF_ENABLED);
-				EnableMenuItem((HMENU) wParam, ID_LOOK, MF_ENABLED);
-			}
-		}
-		break;
-	case WM_COMMAND:
-		if (wParam == ID_START) {
+        else if (wParam == ID_UP_DRAFT)
+        {
+            // ËÆ°ÁÆó‰∏äË°åÔºöÂåóÊßΩËàπËà∂ÊúÄÂ§ßÂêÉÊ∞¥
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DRAFT), hwnd, ComputeUpDraftCallback);
+        }
 
-			// ÕÀ≥ˆ≤Àµ•
-			game.exit();
-		}
-		else if (wParam == ID_LOGIN) {
+        else if (wParam == ID_UP_DWT_DRAFT)
+        {
+            // ËÆ°ÁÆó‰∏äË°åÔºöÂåóÊßΩDWTÂ§ß‰∫é7.5‰∏áÂê®ËàπËà∂ÊúÄÂ§ßÂêÉÊ∞¥
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DWT_DRAFT), hwnd, ComputeUpDWTDraftCallback);
+        }
 
-			// µ«¬º≤Àµ•
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_LOGIN), hwnd, LoginCallback);
-		}
-		else if (wParam == ID_LOOK) {
+        else if (wParam == ID_DOWN_DRAFT)
+        {
+            // ËÆ°ÁÆó‰∏ãË°åÔºöÂåóÊßΩËàπËà∂ÊúÄÂ§ßÂêÉÊ∞¥
+            DialogBoxW(hInst, MAKEINTRESOURCE(IDD_DOWN_DRAFT), hwnd, ComputeDownDraftCallback);
+        }
 
-			//≤Èø¥≤Àµ•
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_LOOK), hwnd, LookCallback);
-		}
-		else if (wParam == ID_MODIFY_PWD) {
+        else if (LOWORD(wParam) >= MENU_ID_START && LOWORD(wParam) < MENU_ID_START + game.getMenuMax())
+        {
+            // ÂìçÂ∫îÂè≥ÈîÆËèúÂçï
+            game.processMenu(LOWORD(wParam) - MENU_ID_START);
+        }
+        break;
 
-			// –ﬁ∏ƒ√‹¬Î≤Àµ•
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_MODIFY), hwnd, ModifyCallback);
-		}
-		else if (wParam == ID_ABOUT) {
+    // Â§ÑÁêÜÈîÆÁõòÊ∂àÊÅØ
+    case WM_KEYDOWN:
+        if (wParam == VK_ESCAPE)
+        {
+            // ÊåâESCÈîÆÂÖ≥Èó≠Â∫îÁî®Á®ãÂ∫è
+            ::PostQuitMessage(WM_QUIT);
+        }
+        else
+        {
+            Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+            game.onKeyDown((int)wParam, point);
+        }
+        break;
 
-			// πÿ”⁄≤Àµ•
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_ABOUT), hwnd, AboutCallback);
-		}
-		else if (wParam == ID_HELP) {
+    // Â§ÑÁêÜÈº†Ê†áÁßªÂä®Ê∂àÊÅØ
+    case WM_MOUSEMOVE:
+    {
+        Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        game.onMouseMove(point);
+    }
+    break;
 
-			// ∞Ô÷˙≤Àµ•
-/*
-			game.fileId = Game::FILE_HELP;
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
-*/
-			wchar_t fullPath[MAX_PATH] = {0, };
-			GetModuleFileNameW(0, fullPath, MAX_PATH);
-			PathRemoveFileSpecW(fullPath);
-			PathAppend(fullPath, L"∫Ω‘À–°∞Ô ÷.chm");
-			// ¥Úø™∫Ω–––°∞Ô ÷.chm
-			ShellExecute(NULL, _T("open"), _T("hh.exe"), fullPath, NULL, SW_SHOWNORMAL);
-		}
-		else if (wParam == IDM_BOAT_INFO)
-		{
-			// Õœ¬÷«Èøˆ≤Àµ•
-			game.fileId = Game::FILE_TUOLUN;
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
-		}
-		else if (wParam == IDM_MATOU_INFO)
-		{
-			// ¬ÎÕ∑«Èøˆ≤Àµ•
-			game.fileId = Game::FILE_MATOU;
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
-		}
-		else if (wParam == IDM_HANGDAO_INFO)
-		{
-			// ∫Ωµ¿«Èøˆ≤Àµ•
-			game.fileId = Game::FILE_HANGDAO;
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
-		}
-		else if (wParam == ID_INPUT_DATA) {
+    // Â§ÑÁêÜÈº†Ê†áÂ∑¶ÈîÆÊ∂àÊÅØ
+    case WM_LBUTTONDOWN:
+    {
+        Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        game.onLeftButtonDown(point);
+    }
+    break;
 
-			//  ˝æ›¬º»Î≤Àµ•
-			//DialogBoxW(hInst, MAKEINTRESOURCE(IDD_INPUT_DATA), hwnd, InputCallback);
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_INPUT_DATA_EX), hwnd, InputCallbackEx);
-		}
-		else if (wParam == ID_TODAY) {
+    // Â§ÑÁêÜÈº†Ê†áÂè≥ÈîÆÈîÆÊ∂àÊÅØ
+    case WM_RBUTTONDOWN:
+    {
+        Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        game.onRightButtonDown(point);
+    }
+    break;
+    case WM_PAINT:
+    {
+        PAINTSTRUCT ps;
+        BeginPaint(hwnd, &ps);  // validate the window
+        EndPaint(hwnd, &ps);
 
-			// ≤Èø¥ΩÒÃÏ
-			game.loadToday();
-		}
-		else if (wParam == ID_PREV) {
+        return (0);  // return success
+    }
+    }
 
-			// ≤Èø¥«∞“ªÃÏ
-			game.loadPrev();
-		}
-		else if (wParam == ID_NEXT) {
-
-			// ≤Èø¥∫Û“ªÃÏ
-			game.loadNext();
-		}
-		else if (wParam == ID_CALCU) {
-
-			// µØ≥ˆº∆À„∆˜
-			ShellExecute(NULL, _T("open"), _T("calc.exe"), NULL, NULL, SW_SHOWNORMAL);
-		}
-
-		else if (wParam == ID_COMPUTER_DEEPTH) {
-			// º∆À„∏ª‘£ÀÆ…Ó
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTE), hwnd, ComputeDeepthCallback);
-		}
-
-		else if (wParam == ID_COMPUTER_EAT_WATER) {
-			// º∆À„◊Ó¥Û≥‘ÀÆ
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTER_EAT_WATER), hwnd, ComputeEatWaterCallback);
-		}
-		
-		else if (wParam == ID_UP_DRAFT) {
-			// º∆À„…œ––£∫±±≤€¥¨≤∞◊Ó¥Û≥‘ÀÆ
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DRAFT), hwnd, ComputeUpDraftCallback);
-		}
-		
-		else if (wParam == ID_UP_DWT_DRAFT) {
-			// º∆À„…œ––£∫±±≤€DWT¥Û”⁄7.5ÕÚ∂÷¥¨≤∞◊Ó¥Û≥‘ÀÆ
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DWT_DRAFT), hwnd, ComputeUpDWTDraftCallback);
-		}
-		
-		else if (wParam == ID_DOWN_DRAFT) {
-			// º∆À„œ¬––£∫±±≤€¥¨≤∞◊Ó¥Û≥‘ÀÆ
-			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_DOWN_DRAFT), hwnd, ComputeDownDraftCallback);
-		}
-
-		else if (LOWORD(wParam) >= MENU_ID_START && LOWORD(wParam) < MENU_ID_START + game.getMenuMax()) {
-
-			// œÏ”¶”“º¸≤Àµ•
-			game.processMenu(LOWORD(wParam) - MENU_ID_START);
-		}
-		break;
-
-	// ¥¶¿Ìº¸≈Ãœ˚œ¢
-	case WM_KEYDOWN:
-		if (wParam == VK_ESCAPE) {
-
-			// ∞¥ESCº¸πÿ±’”¶”√≥Ã–Ú
-			::PostQuitMessage(WM_QUIT);
-		}
-		else {
-			Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			game.onKeyDown((int)wParam, point);
-		}
-		break;
-
-	// ¥¶¿Ì Û±Í“∆∂Øœ˚œ¢
-	case WM_MOUSEMOVE: {
-			Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			game.onMouseMove(point);
-		}
-		break;
-
-	// ¥¶¿Ì Û±Í◊Ûº¸œ˚œ¢
-	case WM_LBUTTONDOWN: {
-			Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			game.onLeftButtonDown(point);
-		}
-		break;
-
-	// ¥¶¿Ì Û±Í”“º¸º¸œ˚œ¢
-	case WM_RBUTTONDOWN: {
-			Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-			game.onRightButtonDown(point);
-		}
-		break;
-	case WM_PAINT: {
-			PAINTSTRUCT ps;
-			BeginPaint(hwnd, &ps);	// validate the window
-			EndPaint(hwnd, &ps);
-
-			return(0);	// return success
-		}
-	}
-
-	return ::DefWindowProc(hwnd, msg, wParam, lParam);
+    return ::DefWindowProc(hwnd, msg, wParam, lParam);
 }
 
 // Message handler for help box.
 INT_PTR CALLBACK HelpCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-			HWND hPwd = ::GetDlgItem(hDlg, IDC_HELP_TXT);
-			if (hPwd)
-			{
-#define MAX_SIZE	(1024 * 30)
-				wchar_t fullPath[MAX_PATH] = {0, };
-				GetModuleFileNameW(0, fullPath, MAX_PATH);
-				PathRemoveFileSpecW(fullPath);
+        HWND hPwd = ::GetDlgItem(hDlg, IDC_HELP_TXT);
+        if (hPwd)
+        {
+#define MAX_SIZE (1024 * 30)
+            wchar_t fullPath[MAX_PATH] = {
+                0,
+            };
+            GetModuleFileNameW(0, fullPath, MAX_PATH);
+            PathRemoveFileSpecW(fullPath);
 
-				switch(game.fileId)
-				{
-				case Game::FILE_HELP:
-					::SetWindowText(hDlg, L"∞Ô÷˙");
-					PathAppend(fullPath, L"help.txt");
-					break;
-				case Game::FILE_MATOU:
-					::SetWindowText(hDlg, L"¬ÎÕ∑«Èøˆ");
-					PathAppend(fullPath, L"¬ÎÕ∑«Èøˆ.txt");
-					break;
-				case Game::FILE_TUOLUN:
-					::SetWindowText(hDlg, L"Õœ¬÷«Èøˆ");
-					PathAppend(fullPath, L"Õœ¬÷«Èøˆ.txt");
-				    break;
-				case Game::FILE_HANGDAO:
-					::SetWindowText(hDlg, L"∫Ωµ¿«Èøˆ");
-					PathAppend(fullPath, L"∫Ωµ¿«Èøˆ.txt");
-				    break;
-				default:
-				    return (INT_PTR) TRUE;
-				}
+            switch (game.fileId)
+            {
+            case Game::FILE_HELP:
+                ::SetWindowText(hDlg, L"Â∏ÆÂä©");
+                PathAppend(fullPath, L"help.txt");
+                break;
+            case Game::FILE_MATOU:
+                ::SetWindowText(hDlg, L"Á†ÅÂ§¥ÊÉÖÂÜµ");
+                PathAppend(fullPath, L"Á†ÅÂ§¥ÊÉÖÂÜµ.txt");
+                break;
+            case Game::FILE_TUOLUN:
+                ::SetWindowText(hDlg, L"ÊãñËΩÆÊÉÖÂÜµ");
+                PathAppend(fullPath, L"ÊãñËΩÆÊÉÖÂÜµ.txt");
+                break;
+            case Game::FILE_HANGDAO:
+                ::SetWindowText(hDlg, L"Ëà™ÈÅìÊÉÖÂÜµ");
+                PathAppend(fullPath, L"Ëà™ÈÅìÊÉÖÂÜµ.txt");
+                break;
+            default:
+                return (INT_PTR)TRUE;
+            }
 
-				CStringW strMode;
-				strMode.Format(L"r, ccs=UTF-8");
-				_tsetlocale(LC_ALL, _T("chinese-simplified"));
+            CStringW strMode;
+            strMode.Format(L"r, ccs=UTF-8");
+            _tsetlocale(LC_ALL, _T("chinese-simplified"));
 
-				FILE*  fp = NULL;
-				errno_t err = _wfopen_s(&fp, fullPath, strMode);
-				if (!err && fp != NULL) {
-					wchar_t buf[MAX_SIZE] = { 0, };
-					fread(buf, sizeof(wchar_t), MAX_SIZE, fp);
-					fgetws(buf, MAX_SIZE, fp);
+            FILE* fp = NULL;
+            errno_t err = _wfopen_s(&fp, fullPath, strMode);
+            if (!err && fp != NULL)
+            {
+                wchar_t buf[MAX_SIZE] = {
+                    0,
+                };
+                fread(buf, sizeof(wchar_t), MAX_SIZE, fp);
+                fgetws(buf, MAX_SIZE, fp);
 
-					for (int i = 0; i < MAX_SIZE && buf[i] != 0; i++) {
-						if ((i + 1) < MAX_SIZE && buf[i] == 0x0a && buf[i + 1] == 0x0a) {
-							buf[i] = 0x0d;
-							i++;
-						}
-					}
+                for (int i = 0; i < MAX_SIZE && buf[i] != 0; i++)
+                {
+                    if ((i + 1) < MAX_SIZE && buf[i] == 0x0a && buf[i + 1] == 0x0a)
+                    {
+                        buf[i] = 0x0d;
+                        i++;
+                    }
+                }
 
-					::SetWindowText(hPwd, buf);
-					fclose(fp);
-				}
-			}
-		}
+                ::SetWindowText(hPwd, buf);
+                fclose(fp);
+            }
+        }
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 // Message handler for input box.
 INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-		}
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK) {
-			const static int LENGTH = 512;
-			wchar_t*  wc = new wchar_t[LENGTH];
-			wmemset(wc, 0, LENGTH);
-			GetDlgItemText(hDlg, IDC_PLACE, wc, LENGTH);
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK)
+        {
+            const static int LENGTH = 512;
+            wchar_t* wc = new wchar_t[LENGTH];
+            wmemset(wc, 0, LENGTH);
+            GetDlgItemText(hDlg, IDC_PLACE, wc, LENGTH);
 
-			CStringW place(wc);
+            CStringW place(wc);
 
-			if (place.IsEmpty()) {
-				delete[] wc;
+            if (place.IsEmpty())
+            {
+                delete[] wc;
 
-				MessageBox(hDlg, L" ‰»Îπ€≤Ïµ„≤ªƒ‹Œ™ø’£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				break;
-			}
+                MessageBox(hDlg, L"ËæìÂÖ•ËßÇÂØüÁÇπ‰∏çËÉΩ‰∏∫Á©∫ÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                break;
+            }
 
-			wmemset(wc, 0, LENGTH);
-			GetDlgItemText(hDlg, IDC_INPUT_DATE, wc, LENGTH);
+            wmemset(wc, 0, LENGTH);
+            GetDlgItemText(hDlg, IDC_INPUT_DATE, wc, LENGTH);
 
-			CStringW month(wc);
+            CStringW month(wc);
 
-			CStringW errInfo;
-			CStringW date;
-			if (!month.IsEmpty()) {
-				date.Format(L"%s01", month);
-			}
+            CStringW errInfo;
+            CStringW date;
+            if (!month.IsEmpty())
+            {
+                date.Format(L"%s01", month);
+            }
 
-			if (month.IsEmpty() || !game.checkDate(date)) {
-				delete[] wc;
+            if (month.IsEmpty() || !game.checkDate(date))
+            {
+                delete[] wc;
 
-				MessageBox(hDlg, L" ‰»ÎƒÍ∑›”Î‘¬∑›∏Ò Ω≤ª’˝»∑£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				SetDlgItemText(hDlg, IDC_INPUT_DATE, L"");
-				break;
-			}
+                MessageBox(hDlg, L"ËæìÂÖ•Âπ¥‰ªΩ‰∏éÊúà‰ªΩÊ†ºÂºè‰∏çÊ≠£Á°ÆÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                SetDlgItemText(hDlg, IDC_INPUT_DATE, L"");
+                break;
+            }
 
 #if 1
-			// Check and input data.
-			std::vector<int> clearIndex;
-			CStringW day;
-			CStringW data;
-			for (int i = 0; i < 6; i++) {
-				day.Empty();
-				data.Empty();
+            // Check and input data.
+            std::vector<int> clearIndex;
+            CStringW day;
+            CStringW data;
+            for (int i = 0; i < 6; i++)
+            {
+                day.Empty();
+                data.Empty();
 
-				int dateDlgId = IDC_DATE1 + i;
-				int dataDlgId = IDC_DATA1 + i;
+                int dateDlgId = IDC_DATE1 + i;
+                int dataDlgId = IDC_DATA1 + i;
 
-				// get date.
-				wmemset(wc, 0, LENGTH);
-				GetDlgItemText(hDlg, dateDlgId, wc, LENGTH);
-				day.Format(L"%s", wc);
-				if (day.GetLength() == 1) {
+                // get date.
+                wmemset(wc, 0, LENGTH);
+                GetDlgItemText(hDlg, dateDlgId, wc, LENGTH);
+                day.Format(L"%s", wc);
+                if (day.GetLength() == 1)
+                {
+                    // day.Format(L"0%s", day);
+                    day = L"0" + day;
+                }
 
-					//day.Format(L"0%s", day);
-					day = L"0" + day;
-				}
+                // check date.
+                if (!day.IsEmpty())
+                {
+                    date.Format(L"%s%s", month, day);
 
-				// check date.
-				if (!day.IsEmpty()) {
-					date.Format(L"%s%s", month, day);
+                    if (!game.checkDate(date))
+                    {
+                        errInfo.Format(L"ËæìÂÖ•Êó•Â≠êÔºà%sÔºâ‰∏çÂêàÊ≥ïÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", day);
+                        MessageBox(hDlg, errInfo, L"ÈîôËØØ", MB_OK);
+                        SetDlgItemText(hDlg, dateDlgId, L"");
+                        break;
+                    }
 
-					if (!game.checkDate(date)) {
-						errInfo.Format(L" ‰»Î»’◊”£®%s£©≤ª∫œ∑®£¨«Î÷ÿ–¬ ‰»Î£°", day);
-						MessageBox(hDlg, errInfo, L"¥ÌŒÛ", MB_OK);
-						SetDlgItemText(hDlg, dateDlgId, L"");
-						break;
-					}
+                    // get tide data.
+                    wmemset(wc, 0, LENGTH);
+                    GetDlgItemText(hDlg, dataDlgId, wc, LENGTH);
+                    data.Format(L"%s", wc);
 
-					// get tide data.
-					wmemset(wc, 0, LENGTH);
-					GetDlgItemText(hDlg, dataDlgId, wc, LENGTH);
-					data.Format(L"%s", wc);
+                    if (data.IsEmpty() || !game.formatInputData(data) || !game.checkInputData(data))
+                    {
+                        errInfo.Format(L"ËæìÂÖ•%sÂè∑ÁöÑÊΩÆÈ´òÊï∞ÊçÆ‰∏çÁ¨¶ÂêàÊ†ºÂºèÔºåÊ£ÄÊü•ÂêéËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", day);
+                        MessageBox(hDlg, errInfo, L"ÈîôËØØ", MB_OK);
+                        break;
+                    }
 
-					if (data.IsEmpty() || !game.formatInputData(data) || !game.checkInputData(data)) {
-						errInfo.Format(L" ‰»Î%s∫≈µƒ≥±∏ﬂ ˝æ›≤ª∑˚∫œ∏Ò Ω£¨ºÏ≤È∫Û«Î÷ÿ–¬ ‰»Î£°", day);
-						MessageBox(hDlg, errInfo, L"¥ÌŒÛ", MB_OK);
-						break;
-					}
+                    if (game.inputData(place, date, data))
+                    {
+                        clearIndex.push_back(i);
+                    }
+                    else
+                    {
+                        errInfo.Format(L"Êä±Ê≠âÔºåÂΩïÂÖ•%dÂè∑ÁöÑÊï∞ÊçÆÊó∂ÂèëÁîü‰∫ÜÈîôËØØÔºÅ\nËØ∑ÈáçËØïÊàñÊä•ÂëäÈîôËØØ(l_zhaohui@163.com)",
+                                       day);
+                        MessageBox(hDlg, errInfo, L"ÈîôËØØ", MB_OK);
+                    }
+                }
+            }
 
-					if (game.inputData(place, date, data)) {
-						clearIndex.push_back(i);
-					}
-					else {
-						errInfo.Format(L"±ß«∏£¨¬º»Î%d∫≈µƒ ˝æ› ±∑¢…˙¡À¥ÌŒÛ£°\n«Î÷ÿ ‘ªÚ±®∏Ê¥ÌŒÛ(l_zhaohui@163.com)", day);
-						MessageBox(hDlg, errInfo, L"¥ÌŒÛ", MB_OK);
-					}
-				}
-			}
+            delete[] wc;
 
-			delete[] wc;
+            if (clearIndex.size() > 0)
+            {
+                game.inputPlace(place);
 
-			if (clearIndex.size() > 0) {
-				game.inputPlace(place);
+                errInfo.Format(L"ÊàêÂäüÂΩïÂÖ•%dÂ§©ÁöÑÊï∞ÊçÆÔºÅ", clearIndex.size());
+                MessageBox(hDlg, errInfo, L"ÊÅ≠Âñú", MB_OK);
+            }
 
-				errInfo.Format(L"≥…π¶¬º»Î%dÃÏµƒ ˝æ›£°", clearIndex.size());
-				MessageBox(hDlg, errInfo, L"πßœ≤", MB_OK);
-			}
-
-			for (size_t i = 0; i < clearIndex.size(); i++) {
-				SetDlgItemText(hDlg, IDC_DATE1 + clearIndex[i], L"");
-				SetDlgItemText(hDlg, IDC_DATA1 + clearIndex[i], L"");
-			}
+            for (size_t i = 0; i < clearIndex.size(); i++)
+            {
+                SetDlgItemText(hDlg, IDC_DATE1 + clearIndex[i], L"");
+                SetDlgItemText(hDlg, IDC_DATA1 + clearIndex[i], L"");
+            }
 
 #else
-			wmemset(wc, 0, LENGTH);
-			GetDlgItemText(hDlg, IDC_TIDE_DATA, wc, LENGTH);
-
-			CStringW tideData(wc);
-			delete[] wc;
-
-			if (tideData.IsEmpty() || !game.formatInputData(tideData) || !game.checkInputData(tideData)) {
-				MessageBox(hDlg, L" ‰»Î ±º‰”Î≥±∏ﬂ ˝æ›≤ª∑˚∫œ∏Ò Ω£¨ºÏ≤È∫Û«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				break;
-			}
-
-			if (game.inputData(place, date, tideData)) {
-
-				//EndDialog(hDlg, LOWORD(wParam));
-				CStringW info;
-				info.Format(L"%s£¨%sƒÍ%s‘¬%s»’µƒ ˝æ›¬º»Î≥…π¶£°", place, date.Left(4), date.Mid(4, 2), date.Mid(6, 2));
-				MessageBox(hDlg, info, L"πßœ≤", MB_OK);
-
-				//SetDlgItemText(hDlg, IDC_INPUT_DATE, L"");
-				SetDlgItemText(hDlg, IDC_TIDE_DATA, L"");
-			}
-			else {
-				MessageBox(
-					hDlg,
-					L"±ß«∏£¨ ˝æ›¬º»Îµƒ ±∫Ú∑¢…˙¡À¥ÌŒÛ£°\n«Î÷ÿ ‘ªÚ±®∏Ê¥ÌŒÛ(l_zhaohui@163.com)",
-					L"¥ÌŒÛ",
-					MB_OK);
-			}
+            wmemset(wc, 0, LENGTH);
+            GetDlgItemText(hDlg, IDC_TIDE_DATA, wc, LENGTH);
+            CStringW tideData(wc);
+            delete[] wc;
+            if (tideData.IsEmpty() || !game.formatInputData(tideData) || !game.checkInputData(tideData))
+            {
+                MessageBox(hDlg, L"ËæìÂÖ•Êó∂Èó¥‰∏éÊΩÆÈ´òÊï∞ÊçÆ‰∏çÁ¨¶ÂêàÊ†ºÂºèÔºåÊ£ÄÊü•ÂêéËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                break;
+            }
+            if (game.inputData(place, date, tideData))
+            {
+                // EndDialog(hDlg, LOWORD(wParam));
+                CStringW info;
+                info.Format(L"%sÔºå%sÂπ¥%sÊúà%sÊó•ÁöÑÊï∞ÊçÆÂΩïÂÖ•ÊàêÂäüÔºÅ", place, date.Left(4), date.Mid(4, 2), date.Mid(6, 2));
+                MessageBox(hDlg, info, L"ÊÅ≠Âñú", MB_OK);
+                // SetDlgItemText(hDlg, IDC_INPUT_DATE, L"");
+                SetDlgItemText(hDlg, IDC_TIDE_DATA, L"");
+            }
+            else
+            {
+                MessageBox(hDlg, L"Êä±Ê≠âÔºåÊï∞ÊçÆÂΩïÂÖ•ÁöÑÊó∂ÂÄôÂèëÁîü‰∫ÜÈîôËØØÔºÅ\nËØ∑ÈáçËØïÊàñÊä•ÂëäÈîôËØØ(l_zhaohui@163.com)", L"ÈîôËØØ", MB_OK);
+            }
 #endif
-		}
-		else if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+        }
+        else if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 // Message handler for input data ex box.
 INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-			HWND hPwd = ::GetDlgItem(hDlg, IDC_DATA_FILE);
-			if (hPwd) {
-				::SetFocus(hPwd);
-			}
-		}
+        HWND hPwd = ::GetDlgItem(hDlg, IDC_DATA_FILE);
+        if (hPwd)
+        {
+            ::SetFocus(hPwd);
+        }
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDE_INPUT_DATA_EX) {
-		
-			wchar_t*  wc = new wchar_t[MAX_PATH];
-			wmemset(wc, 0, MAX_PATH);
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDE_INPUT_DATA_EX)
+        {
+            wchar_t* wc = new wchar_t[MAX_PATH];
+            wmemset(wc, 0, MAX_PATH);
 
-			GetDlgItemText(hDlg, IDC_PLACE, wc, MAX_PATH);
-			CStringW place(wc);
-			if (place.IsEmpty()) {
-				delete[] wc;
+            GetDlgItemText(hDlg, IDC_PLACE, wc, MAX_PATH);
+            CStringW place(wc);
+            if (place.IsEmpty())
+            {
+                delete[] wc;
 
-				MessageBox(hDlg, L" ‰»Îπ€≤Ïµ„≤ªƒ‹Œ™ø’£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				break;
-			}
+                MessageBox(hDlg, L"ËæìÂÖ•ËßÇÂØüÁÇπ‰∏çËÉΩ‰∏∫Á©∫ÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                break;
+            }
 
-			wmemset(wc, 0, MAX_PATH);
-			GetDlgItemText(hDlg, IDC_DATA_FILE, wc, MAX_PATH);
+            wmemset(wc, 0, MAX_PATH);
+            GetDlgItemText(hDlg, IDC_DATA_FILE, wc, MAX_PATH);
 
-			CStringW filePath(wc);
-			delete[] wc;
-			wc = NULL;
+            CStringW filePath(wc);
+            delete[] wc;
+            wc = NULL;
 
-			if (filePath.IsEmpty() || filePath == L"") {
-				MessageBox(hDlg, L"«Îœ»µº»Î ˝æ›Œƒº˛£°", L"¥ÌŒÛ", MB_OK);
-			}
-			else {
-				CStringW resultInfo;
-				bool isSuccess = game.inputDataEx(filePath, place, resultInfo);
-				
-				SetDlgItemText(hDlg, IDC_INFO, resultInfo);
-				MessageBox(hDlg, resultInfo, isSuccess?L"πßœ≤":L"¥ÌŒÛ", MB_OK);
-				
-				if (isSuccess) {
-					SetDlgItemText(hDlg, IDC_DATA_FILE, L"");
-				}
-			}
+            if (filePath.IsEmpty() || filePath == L"")
+            {
+                MessageBox(hDlg, L"ËØ∑ÂÖàÂØºÂÖ•Êï∞ÊçÆÊñá‰ª∂ÔºÅ", L"ÈîôËØØ", MB_OK);
+            }
+            else
+            {
+                CStringW resultInfo;
+                bool isSuccess = game.inputDataEx(filePath, place, resultInfo);
 
-			return(INT_PTR) TRUE;
-		}
-		else if (LOWORD(wParam) == IDC_SEARCH_DATA_FILE) {
+                SetDlgItemText(hDlg, IDC_INFO, resultInfo);
+                MessageBox(hDlg, resultInfo, isSuccess ? L"ÊÅ≠Âñú" : L"ÈîôËØØ", MB_OK);
 
-			// ¥Úø™µº»ÎŒƒº˛∂‘ª∞øÚ
-			OPENFILENAME ofn;	// π´π≤∂‘ª∞øÚΩ·ππ°£
-			TCHAR szFile[MAX_PATH]; // ±£¥ÊªÒ»°Œƒº˛√˚≥∆µƒª∫≥Â«¯°£
+                if (isSuccess)
+                {
+                    SetDlgItemText(hDlg, IDC_DATA_FILE, L"");
+                }
+            }
 
-			// ≥ı ºªØ—°‘ÒŒƒº˛∂‘ª∞øÚ°£
-			ZeroMemory(&ofn, sizeof(ofn));
-			ofn.lStructSize = sizeof(ofn);
-			ofn.hwndOwner = hDlg;
-			ofn.lpstrFile = szFile;
-			ofn.lpstrFile[0] = _T('\0');
-			ofn.nMaxFile = sizeof(szFile);
-			ofn.lpstrFilter = _T("Œƒ±æŒƒº˛\0*.txt\0\0");
-			ofn.nFilterIndex = 1;
-			ofn.lpstrFileTitle = NULL;
-			ofn.nMaxFileTitle = 0;
-			ofn.lpstrInitialDir = NULL;
-			ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDC_SEARCH_DATA_FILE)
+        {
+            // ÊâìÂºÄÂØºÂÖ•Êñá‰ª∂ÂØπËØùÊ°Ü
+            OPENFILENAME ofn;        // ÂÖ¨ÂÖ±ÂØπËØùÊ°ÜÁªìÊûÑ„ÄÇ
+            TCHAR szFile[MAX_PATH];  // ‰øùÂ≠òËé∑ÂèñÊñá‰ª∂ÂêçÁß∞ÁöÑÁºìÂÜ≤Âå∫„ÄÇ
 
-			//ofn.lpTemplateName =  MAKEINTRESOURCE(ID_TEMP_DIALOG);
-			// œ‘ æ¥Úø™—°‘ÒŒƒº˛∂‘ª∞øÚ°£
-			if (GetOpenFileName(&ofn)) {
-				CStringW filePath(szFile);
+            // ÂàùÂßãÂåñÈÄâÊã©Êñá‰ª∂ÂØπËØùÊ°Ü„ÄÇ
+            ZeroMemory(&ofn, sizeof(ofn));
+            ofn.lStructSize = sizeof(ofn);
+            ofn.hwndOwner = hDlg;
+            ofn.lpstrFile = szFile;
+            ofn.lpstrFile[0] = _T('\0');
+            ofn.nMaxFile = sizeof(szFile);
+            ofn.lpstrFilter = _T("ÊñáÊú¨Êñá‰ª∂\0*.txt\0\0");
+            ofn.nFilterIndex = 1;
+            ofn.lpstrFileTitle = NULL;
+            ofn.nMaxFileTitle = 0;
+            ofn.lpstrInitialDir = NULL;
+            ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-				CStringW place, date, resultInfo;
-				bool isSuccess = game.checkInputDataEx(filePath, place, date, resultInfo);
-				
-				SetDlgItemText(hDlg, IDC_INFO, resultInfo);
-				if (isSuccess) {
-					SetDlgItemText(hDlg, IDC_DATA_FILE, szFile);
-				}
-				else {
-					SetDlgItemText(hDlg, IDC_DATA_FILE, L"");
-					MessageBox(hDlg, resultInfo, L"¥ÌŒÛ", MB_OK);
-				}
-			}
-		}
-		else if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+            // ofn.lpTemplateName =  MAKEINTRESOURCE(ID_TEMP_DIALOG);
+            // ÊòæÁ§∫ÊâìÂºÄÈÄâÊã©Êñá‰ª∂ÂØπËØùÊ°Ü„ÄÇ
+            if (GetOpenFileName(&ofn))
+            {
+                CStringW filePath(szFile);
 
-	return(INT_PTR) FALSE;
+                CStringW place, date, resultInfo;
+                bool isSuccess = game.checkInputDataEx(filePath, place, date, resultInfo);
+
+                SetDlgItemText(hDlg, IDC_INFO, resultInfo);
+                if (isSuccess)
+                {
+                    SetDlgItemText(hDlg, IDC_DATA_FILE, szFile);
+                }
+                else
+                {
+                    SetDlgItemText(hDlg, IDC_DATA_FILE, L"");
+                    MessageBox(hDlg, resultInfo, L"ÈîôËØØ", MB_OK);
+                }
+            }
+        }
+        else if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
+
+    return (INT_PTR)FALSE;
 }
-
 
 // Message handler for computer deepth box.
 INT_PTR CALLBACK ComputeDeepthCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-			
-			// …Ë∂®≥ı÷µ
-			CStringW place;
-			int boat = 0;
-			int water = 0;
-			int sea = 0;
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-			game.getRichness(true, place, boat, water, sea);
-			SetDlgItemText(hDlg, IDC_PLACE_ONE, place);
-			SetDlgItemInt(hDlg, IDC_BOAT_ONE, boat, true);
-			SetDlgItemInt(hDlg, IDC_WATER_ONE, water, true);
-			SetDlgItemInt(hDlg, IDC_SEA_ONE, sea, true);
+        // ËÆæÂÆöÂàùÂÄº
+        CStringW place;
+        int boat = 0;
+        int water = 0;
+        int sea = 0;
 
-			game.getRichness(false, place, boat, water, sea);
-			SetDlgItemText(hDlg, IDC_PLACE_TWO, place);
-			SetDlgItemInt(hDlg, IDC_BOAT_TWO, boat, true);
-			SetDlgItemInt(hDlg, IDC_WATER_TWO, water, true);
-			SetDlgItemInt(hDlg, IDC_SEA_TWO, sea, true);
+        game.getRichness(true, place, boat, water, sea);
+        SetDlgItemText(hDlg, IDC_PLACE_ONE, place);
+        SetDlgItemInt(hDlg, IDC_BOAT_ONE, boat, true);
+        SetDlgItemInt(hDlg, IDC_WATER_ONE, water, true);
+        SetDlgItemInt(hDlg, IDC_SEA_ONE, sea, true);
 
-			// ∏¸–¬Ω·π˚
-			updateResultOne(hDlg, false);
-			updateResultTwo(hDlg, false);
-		}
+        game.getRichness(false, place, boat, water, sea);
+        SetDlgItemText(hDlg, IDC_PLACE_TWO, place);
+        SetDlgItemInt(hDlg, IDC_BOAT_TWO, boat, true);
+        SetDlgItemInt(hDlg, IDC_WATER_TWO, water, true);
+        SetDlgItemInt(hDlg, IDC_SEA_TWO, sea, true);
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		else if (LOWORD(wParam) == IDC_COMPUTE_ONE)
-		{
-			updateResultOne(hDlg);
-		}
-		else if (LOWORD(wParam) == IDC_COMPUTE_TWO)
-		{
-			updateResultTwo(hDlg);
-		}
+        // Êõ¥Êñ∞ÁªìÊûú
+        updateResultOne(hDlg, false);
+        updateResultTwo(hDlg, false);
+    }
 
-		else if(LOWORD(wParam) == IDOK )
-		{
-			updateResultOne(hDlg);
-			updateResultTwo(hDlg);
-		}
-		break;
-	}
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDC_COMPUTE_ONE)
+        {
+            updateResultOne(hDlg);
+        }
+        else if (LOWORD(wParam) == IDC_COMPUTE_TWO)
+        {
+            updateResultTwo(hDlg);
+        }
 
-	return(INT_PTR) FALSE;
+        else if (LOWORD(wParam) == IDOK)
+        {
+            updateResultOne(hDlg);
+            updateResultTwo(hDlg);
+        }
+        break;
+    }
+
+    return (INT_PTR)FALSE;
 }
 
 void updateResultOne(HWND hDlg, bool needSave)
 {
-	wchar_t*  wc = new wchar_t[MAX_PATH];
-	wmemset(wc, 0, MAX_PATH);
+    wchar_t* wc = new wchar_t[MAX_PATH];
+    wmemset(wc, 0, MAX_PATH);
 
-	const int UNKOWN = -10000;
-	int boat = UNKOWN;
-	int water = UNKOWN;
-	int sea = UNKOWN;
-	int result = 0;
-	CStringW strResult(L"");
-	CStringW place(L"");
+    const int UNKOWN = -10000;
+    int boat = UNKOWN;
+    int water = UNKOWN;
+    int sea = UNKOWN;
+    int result = 0;
+    CStringW strResult(L"");
+    CStringW place(L"");
 
-	GetDlgItemText(hDlg, IDC_PLACE_ONE, wc, MAX_PATH);
-	place.Format(L"%s", wc);
-	wmemset(wc, 0, MAX_PATH);
+    GetDlgItemText(hDlg, IDC_PLACE_ONE, wc, MAX_PATH);
+    place.Format(L"%s", wc);
+    wmemset(wc, 0, MAX_PATH);
 
-	GetDlgItemText(hDlg, IDC_BOAT_ONE, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		boat = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_BOAT_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        boat = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_WATER_ONE, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		water = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_WATER_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        water = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_SEA_ONE, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		sea = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_SEA_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        sea = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	delete[] wc;
-	wc = NULL;
+    delete[] wc;
+    wc = NULL;
 
-	if (boat != UNKOWN && sea != UNKOWN && water != UNKOWN)
-	{
-		result = int(boat * water / 100) - sea;
-		strResult.Format(L"%d", result);
+    if (boat != UNKOWN && sea != UNKOWN && water != UNKOWN)
+    {
+        result = int(boat * water / 100) - sea;
+        strResult.Format(L"%d", result);
 
-		if (needSave)
-		{
-			game.setRichness(true, place, boat, water, sea);
-		}
-	}
+        if (needSave)
+        {
+            game.setRichness(true, place, boat, water, sea);
+        }
+    }
 
-	SetDlgItemText(hDlg, IDC_RESULT_ONE, strResult);
+    SetDlgItemText(hDlg, IDC_RESULT_ONE, strResult);
 }
 
 void updateResultTwo(HWND hDlg, bool needSave)
 {
-	wchar_t*  wc = new wchar_t[MAX_PATH];
-	wmemset(wc, 0, MAX_PATH);
+    wchar_t* wc = new wchar_t[MAX_PATH];
+    wmemset(wc, 0, MAX_PATH);
 
-	const int UNKOWN = -10000;
-	int boat = UNKOWN;
-	int water = UNKOWN;
-	int sea = UNKOWN;
-	int result = 0;
-	CStringW strResult(L"");
-	CStringW place(L"");
+    const int UNKOWN = -10000;
+    int boat = UNKOWN;
+    int water = UNKOWN;
+    int sea = UNKOWN;
+    int result = 0;
+    CStringW strResult(L"");
+    CStringW place(L"");
 
-	GetDlgItemText(hDlg, IDC_PLACE_TWO, wc, MAX_PATH);
-	place.Format(L"%s", wc);
-	wmemset(wc, 0, MAX_PATH);
+    GetDlgItemText(hDlg, IDC_PLACE_TWO, wc, MAX_PATH);
+    place.Format(L"%s", wc);
+    wmemset(wc, 0, MAX_PATH);
 
-	GetDlgItemText(hDlg, IDC_BOAT_TWO, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		boat = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_BOAT_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        boat = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_WATER_TWO, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		water = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_WATER_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        water = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_SEA_TWO, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		sea = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_SEA_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        sea = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	delete[] wc;
-	wc = NULL;
+    delete[] wc;
+    wc = NULL;
 
-	if (boat != UNKOWN && sea != UNKOWN && water != UNKOWN)
-	{
-		result =  boat + water - sea;
-		strResult.Format(L"%d", result);
+    if (boat != UNKOWN && sea != UNKOWN && water != UNKOWN)
+    {
+        result = boat + water - sea;
+        strResult.Format(L"%d", result);
 
-		if (needSave)
-		{
-			game.setRichness(false, place, boat, water, sea);
-		}
-	}
+        if (needSave)
+        {
+            game.setRichness(false, place, boat, water, sea);
+        }
+    }
 
-	SetDlgItemText(hDlg, IDC_RESULT_TWO, strResult);
+    SetDlgItemText(hDlg, IDC_RESULT_TWO, strResult);
 }
 
-// º∆À„…œ––£∫±±≤€¥¨≤∞◊Ó¥Û≥‘ÀÆ
+// ËÆ°ÁÆó‰∏äË°åÔºöÂåóÊßΩËàπËà∂ÊúÄÂ§ßÂêÉÊ∞¥
 INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-		HWND parent = ::GetParent(hDlg);
-		RECT rcParent = {0,0,0,0};
-		RECT rcDlg = {0,0,0,0};
-		::GetWindowRect(parent, &rcParent);
-		::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-		int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-		int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-		::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-	}
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    }
 
-	return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
 
-		else if(LOWORD(wParam) == IDOK )
-		{
-			updateWaterHeightResultOne(hDlg);
-			updateWaterHeightResultTwo(hDlg);
-		}
+        else if (LOWORD(wParam) == IDOK)
+        {
+            updateWaterHeightResultOne(hDlg);
+            updateWaterHeightResultTwo(hDlg);
+        }
 
-		break;
-	}
-	return(INT_PTR) FALSE;
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
 
-// º∆À„…œ––£∫±±≤€DWT¥Û”⁄7.5ÕÚ∂÷¥¨≤∞◊Ó¥Û≥‘ÀÆ
+// ËÆ°ÁÆó‰∏äË°åÔºöÂåóÊßΩDWTÂ§ß‰∫é7.5‰∏áÂê®ËàπËà∂ÊúÄÂ§ßÂêÉÊ∞¥
 INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-		HWND parent = ::GetParent(hDlg);
-		RECT rcParent = {0,0,0,0};
-		RECT rcDlg = {0,0,0,0};
-		::GetWindowRect(parent, &rcParent);
-		::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-		int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-		int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-		::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-	}
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    }
 
-	return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
 
-		else if(LOWORD(wParam) == IDOK )
-		{
-			updateWaterHeightResultOne(hDlg);
-			updateWaterHeightResultTwo(hDlg);
-		}
+        else if (LOWORD(wParam) == IDOK)
+        {
+            updateWaterHeightResultOne(hDlg);
+            updateWaterHeightResultTwo(hDlg);
+        }
 
-		break;
-	}
-	return(INT_PTR) FALSE;
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
 
-// º∆À„œ¬––£∫±±≤€¥¨≤∞◊Ó¥Û≥‘ÀÆ
+// ËÆ°ÁÆó‰∏ãË°åÔºöÂåóÊßΩËàπËà∂ÊúÄÂ§ßÂêÉÊ∞¥
 INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-		case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-		}
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    }
 
-		return(INT_PTR) TRUE;
+        return (INT_PTR)TRUE;
 
-		case WM_COMMAND:
-			if (LOWORD(wParam) == IDCANCEL) {
-				EndDialog(hDlg, LOWORD(wParam));
-				return(INT_PTR) TRUE;
-			}
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
 
-			else if(LOWORD(wParam) == IDOK )
-			{
-				updateWaterHeightResultOne(hDlg);
-				updateWaterHeightResultTwo(hDlg);
-			}
+        else if (LOWORD(wParam) == IDOK)
+        {
+            updateWaterHeightResultOne(hDlg);
+            updateWaterHeightResultTwo(hDlg);
+        }
 
-			break;
-	}
-	return(INT_PTR) FALSE;
+        break;
+    }
+    return (INT_PTR)FALSE;
 }
 
 // Message handler for computer Eat Water box.
 INT_PTR CALLBACK ComputeEatWaterCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-		HWND parent = ::GetParent(hDlg);
-		RECT rcParent = {0,0,0,0};
-		RECT rcDlg = {0,0,0,0};
-		::GetWindowRect(parent, &rcParent);
-		::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-		int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-		int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-		::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-		// …Ë∂®≥ı÷µ
-		CStringW place;
-		int tide = 0;
-		int water = 0;
-		int sea = 0;
+        // ËÆæÂÆöÂàùÂÄº
+        CStringW place;
+        int tide = 0;
+        int water = 0;
+        int sea = 0;
 
-		game.getWaterHeight(true, place, tide, sea, water);
-		SetDlgItemText(hDlg, IDC_CEW_PLACE_ONE, place);
-		SetDlgItemInt(hDlg, IDC_CEW_TIDE_ONE, tide, true);
-		SetDlgItemInt(hDlg, IDC_CEW_SEA_ONE, sea, true);
-		SetDlgItemInt(hDlg, IDC_CEW_WATER_ONE, water, true);
+        game.getWaterHeight(true, place, tide, sea, water);
+        SetDlgItemText(hDlg, IDC_CEW_PLACE_ONE, place);
+        SetDlgItemInt(hDlg, IDC_CEW_TIDE_ONE, tide, true);
+        SetDlgItemInt(hDlg, IDC_CEW_SEA_ONE, sea, true);
+        SetDlgItemInt(hDlg, IDC_CEW_WATER_ONE, water, true);
 
-		game.getWaterHeight(false, place, tide, sea, water);
-		SetDlgItemText(hDlg, IDC_CEW_PLACE_TWO, place);
-		SetDlgItemInt(hDlg, IDC_CEW_TIDE_TWO, tide, true);
-		SetDlgItemInt(hDlg, IDC_CEW_SEA_TWO, sea, true);
-		SetDlgItemInt(hDlg, IDC_CEW_WATER_TWO, water, true);
+        game.getWaterHeight(false, place, tide, sea, water);
+        SetDlgItemText(hDlg, IDC_CEW_PLACE_TWO, place);
+        SetDlgItemInt(hDlg, IDC_CEW_TIDE_TWO, tide, true);
+        SetDlgItemInt(hDlg, IDC_CEW_SEA_TWO, sea, true);
+        SetDlgItemInt(hDlg, IDC_CEW_WATER_TWO, water, true);
 
-		// ∏¸–¬Ω·π˚
-		updateWaterHeightResultOne(hDlg, false);
-		updateWaterHeightResultTwo(hDlg, false);
-	}
+        // Êõ¥Êñ∞ÁªìÊûú
+        updateWaterHeightResultOne(hDlg, false);
+        updateWaterHeightResultTwo(hDlg, false);
+    }
 
-	return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
 
-		else if (LOWORD(wParam) == IDC_CEW_COMPUTER_ONE)
-		{
-			updateWaterHeightResultOne(hDlg);
-		}
-		else if (LOWORD(wParam) == IDC_CEW_COMPUTER_TWO)
-		{
-			updateWaterHeightResultTwo(hDlg);
-		}
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_ONE)
+        {
+            updateWaterHeightResultOne(hDlg);
+        }
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_TWO)
+        {
+            updateWaterHeightResultTwo(hDlg);
+        }
 
-		else if(LOWORD(wParam) == IDOK )
-		{
-			updateWaterHeightResultOne(hDlg);
-			updateWaterHeightResultTwo(hDlg);
-		}
+        else if (LOWORD(wParam) == IDOK)
+        {
+            updateWaterHeightResultOne(hDlg);
+            updateWaterHeightResultTwo(hDlg);
+        }
 
-		break;
-	}
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 void updateWaterHeightResultOne(HWND hDlg, bool needSave)
 {
-	wchar_t*  wc = new wchar_t[MAX_PATH];
-	wmemset(wc, 0, MAX_PATH);
+    wchar_t* wc = new wchar_t[MAX_PATH];
+    wmemset(wc, 0, MAX_PATH);
 
-	const int UNKOWN = -10000;
-	int water = UNKOWN;
-	int tide = UNKOWN;
-	int sea = UNKOWN;
-	int result = 0;
-	CStringW strResult(L"");
-	CStringW place(L"");
+    const int UNKOWN = -10000;
+    int water = UNKOWN;
+    int tide = UNKOWN;
+    int sea = UNKOWN;
+    int result = 0;
+    CStringW strResult(L"");
+    CStringW place(L"");
 
-	GetDlgItemText(hDlg, IDC_CEW_PLACE_ONE, wc, MAX_PATH);
-	place.Format(L"%s", wc);
-	wmemset(wc, 0, MAX_PATH);
+    GetDlgItemText(hDlg, IDC_CEW_PLACE_ONE, wc, MAX_PATH);
+    place.Format(L"%s", wc);
+    wmemset(wc, 0, MAX_PATH);
 
-	GetDlgItemText(hDlg, IDC_CEW_TIDE_ONE, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		tide = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_CEW_TIDE_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        tide = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_CEW_SEA_ONE, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		sea = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_CEW_SEA_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        sea = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_CEW_WATER_ONE, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		water = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_CEW_WATER_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        water = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	delete[] wc;
-	wc = NULL;
+    delete[] wc;
+    wc = NULL;
 
-	if (tide != UNKOWN && sea != UNKOWN && water != UNKOWN)
-	{
-		result =  int((tide + sea) * 100 / water);
-		strResult.Format(L"%d", result);
+    if (tide != UNKOWN && sea != UNKOWN && water != UNKOWN)
+    {
+        result = int((tide + sea) * 100 / water);
+        strResult.Format(L"%d", result);
 
-		if (needSave)
-		{
-			game.setWaterHeight(true, place, tide, sea, water);
-		}
-	}
+        if (needSave)
+        {
+            game.setWaterHeight(true, place, tide, sea, water);
+        }
+    }
 
-	SetDlgItemText(hDlg, IDC_CEW_RESULT_ONE, strResult);
+    SetDlgItemText(hDlg, IDC_CEW_RESULT_ONE, strResult);
 }
 
 void updateWaterHeightResultTwo(HWND hDlg, bool needSave)
 {
-	wchar_t*  wc = new wchar_t[MAX_PATH];
-	wmemset(wc, 0, MAX_PATH);
+    wchar_t* wc = new wchar_t[MAX_PATH];
+    wmemset(wc, 0, MAX_PATH);
 
-	const int UNKOWN = -10000;
-	int tide = UNKOWN;
-	int water = UNKOWN;
-	int sea = UNKOWN;
-	int result = 0;
-	CStringW strResult(L"");
-	CStringW place(L"");
+    const int UNKOWN = -10000;
+    int tide = UNKOWN;
+    int water = UNKOWN;
+    int sea = UNKOWN;
+    int result = 0;
+    CStringW strResult(L"");
+    CStringW place(L"");
 
-	GetDlgItemText(hDlg, IDC_CEW_PLACE_TWO, wc, MAX_PATH);
-	place.Format(L"%s", wc);
-	wmemset(wc, 0, MAX_PATH);
+    GetDlgItemText(hDlg, IDC_CEW_PLACE_TWO, wc, MAX_PATH);
+    place.Format(L"%s", wc);
+    wmemset(wc, 0, MAX_PATH);
 
-	GetDlgItemText(hDlg, IDC_CEW_TIDE_TWO, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		tide = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_CEW_TIDE_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        tide = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_CEW_SEA_TWO, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		sea = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_CEW_SEA_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        sea = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	GetDlgItemText(hDlg, IDC_CEW_WATER_TWO, wc, MAX_PATH);
-	if(wcslen(wc) > 0)
-	{
-		water = _wtoi(wc);
-		wmemset(wc, 0, MAX_PATH);
-	}
+    GetDlgItemText(hDlg, IDC_CEW_WATER_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        water = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
 
-	delete[] wc;
-	wc = NULL;
+    delete[] wc;
+    wc = NULL;
 
-	if (tide != UNKOWN && sea != UNKOWN && water != UNKOWN)
-	{
-		result = int(tide + sea - water);
-		strResult.Format(L"%d", result);
+    if (tide != UNKOWN && sea != UNKOWN && water != UNKOWN)
+    {
+        result = int(tide + sea - water);
+        strResult.Format(L"%d", result);
 
-		if (needSave)
-		{
-			game.setWaterHeight(false, place, tide, sea, water);
-		}
-	}
+        if (needSave)
+        {
+            game.setWaterHeight(false, place, tide, sea, water);
+        }
+    }
 
-	SetDlgItemText(hDlg, IDC_CEW_RESULT_TWO, strResult);
+    SetDlgItemText(hDlg, IDC_CEW_RESULT_TWO, strResult);
 }
 
 // Message handler for about box.
 INT_PTR CALLBACK AboutCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-		}
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 // Message handler for modify password box.
 INT_PTR CALLBACK ModifyCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-			HWND hPwd = ::GetDlgItem(hDlg, IDC_PWD);
-			if (hPwd) {
-				::SetFocus(hPwd);
-			}
-		}
+        HWND hPwd = ::GetDlgItem(hDlg, IDC_PWD);
+        if (hPwd)
+        {
+            ::SetFocus(hPwd);
+        }
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK) {
-			wchar_t*  wc = new wchar_t[40];
-			wmemset(wc, 0, 40);
-			GetDlgItemText(hDlg, IDC_OLD_PWD, wc, 40);
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK)
+        {
+            wchar_t* wc = new wchar_t[40];
+            wmemset(wc, 0, 40);
+            GetDlgItemText(hDlg, IDC_OLD_PWD, wc, 40);
 
-			CStringW oldPwd(wc);
+            CStringW oldPwd(wc);
 
-			wmemset(wc, 0, 40);
-			GetDlgItemText(hDlg, IDC_NEW_PWD, wc, 40);
+            wmemset(wc, 0, 40);
+            GetDlgItemText(hDlg, IDC_NEW_PWD, wc, 40);
 
-			CStringW newPwd(wc);
+            CStringW newPwd(wc);
 
-			delete[] wc;
-			wc = NULL;
+            delete[] wc;
+            wc = NULL;
 
-			if (!game.checkPassword(oldPwd)) {
-				MessageBox(hDlg, L"‘≠√‹¬Î≤ª’˝»∑£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				SetDlgItemText(hDlg, IDC_OLD_PWD, L"");
-			}
-			else if (newPwd.IsEmpty()) {
-				MessageBox(hDlg, L"–¬√‹¬Î≤ªƒ‹Œ™ø’£¨«Î ‰»Î–¬√‹¬Î£°", L"¥ÌŒÛ", MB_OK);
-				SetDlgItemText(hDlg, IDC_NEW_PWD, L"");
-			}
-			else if (newPwd.GetLength() > 24) {
-				MessageBox(hDlg, L"–¬√‹¬Î≥§∂»≤ªƒ‹≥¨π˝12£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				SetDlgItemText(hDlg, IDC_NEW_PWD, L"");
-			}
-			else {
-				EndDialog(hDlg, LOWORD(wParam));
+            if (!game.checkPassword(oldPwd))
+            {
+                MessageBox(hDlg, L"ÂéüÂØÜÁ†Å‰∏çÊ≠£Á°ÆÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                SetDlgItemText(hDlg, IDC_OLD_PWD, L"");
+            }
+            else if (newPwd.IsEmpty())
+            {
+                MessageBox(hDlg, L"Êñ∞ÂØÜÁ†Å‰∏çËÉΩ‰∏∫Á©∫ÔºåËØ∑ËæìÂÖ•Êñ∞ÂØÜÁ†ÅÔºÅ", L"ÈîôËØØ", MB_OK);
+                SetDlgItemText(hDlg, IDC_NEW_PWD, L"");
+            }
+            else if (newPwd.GetLength() > 24)
+            {
+                MessageBox(hDlg, L"Êñ∞ÂØÜÁ†ÅÈïøÂ∫¶‰∏çËÉΩË∂ÖËøá12ÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                SetDlgItemText(hDlg, IDC_NEW_PWD, L"");
+            }
+            else
+            {
+                EndDialog(hDlg, LOWORD(wParam));
 
-				game.modifyPassword(newPwd);
+                game.modifyPassword(newPwd);
 
-				MessageBox(hDlg, L"–¬√‹¬Î…Ë÷√≥…π¶£¨œ¬ªÿ«Î”√–¬√‹¬Î£°", L"πßœ≤", MB_OK);
-			}
+                MessageBox(hDlg, L"Êñ∞ÂØÜÁ†ÅËÆæÁΩÆÊàêÂäüÔºå‰∏ãÂõûËØ∑Áî®Êñ∞ÂØÜÁ†ÅÔºÅ", L"ÊÅ≠Âñú", MB_OK);
+            }
 
-			return(INT_PTR) TRUE;
-		}
-		else if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 // Message handler for look box.
 INT_PTR CALLBACK LookCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-			HWND hPwd = ::GetDlgItem(hDlg, IDC_PWD);
-			if (hPwd) {
-				::SetFocus(hPwd);
-			}
-		}
+        HWND hPwd = ::GetDlgItem(hDlg, IDC_PWD);
+        if (hPwd)
+        {
+            ::SetFocus(hPwd);
+        }
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK) {
-			wchar_t*  wc = new wchar_t[40];
-			wmemset(wc, 0, 40);
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK)
+        {
+            wchar_t* wc = new wchar_t[40];
+            wmemset(wc, 0, 40);
 
-			GetDlgItemText(hDlg, IDC_DATE, wc, 40);
+            GetDlgItemText(hDlg, IDC_DATE, wc, 40);
 
-			CStringW date(wc);
-			delete[] wc;
-			wc = NULL;
+            CStringW date(wc);
+            delete[] wc;
+            wc = NULL;
 
-			if (game.checkDate(date)) {
-				EndDialog(hDlg, LOWORD(wParam));
+            if (game.checkDate(date))
+            {
+                EndDialog(hDlg, LOWORD(wParam));
 
-				game.loadDay(date);
-			}
-			else {
-				MessageBox(hDlg, L" ‰»Î»’∆⁄∏Ò Ω≤ª’˝»∑£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				SetDlgItemText(hDlg, IDC_DATE, L"");
-			}
+                game.loadDay(date);
+            }
+            else
+            {
+                MessageBox(hDlg, L"ËæìÂÖ•Êó•ÊúüÊ†ºÂºè‰∏çÊ≠£Á°ÆÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                SetDlgItemText(hDlg, IDC_DATE, L"");
+            }
 
-			return(INT_PTR) TRUE;
-		}
-		else if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 // Message handler for login box.
 INT_PTR CALLBACK LoginCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(lParam);
-	switch (message) {
-	case WM_INITDIALOG: {
-			HWND parent = ::GetParent(hDlg);
-			RECT rcParent = {0,0,0,0};
-			RECT rcDlg = {0,0,0,0};
-			::GetWindowRect(parent, &rcParent);
-			::GetWindowRect(hDlg, &rcDlg);
+    UNREFERENCED_PARAMETER(lParam);
+    switch (message)
+    {
+    case WM_INITDIALOG:
+    {
+        HWND parent = ::GetParent(hDlg);
+        RECT rcParent = {0, 0, 0, 0};
+        RECT rcDlg = {0, 0, 0, 0};
+        ::GetWindowRect(parent, &rcParent);
+        ::GetWindowRect(hDlg, &rcDlg);
 
-			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
-			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+        int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+        int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
-			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+        ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-			HWND hPwd = ::GetDlgItem(hDlg, IDC_PWD);
-			if (hPwd) {
-				::SetFocus(hPwd);
-			}
-		}
+        HWND hPwd = ::GetDlgItem(hDlg, IDC_PWD);
+        if (hPwd)
+        {
+            ::SetFocus(hPwd);
+        }
+    }
 
-		return(INT_PTR) TRUE;
-	case WM_COMMAND:
-		if (LOWORD(wParam) == IDOK) {
-			wchar_t*  wc = new wchar_t[40];
-			wmemset(wc, 0, 40);
+        return (INT_PTR)TRUE;
+    case WM_COMMAND:
+        if (LOWORD(wParam) == IDOK)
+        {
+            wchar_t* wc = new wchar_t[40];
+            wmemset(wc, 0, 40);
 
-			GetDlgItemText(hDlg, IDC_PWD, wc, 40);
+            GetDlgItemText(hDlg, IDC_PWD, wc, 40);
 
-			CStringW pwd(wc);
-			delete[] wc;
-			wc = NULL;
+            CStringW pwd(wc);
+            delete[] wc;
+            wc = NULL;
 
-			if (game.checkPassword(pwd)) {
-				EndDialog(hDlg, LOWORD(wParam));
+            if (game.checkPassword(pwd))
+            {
+                EndDialog(hDlg, LOWORD(wParam));
 
-				game.loadToday();
-			}
-			else {
-				MessageBox(hDlg, L"√‹¬Î≤ª’˝»∑£¨«Î÷ÿ–¬ ‰»Î£°", L"¥ÌŒÛ", MB_OK);
-				SetDlgItemText(hDlg, IDC_PWD, L"");
-			}
+                game.loadToday();
+            }
+            else
+            {
+                MessageBox(hDlg, L"ÂØÜÁ†Å‰∏çÊ≠£Á°ÆÔºåËØ∑ÈáçÊñ∞ËæìÂÖ•ÔºÅ", L"ÈîôËØØ", MB_OK);
+                SetDlgItemText(hDlg, IDC_PWD, L"");
+            }
 
-			return(INT_PTR) TRUE;
-		}
-		else if (LOWORD(wParam) == IDCANCEL) {
-			EndDialog(hDlg, LOWORD(wParam));
-			return(INT_PTR) TRUE;
-		}
-		break;
-	}
+            return (INT_PTR)TRUE;
+        }
+        else if (LOWORD(wParam) == IDCANCEL)
+        {
+            EndDialog(hDlg, LOWORD(wParam));
+            return (INT_PTR)TRUE;
+        }
+        break;
+    }
 
-	return(INT_PTR) FALSE;
+    return (INT_PTR)FALSE;
 }
 
 //
@@ -1327,22 +1415,24 @@ INT_PTR CALLBACK LoginCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 //
 int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
 {
-	hInst = hinstance;
+    hInst = hinstance;
 
-	HWND hwnd = WinUtility::InitWindow(hinstance, _T("µÁ◊”≥±œ´Õº±Ì"), 820, 650, true);	//, 600, true);
-	if (!hwnd) {
-		::MessageBox(0, _T("Init game window - FAILED"), 0, 0);
-		return 0;
-	}
+    HWND hwnd = WinUtility::InitWindow(hinstance, _T("ÁîµÂ≠êÊΩÆÊ±êÂõæË°®"), 820, 650, true);  //, 600, true);
+    if (!hwnd)
+    {
+        ::MessageBox(0, _T("Init game window - FAILED"), 0, 0);
+        return 0;
+    }
 
-	if (!Setup(hwnd)) {
-		::MessageBox(0, _T("Setup() - FAILED"), 0, 0);
-		return 0;
-	}
+    if (!Setup(hwnd))
+    {
+        ::MessageBox(0, _T("Setup() - FAILED"), 0, 0);
+        return 0;
+    }
 
-	WinUtility::EnterMsgLoop(Display);
+    WinUtility::EnterMsgLoop(Display);
 
-	Cleanup();
+    Cleanup();
 
-	return 0;
+    return 0;
 }

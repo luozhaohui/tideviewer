@@ -1,14 +1,14 @@
-/*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)   
-*   All rights reserved.   
-*     
-*   ÎÄ¼şÃû³Æ£ºScriptManager.h   
-*   Õª    Òª£º´°¿Ú¸¨Öúº¯ÊıÍ·ÎÄ¼ş
-*     
-*   µ±Ç°°æ±¾£º1.1   
-*   ×÷    Õß£ºÆ®Æ®°×ÔÆ   
-*   Íê³ÉÈÕÆÚ£º2008/11/30
-*/
+/*
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   All rights reserved.
+ *
+ *   æ–‡ä»¶åç§°ï¼šScriptManager.h
+ *   æ‘˜    è¦ï¼šçª—å£è¾…åŠ©å‡½æ•°å¤´æ–‡ä»¶
+ *
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ */
 #pragma once
 #include <Windows.h>
 #include <string>
@@ -24,63 +24,68 @@
 #include <wchar.h>
 
 // ATL/WTL Header Files
-#include <atlbase.h>	//
-#include <atlapp.h> //
-#include <atlwin.h> // ATL
-#include <atlframe.h>	// WTL
-#include <atlmisc.h>	// WTL
-#include <atlcrack.h>	// WTL
+#include <atlbase.h>   //
+#include <atlapp.h>    //
+#include <atlwin.h>    // ATL
+#include <atlframe.h>  // WTL
+#include <atlmisc.h>   // WTL
+#include <atlcrack.h>  // WTL
 #include <atlstr.h>
-#include <atlcoll.h>	// CAtlArray
-#include <atlctrls.h>	// CImageList
+#include <atlcoll.h>   // CAtlArray
+#include <atlctrls.h>  // CImageList
 #include <map>
 #include <vector>
 #include <algorithm>
 
-#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS	// some CString constructors will be explicit
+#define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS  // some CString constructors will be explicit
 #ifdef USE_ATL_MODULE
-extern CComModule _Module;	// _Module
+extern CComModule _Module;  // _Module
 #else
-extern CAppModule _Module;	// WTL
+extern CAppModule _Module;  // WTL
 #endif
 #include <gdiplus.h>
 #pragma comment(lib, "gdiplus.lib")
-#define MAX_STRING_LENGTH	1024
+#define MAX_STRING_LENGTH 1024
 
 const static int DIG_MSG_LOGIN = 1000;
 const static int MENU_ID_START = 2000;
 
 #include "resource.h"
 
-namespace WinUtility {
-HWND InitWindow(
-		HINSTANCE hInstance,	// [in] Application instance.
-		TCHAR*	title,
-		int width,
-		int height, // [in] Backbuffer dimensions.
-		bool windowed	// [in] Windowed (true)or full screen (false).
-		);
+namespace WinUtility
+{
+HWND InitWindow(HINSTANCE hInstance,  // [in] Application instance.
+                TCHAR* title,
+                int width,
+                int height,    // [in] Backbuffer dimensions.
+                bool windowed  // [in] Windowed (true)or full screen (false).
+);
 
-int EnterMsgLoop(bool (*ptr_display) (float timeDelta));
+int EnterMsgLoop(bool (*ptr_display)(float timeDelta));
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 CStringA convertStringW2A(CStringW srcStr);
 CStringW convertStringA2W(CStringA srcStr);
 
-template<class T>
-void Release(T t) {
-	if (t) {
-		t->Release();
-		t = 0;
-	}
+template <class T>
+void Release(T t)
+{
+    if (t)
+    {
+        t->Release();
+        t = 0;
+    }
 }
 
-template<class T>
-void Delete(T t) {
-	if (t) {
-		delete t;
-		t = 0;
-	}
+template <class T>
+void Delete(T t)
+{
+    if (t)
+    {
+        delete t;
+        t = 0;
+    }
 }
-}
+
+}  // namespace WinUtility
