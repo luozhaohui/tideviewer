@@ -172,7 +172,7 @@ private:
     std::vector<TIDE_DATA> tideData;
     float maxMinTide[8];
 
-    wchar_t strLongLi[MAX_PATH];
+    CStringW strWNongLi;
     wchar_t today[MAX_PATH];
     wchar_t strDate[MAX_PATH];
     wchar_t strPlace[MAX_PATH];
@@ -248,6 +248,8 @@ private:
     CStringW getCurrentTimeString();
 
     void loadData(const CStringW& dateString, const CStringW& place);
+
+    bool loadRawData(const CStringW& dateString, const CStringW& place, std::vector<TIDE_DATA>& result, CStringW& nongLi);
 
     std::vector<CStringW> places;
 

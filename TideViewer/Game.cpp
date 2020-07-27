@@ -108,7 +108,7 @@ Game::Game()
 
     ZeroMemory(&maxMinTide, 8 * sizeof(float));
     ZeroMemory(&strDate, MAX_PATH * sizeof(wchar_t));
-    ZeroMemory(&strLongLi, MAX_PATH * sizeof(wchar_t));
+    // ZeroMemory(&strLongLi, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&strPlace, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&md5, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&placeOne, MAX_PATH * sizeof(wchar_t));
@@ -438,11 +438,12 @@ bool Game::inputPlace(const CStringW& place)
     return true;
 }
 
-void Game::loadData(const CStringW& dateString, const CStringW& place)
+bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
+                       std::vector<TIDE_DATA>& result, CStringW& nongLi)
 {
     if (place.IsEmpty() || place == L"")
     {
-        return;
+        return false;
     }
 
     CStringW info;
@@ -481,7 +482,7 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
         {
             // exit();
         }
-        return;
+        return false;
     }
 
     if (sptData.size() < 33)
@@ -493,17 +494,17 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
         {
             // exit();
         }
-        return;
+        return false;
     }
 
-    tideData.clear();
+    result.clear();
     for (int i = 8; i < 33; i++)
     {
         TIDE_DATA data;
         data.tide = sptData[i] * 1.0f;
         data.time = (i - 8) * 100.0f;
 
-        tideData.push_back(data);
+        result.push_back(data);
     }
 
     for (int i = 0; i < 4; i++)
@@ -517,16 +518,25 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
 
         if (sptData[i * 2 + 0] != 0 && sptData[i * 2 + 1] != 0)
         {
-            tideData.push_back(data);
+            result.push_back(data);
         }
     }
 
-    std::sort(tideData.begin(), tideData.end(), less);
+    std::sort(result.begin(), result.end(), less);
 
-    std::vector<TIDE_DATA>::iterator it = tideData.begin();
-    std::vector<TIDE_DATA>::iterator end = tideData.end();
+    // 农历
+    nongLi.Format(L"");
+    if (sptData.size() >= 8 + 25 + 1)
+    {
+        int index = sptData[33];
+        if (index >= 1 && index <= 31)
+        {
+            nongLi.Format(L"%s", strNums[index - 1]);
+        }
+    }
 
-    for (; it != end; it++)
+    // Log tide data
+    for (auto it = result.begin(); it != result.end(); it++)
     {
         const TIDE_DATA& data = (*it);
         PointF pt = getPosition(data);
@@ -535,19 +545,18 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
                      ((int)data.time) % 100, int(data.tide), pt.X, pt.Y);
     }
 
+    return true;
+}
+
+void Game::loadData(const CStringW& dateString, const CStringW& place)
+{
+    if (!loadRawData(dateString, place, tideData, strWNongLi))
+    {
+        return;
+    }
+
     swprintf_s(strDate, MAX_PATH, L"%s", dateString);
     swprintf_s(strPlace, MAX_PATH, L"%s", place);
-
-    ZeroMemory(&strLongLi, MAX_PATH * sizeof(wchar_t));
-
-    if (sptData.size() >= 8 + 25 + 1)
-    {
-        int index = sptData[33];
-        if (index >= 1 && index <= 31)
-        {
-            swprintf_s(strLongLi, MAX_PATH, L"%s", strNums[index - 1]);
-        }
-    }
 
     {
         for (int i = 0; i < 2; ++i)
@@ -790,9 +799,7 @@ void Game::draw()
         if (wcslen(strPlace) > 0 && wcslen(strDate) >= 8)
         {
             CStringW dateW(strDate);
-            CStringW longLiW(strLongLi);
-
-            if (longLiW.IsEmpty() || longLiW == L"")
+            if (strWNongLi.IsEmpty() || strWNongLi == L"")
             {
                 info.Format(L"%s年%s月%s日，%s潮高分布图", dateW.Mid(0, 4), dateW.Mid(4, 2),
                             dateW.Mid(6, 2), strPlace);
@@ -802,7 +809,7 @@ void Game::draw()
             else
             {
                 info.Format(L"%s年%s月%s日，农历%s，%s潮高分布图", dateW.Mid(0, 4), dateW.Mid(4, 2),
-                            dateW.Mid(6, 2), longLiW, strPlace);
+                            dateW.Mid(6, 2), strWNongLi, strPlace);
                 // drawTideString(&g, gdiBigFont, crBlack, info, 50, yLen + 70, true);
                 drawCenterString(&g, gdiBigFont, crBlack, info, yLen + 70);
             }
@@ -1218,7 +1225,8 @@ void Game::drawString(Gdiplus::Graphics* g, Gdiplus::Font* font, Gdiplus::Color 
     g->DrawString(string, string.GetLength(), font, rect, &format, &brush);
 }
 
-void Game::drawCenterString(Gdiplus::Graphics* g, Gdiplus::Font* font, Gdiplus::Color color, const CStringW& string, float y)
+void Game::drawCenterString(Gdiplus::Graphics* g, Gdiplus::Font* font, Gdiplus::Color color,
+                            const CStringW& string, float y)
 {
     if (!g || !font)
     {
