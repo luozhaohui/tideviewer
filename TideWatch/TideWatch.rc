@@ -13,13 +13,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Japanese resources
+// Japanese (Japan) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_JPN)
-#ifdef _WIN32
 LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 #pragma code_page(932)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -55,18 +53,16 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_ICON2               ICON                    "icon.ico"
-#endif    // Japanese resources
+#endif    // Japanese (Japan) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// Chinese (Simplified, PRC) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
-#ifdef _WIN32
 LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 #pragma code_page(936)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -236,6 +232,105 @@ BEGIN
     LTEXT           "百分之",IDC_STATIC,206,39,24,8
 END
 
+IDD_UP_DRAFT DIALOGEX 0, 0, 357, 115
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "上行：北槽船舶最大吃水"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "计　算",IDOK,82,88,50,14
+    PUSHBUTTON      "退　出",IDCANCEL,204,88,50,14
+    CTEXT           "最大可利用潮高(厘米)",IDC_STATIC,39,13,52,21
+    LTEXT           "海图水深(厘米)",IDC_STATIC,115,17,54,8
+    CTEXT           "富裕量/富裕水深(厘米)",IDC_STATIC,192,13,47,21
+    CTEXT           "船舶最大吃水(厘米)",IDC_STATIC,279,13,43,21
+    EDITTEXT        IDC_UP_MAX_TIDE_HEIGHT_ONE,44,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_SEA_CHART_DEPTH_ONE,115,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_WATER_RATIO_ONE,216,36,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_RESULT_ONE,282,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,176,39,8,10
+    LTEXT           "加",IDC_STATIC,99,39,8,10
+    LTEXT           "（",IDC_STATIC,34,39,9,8
+    LTEXT           "）",IDC_STATIC,164,39,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE,248,37,25,14
+    LTEXT           "百分之",IDC_STATIC,191,39,24,8
+    EDITTEXT        IDC_UP_MAX_TIDE_HEIGHT_TWO,44,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_SEA_CHART_DEPTH_TWO,115,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_WATER_RATIO_TWO,216,59,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_RESULT_TWO,282,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,176,62,8,10
+    LTEXT           "加",IDC_STATIC,99,62,8,10
+    LTEXT           "（",IDC_STATIC,34,62,9,8
+    LTEXT           "）",IDC_STATIC,164,62,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE2,248,60,25,14
+    LTEXT           "百分之",IDC_STATIC,191,62,24,8
+END
+
+IDD_UP_DWT_DRAFT DIALOGEX 0, 0, 357, 115
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "上行：北槽DWT大于7.5万吨船舶最大吃水"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "计　算",IDOK,82,88,50,14
+    PUSHBUTTON      "退　出",IDCANCEL,204,88,50,14
+    CTEXT           "最大可利用潮高(厘米)",IDC_STATIC,39,13,52,21
+    LTEXT           "海图水深(厘米)",IDC_STATIC,115,17,54,8
+    CTEXT           "富裕量/富裕水深(厘米)",IDC_STATIC,192,13,47,21
+    CTEXT           "船舶最大吃水(厘米)",IDC_STATIC,279,13,43,21
+    EDITTEXT        IDC_UP_MAX_TIDE_HEIGHT_ONE,44,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_SEA_CHART_DEPTH_ONE,115,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_WATER_RATIO_ONE,216,36,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_RESULT_ONE,282,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,176,39,8,10
+    LTEXT           "加",IDC_STATIC,99,39,8,10
+    LTEXT           "（",IDC_STATIC,34,39,9,8
+    LTEXT           "）",IDC_STATIC,164,39,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE,248,37,25,14
+    LTEXT           "百分之",IDC_STATIC,191,39,24,8
+    EDITTEXT        IDC_UP_MAX_TIDE_HEIGHT_TWO,44,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_SEA_CHART_DEPTH_TWO,115,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_WATER_RATIO_TWO,216,59,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_RESULT_TWO,282,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,176,62,8,10
+    LTEXT           "加",IDC_STATIC,99,62,8,10
+    LTEXT           "（",IDC_STATIC,34,62,9,8
+    LTEXT           "）",IDC_STATIC,164,62,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE2,248,60,25,14
+    LTEXT           "百分之",IDC_STATIC,191,62,24,8
+END
+
+IDD_DOWN_DRAFT DIALOGEX 0, 0, 357, 115
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "下行：北槽船舶最大吃水"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "计　算",IDOK,82,88,50,14
+    PUSHBUTTON      "退　出",IDCANCEL,204,88,50,14
+    CTEXT           "最大可利用潮高(厘米)",IDC_STATIC,39,13,52,21
+    LTEXT           "海图水深(厘米)",IDC_STATIC,115,17,54,8
+    CTEXT           "富裕量/富裕水深(厘米)",IDC_STATIC,192,13,47,21
+    CTEXT           "船舶最大吃水(厘米)",IDC_STATIC,279,13,43,21
+    EDITTEXT        IDC_UP_MAX_TIDE_HEIGHT_ONE,44,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_SEA_CHART_DEPTH_ONE,115,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_WATER_RATIO_ONE,216,36,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_RESULT_ONE,282,36,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,176,39,8,10
+    LTEXT           "加",IDC_STATIC,99,39,8,10
+    LTEXT           "（",IDC_STATIC,34,39,9,8
+    LTEXT           "）",IDC_STATIC,164,39,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE,248,37,25,14
+    LTEXT           "百分之",IDC_STATIC,191,39,24,8
+    EDITTEXT        IDC_UP_MAX_TIDE_HEIGHT_TWO,44,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_SEA_CHART_DEPTH_TWO,115,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_WATER_RATIO_TWO,216,59,23,14,ES_CENTER | ES_AUTOHSCROLL
+    EDITTEXT        IDC_UP_RESULT_TWO,282,59,45,14,ES_CENTER | ES_AUTOHSCROLL
+    LTEXT           "除",IDC_STATIC,176,62,8,10
+    LTEXT           "加",IDC_STATIC,99,62,8,10
+    LTEXT           "（",IDC_STATIC,34,62,9,8
+    LTEXT           "）",IDC_STATIC,164,62,9,8
+    PUSHBUTTON      "＝",IDC_CEW_COMPUTER_ONE2,248,60,25,14
+    LTEXT           "百分之",IDC_STATIC,191,62,24,8
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -243,7 +338,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_ABOUT, DIALOG
     BEGIN
@@ -316,6 +411,30 @@ BEGIN
         TOPMARGIN, 7
         BOTTOMMARGIN, 108
     END
+
+    IDD_UP_DRAFT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 350
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
+
+    IDD_UP_DWT_DRAFT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 350
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
+
+    IDD_DOWN_DRAFT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 350
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 108
+    END
 END
 #endif    // APSTUDIO_INVOKED
 
@@ -325,7 +444,7 @@ END
 // Menu
 //
 
-IDR_MENU1 MENU 
+IDR_MENU1 MENU
 BEGIN
     POPUP "系统"
     BEGIN
@@ -344,6 +463,10 @@ BEGIN
     BEGIN
         MENUITEM "富裕水深",                        ID_COMPUTER_DEEPTH
         MENUITEM "最大吃水",                        ID_COMPUTER_EAT_WATER
+        MENUITEM SEPARATOR
+        MENUITEM "上行：北槽船舶最大吃水",                 ID_UP_DRAFT
+        MENUITEM "上行：北槽DWT大于7.5万吨船舶最大吃水",       ID_UP_DWT_DRAFT
+        MENUITEM "下行：北槽船舶最大吃水",                 ID_DOWN_DRAFT
     END
     POPUP "帮助"
     BEGIN
@@ -352,7 +475,7 @@ BEGIN
     END
 END
 
-#endif    // Chinese (P.R.C.) resources
+#endif    // Chinese (Simplified, PRC) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

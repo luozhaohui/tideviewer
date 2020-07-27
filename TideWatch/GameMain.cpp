@@ -1,5 +1,5 @@
 /*   
-*   Copyright (c) 2008, 飘飘白云(l_zhaohui@163.com)   
+*   Copyright (c) 2008, 飘飘白云(kesalin@gmail.com)   
 *   All rights reserved.   
 *     
 *   文件名称：GameMain.cpp   
@@ -30,6 +30,9 @@ INT_PTR CALLBACK InputCallback(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK InputCallbackEx(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK ComputeDeepthCallback(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK ComputeEatWaterCallback(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK ComputeUpDraftCallback(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK ComputeDownDraftCallback(HWND, UINT, WPARAM, LPARAM);
 
 void updateResultOne(HWND hDlg, bool needSave = true);
 void updateResultTwo(HWND hDlg, bool needSave = true);
@@ -213,6 +216,21 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
 		else if (wParam == ID_COMPUTER_EAT_WATER) {
 			// 计算最大吃水
 			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTER_EAT_WATER), hwnd, ComputeEatWaterCallback);
+		}
+		
+		else if (wParam == ID_UP_DRAFT) {
+			// 计算上行：北槽船舶最大吃水
+			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DRAFT), hwnd, ComputeUpDraftCallback);
+		}
+		
+		else if (wParam == ID_UP_DWT_DRAFT) {
+			// 计算上行：北槽DWT大于7.5万吨船舶最大吃水
+			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DWT_DRAFT), hwnd, ComputeUpDWTDraftCallback);
+		}
+		
+		else if (wParam == ID_DOWN_DRAFT) {
+			// 计算下行：北槽船舶最大吃水
+			DialogBoxW(hInst, MAKEINTRESOURCE(IDD_DOWN_DRAFT), hwnd, ComputeDownDraftCallback);
 		}
 
 		else if (LOWORD(wParam) >= MENU_ID_START && LOWORD(wParam) < MENU_ID_START + game.getMenuMax()) {
@@ -799,6 +817,115 @@ void updateResultTwo(HWND hDlg, bool needSave)
 	}
 
 	SetDlgItemText(hDlg, IDC_RESULT_TWO, strResult);
+}
+
+// 计算上行：北槽船舶最大吃水
+INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message) {
+	case WM_INITDIALOG: {
+		HWND parent = ::GetParent(hDlg);
+		RECT rcParent = {0,0,0,0};
+		RECT rcDlg = {0,0,0,0};
+		::GetWindowRect(parent, &rcParent);
+		::GetWindowRect(hDlg, &rcDlg);
+
+		int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+		int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+
+		::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	}
+
+	return(INT_PTR) TRUE;
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDCANCEL) {
+			EndDialog(hDlg, LOWORD(wParam));
+			return(INT_PTR) TRUE;
+		}
+
+		else if(LOWORD(wParam) == IDOK )
+		{
+			updateWaterHeightResultOne(hDlg);
+			updateWaterHeightResultTwo(hDlg);
+		}
+
+		break;
+	}
+	return(INT_PTR) FALSE;
+}
+
+// 计算上行：北槽DWT大于7.5万吨船舶最大吃水
+INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message) {
+	case WM_INITDIALOG: {
+		HWND parent = ::GetParent(hDlg);
+		RECT rcParent = {0,0,0,0};
+		RECT rcDlg = {0,0,0,0};
+		::GetWindowRect(parent, &rcParent);
+		::GetWindowRect(hDlg, &rcDlg);
+
+		int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+		int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+
+		::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+	}
+
+	return(INT_PTR) TRUE;
+	case WM_COMMAND:
+		if (LOWORD(wParam) == IDCANCEL) {
+			EndDialog(hDlg, LOWORD(wParam));
+			return(INT_PTR) TRUE;
+		}
+
+		else if(LOWORD(wParam) == IDOK )
+		{
+			updateWaterHeightResultOne(hDlg);
+			updateWaterHeightResultTwo(hDlg);
+		}
+
+		break;
+	}
+	return(INT_PTR) FALSE;
+}
+
+// 计算下行：北槽船舶最大吃水
+INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message) {
+		case WM_INITDIALOG: {
+			HWND parent = ::GetParent(hDlg);
+			RECT rcParent = {0,0,0,0};
+			RECT rcDlg = {0,0,0,0};
+			::GetWindowRect(parent, &rcParent);
+			::GetWindowRect(hDlg, &rcDlg);
+
+			int x = int(rcParent.left + ((rcParent.right - rcParent.left) - (rcDlg.right - rcDlg.left)) / 2);
+			int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
+
+			::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+		}
+
+		return(INT_PTR) TRUE;
+
+		case WM_COMMAND:
+			if (LOWORD(wParam) == IDCANCEL) {
+				EndDialog(hDlg, LOWORD(wParam));
+				return(INT_PTR) TRUE;
+			}
+
+			else if(LOWORD(wParam) == IDOK )
+			{
+				updateWaterHeightResultOne(hDlg);
+				updateWaterHeightResultTwo(hDlg);
+			}
+
+			break;
+	}
+	return(INT_PTR) FALSE;
 }
 
 // Message handler for computer Eat Water box.

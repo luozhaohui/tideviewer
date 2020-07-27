@@ -1,5 +1,5 @@
 /*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(l_zhaohui@163.com)   
+*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)  
 *   All rights reserved.   
 *     
 *   ÎÄ¼þÃû³Æ£ºScriptManager.cpp   

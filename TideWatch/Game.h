@@ -1,5 +1,5 @@
 /*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(l_zhaohui@163.com)   
+*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)   
 *   All rights reserved.   
 *     
 *   ÎÄ¼þÃû³Æ£ºGame.h   
@@ -144,6 +144,29 @@ private:
 		float tide;
 		float time;
 	};
+
+	struct ChangeXinDraftData {
+		ChangeXinDraftData():
+			time(0),
+			upDraftOne(0),
+			upDraftTwo(0),
+			upDWTDraftOne(0),
+			upDWTDraftTwo(0),
+			downDraftOne(0),
+			downDraftTwo(0)
+		{
+		};
+
+		float time;
+		float upDraftOne;
+		float upDraftTwo;
+		float upDWTDraftOne;
+		float upDWTDraftTwo;
+		float downDraftOne;
+		float downDraftTwo;
+	};
+	
+	std::vector<ChangeXinDraftData> changeXinDraftData;
 
 	std::vector<TIDE_DATA> tideData;
 	float maxMinTide[8];

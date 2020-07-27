@@ -1,5 +1,5 @@
 /*   
-*   Copyright (c) 2008, 飘飘白云(l_zhaohui@163.com)   
+*   Copyright (c) 2008, 飘飘白云(kesalin@gmail.com) 
 *   All rights reserved.   
 *     
 *   文件名称：Game.cpp   
@@ -527,6 +527,28 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
 			swprintf_s(strLongLi, MAX_PATH, L"%s", strNums[index - 1]);
 		}
 	}
+
+	{
+		for (int i = 0; i < 2; ++i) {
+			ChangeXinDraftData dataOne;
+			if (i == 0) {
+				dataOne.time = 59;
+			}
+			else {
+				dataOne.time = 1337;
+			}
+
+			dataOne.upDraftOne = 479 + i * 80;
+			dataOne.upDraftTwo = 379 + i * 80;
+			dataOne.upDWTDraftOne = 279 + i * 80;
+			dataOne.upDWTDraftTwo = 179 + i * 80;
+			dataOne.downDraftOne = 579 + i * 80;
+			dataOne.downDraftTwo = 679 + i * 80;
+
+			changeXinDraftData.push_back(dataOne);
+		}
+	}
+	
 }
 
 void Game::getForbidTime(const CStringW& path, const CStringW& dateStr)
@@ -669,6 +691,7 @@ void Game::draw()
 	Gdiplus::SolidBrush brGreen(Gdiplus::Color(255, 0, 255, 0));
 	Gdiplus::Color crBlack(0, 0, 0);
 	Gdiplus::Color crBlue(0, 0, 255);
+	Gdiplus::Color crRed(255, 0, 0);
 
 	// Create a Pen object.
 	Pen blackPen(Color(255, 0, 0, 0), 1);
@@ -747,7 +770,7 @@ void Game::draw()
 
 			info.Format(L"(%02d:%02d， %d cm)",
 				int(maxMinTide[i]/100), int(maxMinTide[i])%100, int(maxMinTide[i + 4]));
-			float x = 200.0f + i%2 * 200;
+			float x = 300.0f + i%2 * 200;
 			float y = yLen + 18 + (1 - (i)/2) * 20;
 			drawTideString(&g, gdiFont, crBlack, info, x, y, true);
 		}
@@ -766,8 +789,8 @@ void Game::draw()
 			int timeValue = _wtoi(curTimeString);
 			float tideValue = getTideByTime(timeValue);
 
-			float x = 50;
-			float y = yLen - 5;
+			float x = 60;
+			float y = yLen + 38;
 			info.Format(L"现在时间：%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
 			
 			drawTideString(&g, gdiFont, crBlack, info, x, y, true);
@@ -796,9 +819,52 @@ void Game::draw()
 			}
 		}
 
+		float x = 0, y = 0;
+
+		// 描绘北槽最大吃水
+		{
+			x = 16;
+			y = yLen - 5;
+			CStringW beicaoMaxDraft("北槽船舶最大吃水：");
+			drawTideString(&g, gdiFont, crBlack, beicaoMaxDraft, x, y, false);
+
+			for (int i = 0; i < changeXinDraftData.size(); ++i) {
+				auto data = changeXinDraftData[i];
+				CStringW draftInfo;
+
+				x = 20;
+				y -= 20;
+
+				draftInfo.Format(L"长兴高潮时：%02d:%02d  上行：%4.2f m",
+					int(data.time/100), int(data.time)%100, data.upDraftOne/100);
+				drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
+
+				x += 290;
+				draftInfo.Format(L"上行(DWT大于7.5万吨)：%4.2f m", data.upDWTDraftOne/100);
+				drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
+
+				x += 280;
+				draftInfo.Format(L"下行：%4.2f m", data.downDraftOne/100);
+				drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
+
+				x = 20;
+				x += 240;
+				draftInfo.Format(L"%4.2f m", data.upDraftTwo/100);
+				drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
+
+				x += 274;
+				draftInfo.Format(L"%4.2f m", data.upDWTDraftTwo/100);
+				drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
+
+				x += 152;
+				draftInfo.Format(L"%4.2f m", data.downDraftTwo/100);
+				drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
+			}
+		}
+
 		// 描绘管制时间
-		float x = 220;
-		float y = yLen - 5;
+		x = 220;
+		y = yLen - 5;
 		CStringW forbidOne(strForbidTimeOne);
 		if(!forbidOne.IsEmpty() && forbidOne != L"")
 		{

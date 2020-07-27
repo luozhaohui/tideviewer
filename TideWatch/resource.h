@@ -14,6 +14,10 @@
 #define IDD_INPUT_DATA_EX               114
 #define IDD_COMPUTE                     115
 #define IDD_COMPUTER_EAT_WATER          116
+#define IDD_UP_DRAFT                    117
+#define IDD_UP_DWT_DRAFT                118
+#define IDD_DWN_DRAFT                   119
+#define IDD_DOWN_DRAFT                  119
 #define IDC_PWD                         1001
 #define IDC_OLD_PWD                     1002
 #define IDC_NEW_PWD                     1003
@@ -63,10 +67,19 @@
 #define IDC_CEW_SEA_TWO                 1048
 #define IDC_CEW_WATER_ONE               1049
 #define IDC_CEW_WATER_TWO               1050
+#define IDC_UP_WATER_RATIO_TWO          1050
 #define IDC_CEW_COMPUTER_ONE            1054
 #define IDC_CEW_COMPUTER_TWO            1055
+#define IDC_CEW_COMPUTER_ONE2           1055
 #define IDC_CEW_RESULT_ONE              1056
 #define IDC_CEW_RESULT_TWO              1057
+#define IDC_UP_MAX_TIDE_HEIGHT_ONE      1058
+#define IDC_UP_SEA_CHART_DEPTH_ONE      1059
+#define IDC_UP_RESULT_ONE               1060
+#define IDC_UP_MAX_TIDE_HEIGHT_TWO      1061
+#define IDC_UP_SEA_CHART_DEPTH_TWO      1062
+#define IDC_UP_RESULT_TWO               1063
+#define IDC_UP_WATER_RATIO_ONE          1064
 #define ID_40001                        40001
 #define ID_40002                        40002
 #define ID_START                        40003
@@ -99,14 +112,20 @@
 #define ID_COMPUTER                     40030
 #define ID_COMPUTER_MAX_WATER           40031
 #define ID_COMPUTER_EAT_WATER           40032
+#define ID_40033                        40033
+#define ID_UP_DRAFT                     40034
+#define ID_40035                        40035
+#define ID_UP_DWT_DRAFT                 40036
+#define ID_Menu                         40037
+#define ID_DOWN_DRAFT                   40038
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        117
-#define _APS_NEXT_COMMAND_VALUE         40033
-#define _APS_NEXT_CONTROL_VALUE         1058
+#define _APS_NEXT_COMMAND_VALUE         40039
+#define _APS_NEXT_CONTROL_VALUE         1065
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
