@@ -71,7 +71,7 @@ public:
     bool checkPassword(const CStringW& password);
 
     /* 检查日期的合法性 */
-    bool checkDate(const CStringW& date);
+    static bool checkDate(const CStringW& date);
 
     /* 插入往地址表中插入地址 */
     bool inputPlace(const CStringW& place);
@@ -170,7 +170,7 @@ private:
     std::vector<ChangeXinDraftData> changeXinDraftData;
 
     std::vector<TIDE_DATA> tideData;
-    float maxMinTide[8];
+    std::vector<int> maxMinTide;
 
     CStringW strWNongLi;
     wchar_t today[MAX_PATH];
@@ -218,11 +218,14 @@ private:
     float getTide(float y);
     float getTime(float x);
 
+    bool getMaxHeight(const std::vector<int>& maxMinData, int& time, int& tide);
+
     float getTideByTime(int time);
     void getForbidTime(const CStringW& path, const CStringW& dateStr);
 
     void drawTideLine(Gdiplus::Graphics* g, const Pen* pen, const PointF& pt1, const PointF& pt2);
-    void drawTideEllipse(Gdiplus::Graphics* g, const Pen* pen, Gdiplus::Brush* brush, const PointF& pt1, float r1, float r2);
+    void drawTideEllipse(Gdiplus::Graphics* g, const Pen* pen, Gdiplus::Brush* brush,
+                         const PointF& pt1, float r1, float r2);
     void drawTideString(Gdiplus::Graphics* g,
                         Gdiplus::Font* font,
                         Gdiplus::Color color,
@@ -239,20 +242,24 @@ private:
                     float y,
                     bool bAlignLeft = true);
 
-    void drawCenterString(Gdiplus::Graphics* g, Gdiplus::Font* font, Gdiplus::Color color, const CStringW& string, float y);
+    void drawCenterString(Gdiplus::Graphics* g, Gdiplus::Font* font, Gdiplus::Color color,
+                          const CStringW& string, float y);
 
     bool Game::isPointInRect(const PointF& pt, const RectF& rect);
 
-    CStringW getDateString();
-
-    CStringW getCurrentTimeString();
+    static CStringW getDateString();
+    static CStringW getCurrentTimeString();
+    static CStringW prevDateString(const CStringW& dateString);
+    static CStringW nextDateString(const CStringW& dateString);
+    static int getDaysOfMonth(int year, int month);
+    static bool getOffsetDateTime(const CStringW& date, int time, int offset, CStringW& offDate, int& offTime);
 
     void loadData(const CStringW& dateString, const CStringW& place);
 
-    bool loadRawData(const CStringW& dateString, const CStringW& place, std::vector<TIDE_DATA>& result, CStringW& nongLi);
+    bool loadRawData(const CStringW& dateString, const CStringW& place, std::vector<TIDE_DATA>& result,
+                     std::vector<int>& maxMinResult, CStringW& nongLi);
 
     std::vector<CStringW> places;
 
     bool loginFlag;
-    int getDaysOfMonth(int year, int month);
 };

@@ -106,9 +106,10 @@ Game::Game()
     mousePoint.X = mousePoint.Y = 0;
     zeroPoint.X = zeroPoint.Y = 0;
 
-    ZeroMemory(&maxMinTide, 8 * sizeof(float));
+    maxMinTide.resize(8, 0);
+    strWNongLi.Format(L"");
+
     ZeroMemory(&strDate, MAX_PATH * sizeof(wchar_t));
-    // ZeroMemory(&strLongLi, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&strPlace, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&md5, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&placeOne, MAX_PATH * sizeof(wchar_t));
@@ -439,7 +440,7 @@ bool Game::inputPlace(const CStringW& place)
 }
 
 bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
-                       std::vector<TIDE_DATA>& result, CStringW& nongLi)
+                       std::vector<TIDE_DATA>& result, std::vector<int>& maxMinResult, CStringW& nongLi)
 {
     if (place.IsEmpty() || place == L"")
     {
@@ -507,17 +508,21 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
         result.push_back(data);
     }
 
+    maxMinResult.clear();
+    maxMinResult.resize(8, 0);
     for (int i = 0; i < 4; i++)
     {
-        TIDE_DATA data;
-        data.time = sptData[i * 2 + 0] * 1.0f;
-        data.tide = sptData[i * 2 + 1] * 1.0f;
+        int time = sptData[i * 2 + 0];
+        int tide = sptData[i * 2 + 1];
 
-        maxMinTide[i] = sptData[i * 2 + 0] * 1.0f;
-        maxMinTide[i + 4] = sptData[i * 2 + 1] * 1.0f;
+        maxMinResult[i] = time;
+        maxMinResult[i + 4] = tide;
 
-        if (sptData[i * 2 + 0] != 0 && sptData[i * 2 + 1] != 0)
+        if (time != 0 && tide != 0)
         {
+            TIDE_DATA data;
+            data.time = time;
+            data.tide = tide;
             result.push_back(data);
         }
     }
@@ -548,16 +553,84 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
     return true;
 }
 
-void Game::loadData(const CStringW& dateString, const CStringW& place)
+bool Game::getMaxHeight(const std::vector<int>& maxMinData, int& time, int& tide)
 {
-    if (!loadRawData(dateString, place, tideData, strWNongLi))
+    time = 0;
+    tide = 0;
+
+    if (maxMinData.size() == 8)
     {
-        return;
+        for (int i = 0; i < 4; ++i)
+        {
+            if (maxMinData[i + 4] > tide)
+            {
+                time = maxMinData[i];
+                tide = maxMinData[i + 4];
+            }
+        }
+        return true;
     }
 
-    swprintf_s(strDate, MAX_PATH, L"%s", dateString);
-    swprintf_s(strPlace, MAX_PATH, L"%s", place);
+    return false;
+}
 
+bool Game::getOffsetDateTime(const CStringW& date, int time, int offset, CStringW& offDate, int& offTime)
+{
+    offDate = date;
+    offTime = time + offset;
+    if (offTime < 0)
+    {
+        offTime += 2400;
+        offDate = prevDateString(date);
+    }
+
+    if (offTime > 2400)
+    {
+        offTime -= 2440;
+        offDate = nextDateString(date);
+    }
+
+    CLog::output("Offset time of %s %02d:%02d, offset: %d ===> %s %02d:%02d)\n", date,
+                 int(time / 100), time % 100, offset, offDate, int(offTime / 100), offTime % 100);
+    return true;
+}
+
+bool Game::loadBeiCaoMaxDraftData()
+{
+    CStringW strDateW(strDate);
+    CStringW strPlaceChangXinW(L"ChangXing");
+    CStringW strPlaceJiGuJiaoW(L"JiGuJiao");
+    CStringW strNongLiTemp;
+
+    // load date of ChangXing on the same date.
+    std::vector<TIDE_DATA> changXingCurTideData;
+    std::vector<int> changXingCurMaxMin;
+    if (!loadRawData(strDateW, strPlaceChangXinW, changXingCurTideData, changXingCurMaxMin, strNongLiTemp))
+    {
+        CStringW info;
+        info.Format(L"Can not load data for %s on %s", strPlaceChangXinW, strDateW);
+        ::MessageBox(hWnd, info, L"Error", MB_OK);
+        return false;
+    }
+
+    // Get high tide and time of ChangXing
+    int changXingMaxTime = 0, changXinMaxTide = 0;
+    if (getMaxHeight(changXingCurMaxMin, changXingMaxTime, changXinMaxTide))
+    {
+        CLog::output("ChangXin max height: %02d:%02d(%d) :%d cm)\n", int(changXingMaxTime / 100.0f),
+                     (changXingMaxTime) % 100, changXinMaxTide);
+    }
+
+    // Get 4 hours ago and 1 hours later
+    CStringW fourHoursAgoDate(L"");
+    int fourHoursAgoTime;
+    getOffsetDateTime(strDateW, changXingMaxTime, -400, fourHoursAgoDate, fourHoursAgoTime);
+
+    CStringW oneHoursLaterDate(L"");
+    int oneHoursLaterTime;
+    getOffsetDateTime(strDateW, changXingMaxTime, 100, oneHoursLaterDate, oneHoursLaterTime);
+
+    // demo
     {
         for (int i = 0; i < 2; ++i)
         {
@@ -581,6 +654,20 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
             changeXinDraftData.push_back(dataOne);
         }
     }
+}
+
+void Game::loadData(const CStringW& dateString, const CStringW& place)
+{
+    if (!loadRawData(dateString, place, tideData, maxMinTide, strWNongLi))
+    {
+        return;
+    }
+
+    swprintf_s(strDate, MAX_PATH, L"%s", dateString);
+    swprintf_s(strPlace, MAX_PATH, L"%s", place);
+
+    // Load max draft date of BeiCao
+    loadBeiCaoMaxDraftData();
 }
 
 void Game::getForbidTime(const CStringW& path, const CStringW& dateStr)
@@ -816,18 +903,21 @@ void Game::draw()
         }
 
         // draw first and second high/low tide.
-        for (int i = 0; i < 4; i++)
+        if (maxMinTide.size() >= 8)
         {
-            if ((maxMinTide[i] == 0) && (maxMinTide[i + 4] == 0))
+            for (int i = 0; i < 4; i++)
             {
-                continue;
-            }
+                if ((maxMinTide[i] == 0) && (maxMinTide[i + 4] == 0))
+                {
+                    continue;
+                }
 
-            info.Format(L"(%02d:%02d， %d cm)", int(maxMinTide[i] / 100), int(maxMinTide[i]) % 100,
-                        int(maxMinTide[i + 4]));
-            float x = 300.0f + i % 2 * 200;
-            float y = yLen + 18 + (1 - (i) / 2) * 20;
-            drawTideString(&g, gdiFont, crBlack, info, x, y, true);
+                info.Format(L"(%02d:%02d， %.2f m)", int(maxMinTide[i] / 100),
+                            int(maxMinTide[i]) % 100, int(maxMinTide[i + 4] / 100.0f));
+                float x = 300.0f + i % 2 * 200;
+                float y = yLen + 18 + (1 - (i) / 2) * 20;
+                drawTideString(&g, gdiFont, crBlack, info, x, y, true);
+            }
         }
 
         // draw tide line
@@ -851,7 +941,7 @@ void Game::draw()
             info.Format(L"现在时间：%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
 
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
-            info.Format(L"现在潮高：%d cm", int(tideValue));
+            info.Format(L"现在潮高：%.2 m", int(tideValue / 100.0f));
 
             y = y - 20;
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
@@ -864,7 +954,8 @@ void Game::draw()
 
             if (isShowCurrentTide)
             {
-                info.Format(L"(%02d:%02d %dcm)", int(data.time / 100), int(data.time) % 100, int(data.tide));
+                info.Format(L"(%02d:%02d %d m)", int(data.time / 100), int(data.time) % 100,
+                            int(data.tide / 100.0f));
                 drawTideString(&g, gdiFont, crBlack, info, pt1.X - 44, pt1.Y + 20, false);
             }
 
@@ -984,7 +1075,8 @@ void Game::draw()
                 data.tide = currentTide;
                 pt1 = getPosition(data);
 
-                info.Format(L"(%02d:%02d %dcm)", int(data.time / 100), int(data.time) % 100, int(data.tide));
+                info.Format(L"(%02d:%02d %d m)", int(data.time / 100), int(data.time) % 100,
+                            int(data.tide / 100.0f));
                 drawTideString(&g, gdiFont, crBlack, info, pt1.X - 44, pt1.Y + 20, false);
 
                 pt1.X -= 3;
@@ -1370,14 +1462,14 @@ void Game::loadToday()
     loadData(today, strPlace);
 }
 
-void Game::loadPrev()
+CStringW Game::prevDateString(const CStringW& dateString)
 {
-    CStringW curDay(strDate);
-    if (curDay.GetLength() == 8)
+    CStringW prevDate(L"");
+    if (dateString.GetLength() == 8)
     {
-        int year = _wtoi(curDay.Left(4));
-        int month = _wtoi(curDay.Mid(4, 2));
-        int day = _wtoi(curDay.Mid(6, 2));
+        int year = _wtoi(dateString.Left(4));
+        int month = _wtoi(dateString.Mid(4, 2));
+        int day = _wtoi(dateString.Mid(6, 2));
 
         if (month >= 1 && month <= 12 && year >= 1000 && year < 10000)
         {
@@ -1400,26 +1492,21 @@ void Game::loadPrev()
                 day = day - 1;
             }
 
-            curDay.Format(L"%04d%02d%02d", year, month, day);
-            loadData(curDay, strPlace);
-        }
-        else
-        {
-            CStringW info;
-            info.Format(L"%年%d月%d日不合法，请检查数据段%s是否合理。", year, month, day, strDate);
-            ::MessageBox(hWnd, info, L"错误", MB_OK);
+            prevDate.Format(L"%04d%02d%02d", year, month, day);
         }
     }
+
+    return prevDate;
 }
 
-void Game::loadNext()
+CStringW Game::nextDateString(const CStringW& dateString)
 {
-    CStringW curDay(strDate);
-    if (curDay.GetLength() == 8)
+    CStringW nextDate(L"");
+    if (dateString.GetLength() == 8)
     {
-        int year = _wtoi(curDay.Left(4));
-        int month = _wtoi(curDay.Mid(4, 2));
-        int day = _wtoi(curDay.Mid(6, 2));
+        int year = _wtoi(dateString.Left(4));
+        int month = _wtoi(dateString.Mid(4, 2));
+        int day = _wtoi(dateString.Mid(6, 2));
 
         if (month >= 1 && month <= 12 && year >= 1000 && year < 10000)
         {
@@ -1443,15 +1530,40 @@ void Game::loadNext()
                 day = day + 1;
             }
 
-            curDay.Format(L"%04d%02d%02d", year, month, day);
-            loadData(curDay, strPlace);
+            nextDate.Format(L"%04d%02d%02d", year, month, day);
         }
-        else
-        {
-            CStringW info;
-            info.Format(L"%年%d月%d日不合法，请检查数据段%s是否合理。", year, month, day, strDate);
-            ::MessageBox(hWnd, info, L"错误", MB_OK);
-        }
+    }
+
+    return nextDate;
+}
+
+void Game::loadPrev()
+{
+    CStringW prevDate = prevDateString(strDate);
+    if (prevDate != L"" && prevDate.GetLength() == 8)
+    {
+        loadData(prevDate, strPlace);
+    }
+    else
+    {
+        CStringW info;
+        info.Format(L"%年%d月%d日不合法，请检查数据段%s是否合理。", year, month, day, strDate);
+        ::MessageBox(hWnd, info, L"错误", MB_OK);
+    }
+}
+
+void Game::loadNext()
+{
+    CStringW nextDate = nextDateString(strDate);
+    if (nextDate != L"" && nextDate.GetLength() == 8)
+    {
+        loadData(nextDate, strPlace);
+    }
+    else
+    {
+        CStringW info;
+        info.Format(L"%年%d月%d日不合法，请检查数据段%s是否合理。", year, month, day, strDate);
+        ::MessageBox(hWnd, info, L"错误", MB_OK);
     }
 }
 
