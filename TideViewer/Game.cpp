@@ -553,40 +553,83 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
     return true;
 }
 
-bool Game::getMaxHeight(const std::vector<int>& maxMinData, int& time, int& tide)
+// There might be two high heights.
+bool Game::getHighTideHeights(const std::vector<int>& maxMinData, std::vector<int>& highData)
 {
-    time = 0;
-    tide = 0;
+    highData.clear();
 
-    if (maxMinData.size() == 8)
+    int time = 0, tide = 0;
+    int maxIndex = -1;
+
+    for (int i = 0; i < maxMinData.size(); ++i)
     {
-        for (int i = 0; i < 4; ++i)
+        if (maxMinData[i + 4] > tide)
         {
-            if (maxMinData[i + 4] > tide)
-            {
-                time = maxMinData[i];
-                tide = maxMinData[i + 4];
-            }
+            time = maxMinData[i];
+            tide = maxMinData[i + 4];
+            maxIndex = i;
         }
-        return true;
     }
 
-    return false;
+    if (maxIndex >= 0)
+    {
+        highData.push_back(time);
+        highData.push_back(tide);
+
+        int secondTime = 0, secondTide = 0;
+        int secondIndex = -1;
+        for (int i = 0; i < maxMinData.size(); ++i)
+        {
+            if (i != maxIndex && maxMinData[i + 4] > tide)
+            {
+                secondTime = maxMinData[i];
+                secondTide = maxMinData[i + 4];
+                secondIndex = i;
+            }
+        }
+
+        // time interval over 10 hours
+        if (secondIndex >= 0 && abs(time - secondTime) > 1000)
+        {
+            highData.push_back(secondTime);
+            highData.push_back(secondTide);
+        }
+    }
+
+    return !highData.empty();
 }
 
 bool Game::getOffsetDateTime(const CStringW& date, int time, int offset, CStringW& offDate, int& offTime)
 {
+    int timeHour = int(time / 100);
+    int timeMinute = time % 100;
+    int offsetHour = int(offset / 100);
+    int offsetMinute = offset % 100;
+
+    int resultHour = timeHour + offsetHour;
+    int resultMinute = timeMinute + offsetMinute;
+
+    if (resultMinute > 60)
+    {
+        resultHour += 1;
+        resultMinute -= 60;
+    }
+    else if (resultMinute < 0)
+    {
+        resultHour -= 1;
+        resultMinute += 60;
+    }
+
     offDate = date;
-    offTime = time + offset;
+    offTime = resultHour < 0 ? -(abs(resultHour * 100) + resultMinute) : (abs(resultHour * 100) + resultMinute);
+
     if (offTime < 0)
     {
-        offTime += 2400;
         offDate = prevDateString(date);
     }
 
     if (offTime > 2400)
     {
-        offTime -= 2440;
         offDate = nextDateString(date);
     }
 
@@ -595,8 +638,15 @@ bool Game::getOffsetDateTime(const CStringW& date, int time, int offset, CString
     return true;
 }
 
+float Game::calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 12.5f)
+{
+    return (maxTideHeight + height) / ratio;
+}
+
 bool Game::loadBeiCaoMaxDraftData()
 {
+    beiCaoDraftData.clear();
+
     CStringW strDateW(strDate);
     CStringW strPlaceChangXinW(L"ChangXing");
     CStringW strPlaceJiGuJiaoW(L"JiGuJiao");
@@ -614,21 +664,41 @@ bool Game::loadBeiCaoMaxDraftData()
     }
 
     // Get high tide and time of ChangXing
-    int changXingMaxTime = 0, changXinMaxTide = 0;
-    if (getMaxHeight(changXingCurMaxMin, changXingMaxTime, changXinMaxTide))
+    std::vector<int> changXingHighHeights;
+    if (!getHighTideHeights(changXingCurMaxMin, changXingHighHeights))
     {
-        CLog::output("ChangXin max height: %02d:%02d(%d) :%d cm)\n", int(changXingMaxTime / 100.0f),
-                     (changXingMaxTime) % 100, changXinMaxTide);
+        CStringW info;
+        info.Format(L"Can not load high height data for %s on %s", strPlaceChangXinW, strDateW);
+        ::MessageBox(hWnd, info, L"Error", MB_OK);
+        return false;
     }
 
-    // Get 4 hours ago and 1 hours later
-    CStringW fourHoursAgoDate(L"");
-    int fourHoursAgoTime;
-    getOffsetDateTime(strDateW, changXingMaxTime, -400, fourHoursAgoDate, fourHoursAgoTime);
+    for (int i = 0; i < changXingHighHeights.size() / 2; ++i)
+    {
+        int time = changXingHighHeights[i * 2 + 0];
+        int tide = changXingHighHeights[i * 2 + 1];
+        CLog::output("ChangXin high height: %02d:%02d(%d) :%d cm)\n", int(time / 100.0f), (time) % 100, tide);
 
-    CStringW oneHoursLaterDate(L"");
-    int oneHoursLaterTime;
-    getOffsetDateTime(strDateW, changXingMaxTime, 100, oneHoursLaterDate, oneHoursLaterTime);
+        // 4 hours ago
+        CStringW fourHoursAgoDate(L"");
+        int fourHoursAgoTime;
+        getOffsetDateTime(strDateW, time, -400, fourHoursAgoDate, fourHoursAgoTime);
+
+        // 2.5 hours ago
+        CStringW fourHoursAgoDate(L"");
+        int fourHoursAgoTime;
+        getOffsetDateTime(strDateW, time, -230, fourHoursAgoDate, fourHoursAgoTime);
+
+        // 2 hours later
+        CStringW twoHoursLaterDate(L"");
+        int twoHoursLaterTime;
+        getOffsetDateTime(strDateW, time, 200, twoHoursLaterDate, twoHoursLaterTime);
+
+        // 1 hours later
+        CStringW oneHoursLaterDate(L"");
+        int oneHoursLaterTime;
+        getOffsetDateTime(strDateW, time, 100, oneHoursLaterDate, oneHoursLaterTime);
+    }
 
     // demo
     {
@@ -651,7 +721,7 @@ bool Game::loadBeiCaoMaxDraftData()
             dataOne.downDraftOne = 579 + i * 80;
             dataOne.downDraftTwo = 679 + i * 80;
 
-            changeXinDraftData.push_back(dataOne);
+            beiCaoDraftData.push_back(dataOne);
         }
     }
 }
@@ -765,11 +835,11 @@ bool Game::enter()
     return true;
 }
 
-float Game::getTideByTime(int time)
+float Game::getTideByTime(int time, const std::vector<TIDE_DATA>& dataVec)
 {
     float tide = 0.0f;
-    std::vector<TIDE_DATA>::iterator it = tideData.begin();
-    std::vector<TIDE_DATA>::iterator end = tideData.end();
+    std::vector<TIDE_DATA>::iterator it = dataVec.begin();
+    std::vector<TIDE_DATA>::iterator end = dataVec.end();
 
     int pos = 0;
     bool isEqual = false;
@@ -791,11 +861,11 @@ float Game::getTideByTime(int time)
 
     if (!isEqual && pos > 0)
     {
-        PointF p1(tideData[pos - 1].time, tideData[pos - 1].tide);
-        PointF p2(tideData[pos].time, tideData[pos].tide);
+        PointF p1(dataVec[pos - 1].time, dataVec[pos - 1].tide);
+        PointF p2(dataVec[pos].time, dataVec[pos].tide);
 
-        int t1 = int(tideData[pos - 1].time);
-        int t2 = int(tideData[pos].time);
+        int t1 = int(dataVec[pos - 1].time);
+        int t2 = int(dataVec[pos].time);
         int t = time;
 
         p1.X = t1 / 100 * 60.0f + t1 % 100;
@@ -809,6 +879,11 @@ float Game::getTideByTime(int time)
     }
 
     return tide;
+}
+
+float Game::getTideByTime(int time)
+{
+    return getTideByTime(time, tideData);
 }
 
 void Game::draw()
@@ -976,9 +1051,9 @@ void Game::draw()
             CStringW beicaoMaxDraft("北槽船舶最大吃水：");
             drawTideString(&g, gdiFont, crBlack, beicaoMaxDraft, x, y, false);
 
-            for (int i = 0; i < changeXinDraftData.size(); ++i)
+            for (int i = 0; i < beiCaoDraftData.size(); ++i)
             {
-                auto data = changeXinDraftData[i];
+                auto data = beiCaoDraftData[i];
                 CStringW draftInfo;
 
                 x = 20;

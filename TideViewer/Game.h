@@ -147,9 +147,9 @@ private:
         float time;
     };
 
-    struct ChangeXinDraftData
+    struct BeiCaoDraftData
     {
-        ChangeXinDraftData()
+        BeiCaoDraftData()
             : time(0),
               upDraftOne(0),
               upDraftTwo(0),
@@ -167,7 +167,7 @@ private:
         float downDraftTwo;
     };
 
-    std::vector<ChangeXinDraftData> changeXinDraftData;
+    std::vector<BeiCaoDraftData> beiCaoDraftData;
 
     std::vector<TIDE_DATA> tideData;
     std::vector<int> maxMinTide;
@@ -218,9 +218,11 @@ private:
     float getTide(float y);
     float getTime(float x);
 
-    bool getMaxHeight(const std::vector<int>& maxMinData, int& time, int& tide);
+    bool getHighTideHeights(const std::vector<int>& maxMinData, std::vector<int>& highData);
 
     float getTideByTime(int time);
+    static float getTideByTime(int time, const std::vector<TIDE_DATA>& data);
+
     void getForbidTime(const CStringW& path, const CStringW& dateStr);
 
     void drawTideLine(Gdiplus::Graphics* g, const Pen* pen, const PointF& pt1, const PointF& pt2);
@@ -253,6 +255,7 @@ private:
     static CStringW nextDateString(const CStringW& dateString);
     static int getDaysOfMonth(int year, int month);
     static bool getOffsetDateTime(const CStringW& date, int time, int offset, CStringW& offDate, int& offTime);
+    static float calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 12.5f);
 
     void loadData(const CStringW& dateString, const CStringW& place);
 
