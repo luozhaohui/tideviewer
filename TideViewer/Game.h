@@ -222,6 +222,7 @@ private:
 
     float getTideByTime(int time);
     static float getTideByTime(int time, const std::vector<TIDE_DATA>& data);
+    static bool getTideAt(const CStringW& place, const CStringW& dateStr, int time, int& tide);
 
     void getForbidTime(const CStringW& path, const CStringW& dateStr);
 
@@ -261,6 +262,7 @@ private:
 
     bool loadRawData(const CStringW& dateString, const CStringW& place, std::vector<TIDE_DATA>& result,
                      std::vector<int>& maxMinResult, CStringW& nongLi);
+    bool loadBeiCaoMaxDraftData();
 
     std::vector<CStringW> places;
 

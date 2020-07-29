@@ -15,9 +15,10 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.vscode
 
 # External tool builders
-.externalToolBuilders/
+.externalToolBuilders
 
 # Locally stored "Eclipse launch configurations"
 *.launch

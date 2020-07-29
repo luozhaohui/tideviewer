@@ -638,9 +638,14 @@ bool Game::getOffsetDateTime(const CStringW& date, int time, int offset, CString
     return true;
 }
 
-float Game::calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 12.5f)
+float Game::calculateBeiCaoDraft(float ratio, float maxTideHeight, float height)
 {
     return (maxTideHeight + height) / ratio;
+}
+
+bool Game::getTideAt(const CStringW& place, const CStringW& dateStr, int time, int& tide)
+{
+    return false;
 }
 
 bool Game::loadBeiCaoMaxDraftData()
@@ -679,32 +684,73 @@ bool Game::loadBeiCaoMaxDraftData()
         int tide = changXingHighHeights[i * 2 + 1];
         CLog::output("ChangXin high height: %02d:%02d(%d) :%d cm)\n", int(time / 100.0f), (time) % 100, tide);
 
-        // 4 hours ago
+        // Up: 4 hours ago
         CStringW fourHoursAgoDate(L"");
         int fourHoursAgoTime;
         getOffsetDateTime(strDateW, time, -400, fourHoursAgoDate, fourHoursAgoTime);
 
-        // 2.5 hours ago
-        CStringW fourHoursAgoDate(L"");
-        int fourHoursAgoTime;
-        getOffsetDateTime(strDateW, time, -230, fourHoursAgoDate, fourHoursAgoTime);
+        bool ret = false;
+        int fourHoursAgoTide = 0;
+        ret = getTideAt(L"鸡骨礁", fourHoursAgoDate, fourHoursAgoTime, fourHoursAgoTide);
+        if (!ret) {
+            CStringW info;
+            info.Format(L"Could not load 鸡骨礁 data on %s %02d:%02d\n",
+                fourHoursAgoDate, int(fourHoursAgoTime / 100), fourHoursAgoTime % 100);
+            ::MessageBox(hWnd, info, L"Error", MB_OK);
+            continue;
+        }
 
-        // 2 hours later
+        // Up: 1 hours later
+        CStringW oneHoursLaterDate(L"");
+        int oneHoursLaterTime;
+        getOffsetDateTime(strDateW, time, 100, oneHoursLaterDate, oneHoursLaterTime);
+
+        int oneHoursLaterTide = 0;
+        ret = getTideAt(L"长兴", oneHoursLaterDate, oneHoursLaterTime, oneHoursLaterTide);
+        if (!ret) {
+            CStringW info;
+            info.Format(L"Could not load 长兴 data on %s %02d:%02d\n",
+                oneHoursLaterDate, int(oneHoursLaterTime / 100), oneHoursLaterTime % 100);
+            ::MessageBox(hWnd, info, L"Error", MB_OK);
+            continue;
+        }
+
+        // Down: 2.5 hours ago
+        CStringW twoHalfHoursAgoDate(L"");
+        int twoHalfHoursAgoTime;
+        getOffsetDateTime(strDateW, time, -230, twoHalfHoursAgoDate, twoHalfHoursAgoTime);
+
+        int twoHalfHoursAgoTide = 0;
+        ret = getTideAt(L"鸡骨礁", twoHalfHoursAgoDate, twoHalfHoursAgoTime, twoHalfHoursAgoTide);
+        if (!ret) {
+            CStringW info;
+            info.Format(L"Could not load 鸡骨礁 data on %s %02d:%02d\n",
+                twoHalfHoursAgoDate, int(twoHalfHoursAgoTime / 100), twoHalfHoursAgoTime % 100);
+            ::MessageBox(hWnd, info, L"Error", MB_OK);
+            continue;
+        }
+
+        // Down: 2 hours later
         CStringW twoHoursLaterDate(L"");
         int twoHoursLaterTime;
         getOffsetDateTime(strDateW, time, 200, twoHoursLaterDate, twoHoursLaterTime);
 
-        // 1 hours later
-        CStringW oneHoursLaterDate(L"");
-        int oneHoursLaterTime;
-        getOffsetDateTime(strDateW, time, 100, oneHoursLaterDate, oneHoursLaterTime);
+        int twoHoursLaterTide = 0;
+        ret = getTideAt(L"长兴", twoHoursLaterDate, twoHoursLaterTime, twoHoursLaterTide);
+        if (!ret) {
+            CStringW info;
+            info.Format(L"Could not load 长兴 data on %s %02d:%02d\n",
+                twoHoursLaterDate, int(twoHoursLaterTime / 100), twoHoursLaterTime % 100);
+            ::MessageBox(hWnd, info, L"Error", MB_OK);
+            continue;
+        }
     }
 
     // demo
     {
         for (int i = 0; i < 2; ++i)
         {
-            ChangeXinDraftData dataOne;
+            BeiCaoDraftData dataOne;
             if (i == 0)
             {
                 dataOne.time = 59;
@@ -838,8 +884,8 @@ bool Game::enter()
 float Game::getTideByTime(int time, const std::vector<TIDE_DATA>& dataVec)
 {
     float tide = 0.0f;
-    std::vector<TIDE_DATA>::iterator it = dataVec.begin();
-    std::vector<TIDE_DATA>::iterator end = dataVec.end();
+    auto it = dataVec.begin();
+    auto end = dataVec.end();
 
     int pos = 0;
     bool isEqual = false;
@@ -1622,7 +1668,7 @@ void Game::loadPrev()
     else
     {
         CStringW info;
-        info.Format(L"%年%d月%d日不合法，请检查数据段%s是否合理。", year, month, day, strDate);
+        info.Format(L"日期 %s 不合法，请检查数据段%s是否合理。", prevDate, strDate);
         ::MessageBox(hWnd, info, L"错误", MB_OK);
     }
 }
@@ -1637,7 +1683,7 @@ void Game::loadNext()
     else
     {
         CStringW info;
-        info.Format(L"%年%d月%d日不合法，请检查数据段%s是否合理。", year, month, day, strDate);
+        info.Format(L"日期 %s 不合法，请检查数据段%s是否合理。", nextDate, strDate);
         ::MessageBox(hWnd, info, L"错误", MB_OK);
     }
 }
