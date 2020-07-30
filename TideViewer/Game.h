@@ -1,13 +1,13 @@
 /*
- *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)
  *   All rights reserved.
  *
- *   æ–‡ä»¶åç§°ï¼šGame.h
- *   æ‘˜    è¦ï¼šé€»è¾‘æ¡†æ¶å¤´æ–‡ä»¶
+ *   ÎÄ¼şÃû³Æ£ºGame.h
+ *   Õª    Òª£ºÂß¼­¿ò¼ÜÍ·ÎÄ¼ş
  *
- *   å½“å‰ç‰ˆæœ¬ï¼š1.1
- *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
- *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ *   µ±Ç°°æ±¾£º1.1
+ *   ×÷    Õß£ºÆ®Æ®°×ÔÆ
+ *   Íê³ÉÈÕÆÚ£º2008/11/30
  */
 
 #pragma once
@@ -28,78 +28,78 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
 
-    /* å“åº”é”®ç›˜æŒ‰é”®æ¶ˆæ¯ */
+    /* ÏìÓ¦¼üÅÌ°´¼üÏûÏ¢ */
     void onKeyDown(int keyCode, const Point& pt);
 
-    /* å“åº”é¼ æ ‡å·¦é”®æ¶ˆæ¯ */
+    /* ÏìÓ¦Êó±ê×ó¼üÏûÏ¢ */
     void onLeftButtonDown(const Point& pt);
 
-    /* å“åº”é¼ æ ‡å³é”®æ¶ˆæ¯ */
+    /* ÏìÓ¦Êó±êÓÒ¼üÏûÏ¢ */
     void onRightButtonDown(const Point& pt);
 
-    /* å“åº”é¼ æ ‡ç§»åŠ¨æ¶ˆæ¯ */
+    /* ÏìÓ¦Êó±êÒÆ¶¯ÏûÏ¢ */
     void onMouseMove(const Point& pt);
 
-    /* æç»˜ */
+    /* Ãè»æ */
     void draw();
 
-    /* é€€å‡ºåº”ç”¨ç¨‹åº */
+    /* ÍË³öÓ¦ÓÃ³ÌĞò */
     void exit();
 
-    /* è½½å…¥ä»Šå¤©çš„æ½®é«˜æ•°æ® */
+    /* ÔØÈë½ñÌìµÄ³±¸ßÊı¾İ */
     void loadToday();
 
-    /* è½½å…¥å‰ä¸€å¤©çš„æ½®é«˜æ•°æ® */
+    /* ÔØÈëÇ°Ò»ÌìµÄ³±¸ßÊı¾İ */
     void loadPrev();
 
-    /* è½½å…¥åä¸€å¤©çš„æ½®é«˜æ•°æ®*/
+    /* ÔØÈëºóÒ»ÌìµÄ³±¸ßÊı¾İ*/
     void loadNext();
 
-    /* è½½å…¥æŒ‡å®šæ—¥æœŸçš„æ½®é«˜æ•°æ® */
+    /* ÔØÈëÖ¸¶¨ÈÕÆÚµÄ³±¸ßÊı¾İ */
     void loadDay(const CStringW& dateString);
 
-    /* æ˜¾ç¤ºæ½®é«˜æ•°æ® */
+    /* ÏÔÊ¾³±¸ßÊı¾İ */
     void start(LPCWSTR dateString = NULL);
 
-    /* å–å¾—å³é”®èœå•çš„èœå•æ•°ç›® */
+    /* È¡µÃÓÒ¼ü²Ëµ¥µÄ²Ëµ¥ÊıÄ¿ */
     int getMenuMax()
     {
         return (int)(MENU_ID_START + places.size());
     }
 
-    /* æ£€æŸ¥å¯†ç å¸ˆå‚…åŒ¹é… */
+    /* ¼ì²éÃÜÂëÊ¦¸µÆ¥Åä */
     bool checkPassword(const CStringW& password);
 
-    /* æ£€æŸ¥æ—¥æœŸçš„åˆæ³•æ€§ */
+    /* ¼ì²éÈÕÆÚµÄºÏ·¨ĞÔ */
     static bool checkDate(const CStringW& date);
 
-    /* æ’å…¥å¾€åœ°å€è¡¨ä¸­æ’å…¥åœ°å€ */
+    /* ²åÈëÍùµØÖ·±íÖĞ²åÈëµØÖ· */
     bool inputPlace(const CStringW& place);
 
-    /* æ ¼å¼åŒ–å½•å…¥æ•°æ® */
+    /* ¸ñÊ½»¯Â¼ÈëÊı¾İ */
     bool formatInputData(CStringW& inputData);
 
-    /* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§ */
+    /* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ */
     bool checkInputData(const CStringW& inputData);
 
-    /* å½•å…¥æ•°æ® */
+    /* Â¼ÈëÊı¾İ */
     bool inputData(const CStringW& place, const CStringW& date, const CStringW& data);
 
-    /* ä¿®æ”¹å¯†ç  */
+    /* ĞŞ¸ÄÃÜÂë */
     void modifyPassword(const CStringW& password);
 
-    /* åˆ¤æ–­æ˜¯å¦å·²ç»ç™»å½• */
+    /* ÅĞ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼ */
     bool isLogined()
     {
         return loginFlag;
     }
 
-    /* è½½å…¥å³é”®èœå•æŒ‡å®šåœ°ç‚¹çš„æ½®é«˜æ•°æ® */
+    /* ÔØÈëÓÒ¼ü²Ëµ¥Ö¸¶¨µØµãµÄ³±¸ßÊı¾İ */
     void processMenu(int menuId);
 
-    /* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§:ex */
+    /* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ:ex */
     bool checkInputDataEx(const CStringW& filePath, CStringW& place, CStringW& date, CStringW& resultInfo);
-    /* å½•å…¥æ•°æ®:ex */
+    /* Â¼ÈëÊı¾İ:ex */
     bool inputDataEx(const CStringW& filePath, const CStringW& place, CStringW& resultInfo);
 
     void setRichness(bool isPlaceOne, const CStringW& place, int boat, int water, int sea);
@@ -107,6 +107,9 @@ public:
 
     void setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water);
     void getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water);
+
+	void getAvailableDraftTide(int& up, int& upDWT, int& down);
+	static int calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 1250.0f);
 
     enum
     {
@@ -116,7 +119,7 @@ public:
         FILE_MATOU,
         FILE_HANGDAO,
     };
-    int fileId;  // æŸ¥çœ‹æ–‡æœ¬æ–‡ä»¶çš„ç´¢å¼•
+    int fileId;  // ²é¿´ÎÄ±¾ÎÄ¼şµÄË÷Òı
 
 protected:
     bool writeToScript(const CStringW& place, const CStringW& date, std::vector<std::vector<int>> data);
@@ -222,7 +225,7 @@ private:
 
     float getTideByTime(int time);
     static float getTideByTime(int time, const std::vector<TIDE_DATA>& data);
-    static bool getTideAt(const CStringW& place, const CStringW& dateStr, int time, int& tide);
+    bool getTideAt(const CStringW& place, const CStringW& dateStr, int time, int& tide);
 
     void getForbidTime(const CStringW& path, const CStringW& dateStr);
 
@@ -256,7 +259,6 @@ private:
     static CStringW nextDateString(const CStringW& dateString);
     static int getDaysOfMonth(int year, int month);
     static bool getOffsetDateTime(const CStringW& date, int time, int offset, CStringW& offDate, int& offTime);
-    static float calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 12.5f);
 
     void loadData(const CStringW& dateString, const CStringW& place);
 
@@ -267,4 +269,8 @@ private:
     std::vector<CStringW> places;
 
     bool loginFlag;
+
+	int availableUpDraftTide;
+	int availableUpDWTDraftTide;
+	int availableDownDraftTide;
 };

@@ -1,13 +1,13 @@
 /*
- *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)
  *   All rights reserved.
  *
- *   æ–‡ä»¶åç§°ï¼šGameMain.cpp
- *   æ‘˜    è¦ï¼šä¸»æ¡†æ¶æ–‡ä»¶
+ *   ÎÄ¼şÃû³Æ£ºGameMain.cpp
+ *   Õª    Òª£ºÖ÷¿ò¼ÜÎÄ¼ş
  *
- *   å½“å‰ç‰ˆæœ¬ï¼š1.1
- *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
- *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ *   µ±Ç°°æ±¾£º1.1
+ *   ×÷    Õß£ºÆ®Æ®°×ÔÆ
+ *   Íê³ÉÈÕÆÚ£º2008/11/30
  */
 #include "WinUtility.h"
 #include "Game.h"
@@ -84,14 +84,14 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
     switch (msg)
     {
     case WM_DESTROY:
-        // å…³é—­çª—å£
+        // ¹Ø±Õ´°¿Ú
         ::PostQuitMessage(WM_QUIT);
         break;
     case WM_INITMENUPOPUP:
-        // ç³»ç»Ÿèœå•
+        // ÏµÍ³²Ëµ¥
         if (lParam == 0)
         {
-            // å·²ç™»å½•
+            // ÒÑµÇÂ¼
             if (game.isLogined())
             {
                 EnableMenuItem((HMENU)wParam, ID_LOGIN, MF_GRAYED);
@@ -99,7 +99,7 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
                 EnableMenuItem((HMENU)wParam, ID_INPUT_DATA, MF_ENABLED);
             }
 
-            // æœªç™»å½•
+            // Î´µÇÂ¼
             else
             {
                 EnableMenuItem((HMENU)wParam, ID_MODIFY_PWD, MF_GRAYED);
@@ -107,10 +107,10 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
             }
         }
 
-        // æŸ¥çœ‹èœå•
+        // ²é¿´²Ëµ¥
         else if (lParam == 1)
         {
-            // æœªç™»å½•ï¼Œä»¥ä¸‹èœå•ç¦æ­¢æ“ä½œ
+            // Î´µÇÂ¼£¬ÒÔÏÂ²Ëµ¥½ûÖ¹²Ù×÷
             if (!game.isLogined())
             {
                 EnableMenuItem((HMENU)wParam, ID_TODAY, MF_GRAYED);
@@ -120,7 +120,7 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
             }
             else
             {
-                // å·²ç™»å½•
+                // ÒÑµÇÂ¼
                 EnableMenuItem((HMENU)wParam, ID_TODAY, MF_ENABLED);
                 EnableMenuItem((HMENU)wParam, ID_PREV, MF_ENABLED);
                 EnableMenuItem((HMENU)wParam, ID_NEXT, MF_ENABLED);
@@ -131,32 +131,32 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
     case WM_COMMAND:
         if (wParam == ID_START)
         {
-            // é€€å‡ºèœå•
+            // ÍË³ö²Ëµ¥
             game.exit();
         }
         else if (wParam == ID_LOGIN)
         {
-            // ç™»å½•èœå•
+            // µÇÂ¼²Ëµ¥
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_LOGIN), hwnd, LoginCallback);
         }
         else if (wParam == ID_LOOK)
         {
-            //æŸ¥çœ‹èœå•
+            //²é¿´²Ëµ¥
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_LOOK), hwnd, LookCallback);
         }
         else if (wParam == ID_MODIFY_PWD)
         {
-            // ä¿®æ”¹å¯†ç èœå•
+            // ĞŞ¸ÄÃÜÂë²Ëµ¥
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_MODIFY), hwnd, ModifyCallback);
         }
         else if (wParam == ID_ABOUT)
         {
-            // å…³äºèœå•
+            // ¹ØÓÚ²Ëµ¥
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_ABOUT), hwnd, AboutCallback);
         }
         else if (wParam == ID_HELP)
         {
-            // å¸®åŠ©èœå•
+            // °ïÖú²Ëµ¥
             /*
                         game.fileId = Game::FILE_HELP;
                         DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
@@ -166,97 +166,97 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
             };
             GetModuleFileNameW(0, fullPath, MAX_PATH);
             PathRemoveFileSpecW(fullPath);
-            PathAppend(fullPath, L"èˆªè¿å°å¸®æ‰‹.chm");
-            // æ‰“å¼€èˆªè¡Œå°å¸®æ‰‹.chm
+            PathAppend(fullPath, L"º½ÔËĞ¡°ïÊÖ.chm");
+            // ´ò¿ªº½ĞĞĞ¡°ïÊÖ.chm
             ShellExecute(NULL, _T("open"), _T("hh.exe"), fullPath, NULL, SW_SHOWNORMAL);
         }
         else if (wParam == IDM_BOAT_INFO)
         {
-            // æ‹–è½®æƒ…å†µèœå•
+            // ÍÏÂÖÇé¿ö²Ëµ¥
             game.fileId = Game::FILE_TUOLUN;
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
         }
         else if (wParam == IDM_MATOU_INFO)
         {
-            // ç å¤´æƒ…å†µèœå•
+            // ÂëÍ·Çé¿ö²Ëµ¥
             game.fileId = Game::FILE_MATOU;
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
         }
         else if (wParam == IDM_HANGDAO_INFO)
         {
-            // èˆªé“æƒ…å†µèœå•
+            // º½µÀÇé¿ö²Ëµ¥
             game.fileId = Game::FILE_HANGDAO;
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_HELP), hwnd, HelpCallback);
         }
         else if (wParam == ID_INPUT_DATA)
         {
-            // æ•°æ®å½•å…¥èœå•
+            // Êı¾İÂ¼Èë²Ëµ¥
             // DialogBoxW(hInst, MAKEINTRESOURCE(IDD_INPUT_DATA), hwnd, InputCallback);
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_INPUT_DATA_EX), hwnd, InputCallbackEx);
         }
         else if (wParam == ID_TODAY)
         {
-            // æŸ¥çœ‹ä»Šå¤©
+            // ²é¿´½ñÌì
             game.loadToday();
         }
         else if (wParam == ID_PREV)
         {
-            // æŸ¥çœ‹å‰ä¸€å¤©
+            // ²é¿´Ç°Ò»Ìì
             game.loadPrev();
         }
         else if (wParam == ID_NEXT)
         {
-            // æŸ¥çœ‹åä¸€å¤©
+            // ²é¿´ºóÒ»Ìì
             game.loadNext();
         }
         else if (wParam == ID_CALCU)
         {
-            // å¼¹å‡ºè®¡ç®—å™¨
+            // µ¯³ö¼ÆËãÆ÷
             ShellExecute(NULL, _T("open"), _T("calc.exe"), NULL, NULL, SW_SHOWNORMAL);
         }
 
         else if (wParam == ID_COMPUTER_DEEPTH)
         {
-            // è®¡ç®—å¯Œè£•æ°´æ·±
+            // ¼ÆËã¸»Ô£Ë®Éî
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTE), hwnd, ComputeDeepthCallback);
         }
 
         else if (wParam == ID_COMPUTER_EAT_WATER)
         {
-            // è®¡ç®—æœ€å¤§åƒæ°´
+            // ¼ÆËã×î´ó³ÔË®
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_COMPUTER_EAT_WATER), hwnd, ComputeEatWaterCallback);
         }
 
         else if (wParam == ID_UP_DRAFT)
         {
-            // è®¡ç®—ä¸Šè¡Œï¼šåŒ—æ§½èˆ¹èˆ¶æœ€å¤§åƒæ°´
+            // ¼ÆËãÉÏĞĞ£º±±²Û´¬²°×î´ó³ÔË®
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DRAFT), hwnd, ComputeUpDraftCallback);
         }
 
         else if (wParam == ID_UP_DWT_DRAFT)
         {
-            // è®¡ç®—ä¸Šè¡Œï¼šåŒ—æ§½DWTå¤§äº7.5ä¸‡å¨èˆ¹èˆ¶æœ€å¤§åƒæ°´
+            // ¼ÆËãÉÏĞĞ£º±±²ÛDWT´óÓÚ7.5Íò¶Ö´¬²°×î´ó³ÔË®
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_UP_DWT_DRAFT), hwnd, ComputeUpDWTDraftCallback);
         }
 
         else if (wParam == ID_DOWN_DRAFT)
         {
-            // è®¡ç®—ä¸‹è¡Œï¼šåŒ—æ§½èˆ¹èˆ¶æœ€å¤§åƒæ°´
+            // ¼ÆËãÏÂĞĞ£º±±²Û´¬²°×î´ó³ÔË®
             DialogBoxW(hInst, MAKEINTRESOURCE(IDD_DOWN_DRAFT), hwnd, ComputeDownDraftCallback);
         }
 
         else if (LOWORD(wParam) >= MENU_ID_START && LOWORD(wParam) < MENU_ID_START + game.getMenuMax())
         {
-            // å“åº”å³é”®èœå•
+            // ÏìÓ¦ÓÒ¼ü²Ëµ¥
             game.processMenu(LOWORD(wParam) - MENU_ID_START);
         }
         break;
 
-    // å¤„ç†é”®ç›˜æ¶ˆæ¯
+    // ´¦Àí¼üÅÌÏûÏ¢
     case WM_KEYDOWN:
         if (wParam == VK_ESCAPE)
         {
-            // æŒ‰ESCé”®å…³é—­åº”ç”¨ç¨‹åº
+            // °´ESC¼ü¹Ø±ÕÓ¦ÓÃ³ÌĞò
             ::PostQuitMessage(WM_QUIT);
         }
         else
@@ -266,7 +266,7 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
         }
         break;
 
-    // å¤„ç†é¼ æ ‡ç§»åŠ¨æ¶ˆæ¯
+    // ´¦ÀíÊó±êÒÆ¶¯ÏûÏ¢
     case WM_MOUSEMOVE:
     {
         Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -274,7 +274,7 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
     }
     break;
 
-    // å¤„ç†é¼ æ ‡å·¦é”®æ¶ˆæ¯
+    // ´¦ÀíÊó±ê×ó¼üÏûÏ¢
     case WM_LBUTTONDOWN:
     {
         Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -282,7 +282,7 @@ LRESULT CALLBACK WinUtility::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
     }
     break;
 
-    // å¤„ç†é¼ æ ‡å³é”®é”®æ¶ˆæ¯
+    // ´¦ÀíÊó±êÓÒ¼ü¼üÏûÏ¢
     case WM_RBUTTONDOWN:
     {
         Point point(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -334,20 +334,20 @@ INT_PTR CALLBACK HelpCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
             switch (game.fileId)
             {
             case Game::FILE_HELP:
-                ::SetWindowText(hDlg, L"å¸®åŠ©");
+                ::SetWindowText(hDlg, L"°ïÖú");
                 PathAppend(fullPath, L"help.txt");
                 break;
             case Game::FILE_MATOU:
-                ::SetWindowText(hDlg, L"ç å¤´æƒ…å†µ");
-                PathAppend(fullPath, L"ç å¤´æƒ…å†µ.txt");
+                ::SetWindowText(hDlg, L"ÂëÍ·Çé¿ö");
+                PathAppend(fullPath, L"ÂëÍ·Çé¿ö.txt");
                 break;
             case Game::FILE_TUOLUN:
-                ::SetWindowText(hDlg, L"æ‹–è½®æƒ…å†µ");
-                PathAppend(fullPath, L"æ‹–è½®æƒ…å†µ.txt");
+                ::SetWindowText(hDlg, L"ÍÏÂÖÇé¿ö");
+                PathAppend(fullPath, L"ÍÏÂÖÇé¿ö.txt");
                 break;
             case Game::FILE_HANGDAO:
-                ::SetWindowText(hDlg, L"èˆªé“æƒ…å†µ");
-                PathAppend(fullPath, L"èˆªé“æƒ…å†µ.txt");
+                ::SetWindowText(hDlg, L"º½µÀÇé¿ö");
+                PathAppend(fullPath, L"º½µÀÇé¿ö.txt");
                 break;
             default:
                 return (INT_PTR)TRUE;
@@ -430,7 +430,7 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             {
                 delete[] wc;
 
-                MessageBox(hDlg, L"è¾“å…¥è§‚å¯Ÿç‚¹ä¸èƒ½ä¸ºç©ºï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÊäÈë¹Û²ìµã²»ÄÜÎª¿Õ£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 break;
             }
 
@@ -450,7 +450,7 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             {
                 delete[] wc;
 
-                MessageBox(hDlg, L"è¾“å…¥å¹´ä»½ä¸æœˆä»½æ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÊäÈëÄê·İÓëÔÂ·İ¸ñÊ½²»ÕıÈ·£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 SetDlgItemText(hDlg, IDC_INPUT_DATE, L"");
                 break;
             }
@@ -485,8 +485,8 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 
                     if (!game.checkDate(date))
                     {
-                        errInfo.Format(L"è¾“å…¥æ—¥å­ï¼ˆ%sï¼‰ä¸åˆæ³•ï¼Œè¯·é‡æ–°è¾“å…¥ï¼", day);
-                        MessageBox(hDlg, errInfo, L"é”™è¯¯", MB_OK);
+                        errInfo.Format(L"ÊäÈëÈÕ×Ó£¨%s£©²»ºÏ·¨£¬ÇëÖØĞÂÊäÈë£¡", day);
+                        MessageBox(hDlg, errInfo, L"´íÎó", MB_OK);
                         SetDlgItemText(hDlg, dateDlgId, L"");
                         break;
                     }
@@ -498,8 +498,8 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
 
                     if (data.IsEmpty() || !game.formatInputData(data) || !game.checkInputData(data))
                     {
-                        errInfo.Format(L"è¾“å…¥%så·çš„æ½®é«˜æ•°æ®ä¸ç¬¦åˆæ ¼å¼ï¼Œæ£€æŸ¥åè¯·é‡æ–°è¾“å…¥ï¼", day);
-                        MessageBox(hDlg, errInfo, L"é”™è¯¯", MB_OK);
+                        errInfo.Format(L"ÊäÈë%sºÅµÄ³±¸ßÊı¾İ²»·ûºÏ¸ñÊ½£¬¼ì²éºóÇëÖØĞÂÊäÈë£¡", day);
+                        MessageBox(hDlg, errInfo, L"´íÎó", MB_OK);
                         break;
                     }
 
@@ -509,9 +509,9 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
                     }
                     else
                     {
-                        errInfo.Format(L"æŠ±æ­‰ï¼Œå½•å…¥%då·çš„æ•°æ®æ—¶å‘ç”Ÿäº†é”™è¯¯ï¼\nè¯·é‡è¯•æˆ–æŠ¥å‘Šé”™è¯¯(l_zhaohui@163.com)",
+                        errInfo.Format(L"±§Ç¸£¬Â¼Èë%dºÅµÄÊı¾İÊ±·¢ÉúÁË´íÎó£¡\nÇëÖØÊÔ»ò±¨¸æ´íÎó(l_zhaohui@163.com)",
                                        day);
-                        MessageBox(hDlg, errInfo, L"é”™è¯¯", MB_OK);
+                        MessageBox(hDlg, errInfo, L"´íÎó", MB_OK);
                     }
                 }
             }
@@ -522,8 +522,8 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             {
                 game.inputPlace(place);
 
-                errInfo.Format(L"æˆåŠŸå½•å…¥%då¤©çš„æ•°æ®ï¼", clearIndex.size());
-                MessageBox(hDlg, errInfo, L"æ­å–œ", MB_OK);
+                errInfo.Format(L"³É¹¦Â¼Èë%dÌìµÄÊı¾İ£¡", clearIndex.size());
+                MessageBox(hDlg, errInfo, L"¹§Ï²", MB_OK);
             }
 
             for (size_t i = 0; i < clearIndex.size(); i++)
@@ -539,21 +539,21 @@ INT_PTR CALLBACK InputCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             delete[] wc;
             if (tideData.IsEmpty() || !game.formatInputData(tideData) || !game.checkInputData(tideData))
             {
-                MessageBox(hDlg, L"è¾“å…¥æ—¶é—´ä¸æ½®é«˜æ•°æ®ä¸ç¬¦åˆæ ¼å¼ï¼Œæ£€æŸ¥åè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÊäÈëÊ±¼äÓë³±¸ßÊı¾İ²»·ûºÏ¸ñÊ½£¬¼ì²éºóÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 break;
             }
             if (game.inputData(place, date, tideData))
             {
                 // EndDialog(hDlg, LOWORD(wParam));
                 CStringW info;
-                info.Format(L"%sï¼Œ%så¹´%sæœˆ%sæ—¥çš„æ•°æ®å½•å…¥æˆåŠŸï¼", place, date.Left(4), date.Mid(4, 2), date.Mid(6, 2));
-                MessageBox(hDlg, info, L"æ­å–œ", MB_OK);
+                info.Format(L"%s£¬%sÄê%sÔÂ%sÈÕµÄÊı¾İÂ¼Èë³É¹¦£¡", place, date.Left(4), date.Mid(4, 2), date.Mid(6, 2));
+                MessageBox(hDlg, info, L"¹§Ï²", MB_OK);
                 // SetDlgItemText(hDlg, IDC_INPUT_DATE, L"");
                 SetDlgItemText(hDlg, IDC_TIDE_DATA, L"");
             }
             else
             {
-                MessageBox(hDlg, L"æŠ±æ­‰ï¼Œæ•°æ®å½•å…¥çš„æ—¶å€™å‘ç”Ÿäº†é”™è¯¯ï¼\nè¯·é‡è¯•æˆ–æŠ¥å‘Šé”™è¯¯(l_zhaohui@163.com)", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"±§Ç¸£¬Êı¾İÂ¼ÈëµÄÊ±ºò·¢ÉúÁË´íÎó£¡\nÇëÖØÊÔ»ò±¨¸æ´íÎó(l_zhaohui@163.com)", L"´íÎó", MB_OK);
             }
 #endif
         }
@@ -607,7 +607,7 @@ INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
             {
                 delete[] wc;
 
-                MessageBox(hDlg, L"è¾“å…¥è§‚å¯Ÿç‚¹ä¸èƒ½ä¸ºç©ºï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÊäÈë¹Û²ìµã²»ÄÜÎª¿Õ£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 break;
             }
 
@@ -620,7 +620,7 @@ INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
 
             if (filePath.IsEmpty() || filePath == L"")
             {
-                MessageBox(hDlg, L"è¯·å…ˆå¯¼å…¥æ•°æ®æ–‡ä»¶ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÇëÏÈµ¼ÈëÊı¾İÎÄ¼ş£¡", L"´íÎó", MB_OK);
             }
             else
             {
@@ -628,7 +628,7 @@ INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
                 bool isSuccess = game.inputDataEx(filePath, place, resultInfo);
 
                 SetDlgItemText(hDlg, IDC_INFO, resultInfo);
-                MessageBox(hDlg, resultInfo, isSuccess ? L"æ­å–œ" : L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, resultInfo, isSuccess ? L"¹§Ï²" : L"´íÎó", MB_OK);
 
                 if (isSuccess)
                 {
@@ -640,18 +640,18 @@ INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
         }
         else if (LOWORD(wParam) == IDC_SEARCH_DATA_FILE)
         {
-            // æ‰“å¼€å¯¼å…¥æ–‡ä»¶å¯¹è¯æ¡†
-            OPENFILENAME ofn;        // å…¬å…±å¯¹è¯æ¡†ç»“æ„ã€‚
-            TCHAR szFile[MAX_PATH];  // ä¿å­˜è·å–æ–‡ä»¶åç§°çš„ç¼“å†²åŒºã€‚
+            // ´ò¿ªµ¼ÈëÎÄ¼ş¶Ô»°¿ò
+            OPENFILENAME ofn;        // ¹«¹²¶Ô»°¿ò½á¹¹¡£
+            TCHAR szFile[MAX_PATH];  // ±£´æ»ñÈ¡ÎÄ¼şÃû³ÆµÄ»º³åÇø¡£
 
-            // åˆå§‹åŒ–é€‰æ‹©æ–‡ä»¶å¯¹è¯æ¡†ã€‚
+            // ³õÊ¼»¯Ñ¡ÔñÎÄ¼ş¶Ô»°¿ò¡£
             ZeroMemory(&ofn, sizeof(ofn));
             ofn.lStructSize = sizeof(ofn);
             ofn.hwndOwner = hDlg;
             ofn.lpstrFile = szFile;
             ofn.lpstrFile[0] = _T('\0');
             ofn.nMaxFile = sizeof(szFile);
-            ofn.lpstrFilter = _T("æ–‡æœ¬æ–‡ä»¶\0*.txt\0\0");
+            ofn.lpstrFilter = _T("ÎÄ±¾ÎÄ¼ş\0*.txt\0\0");
             ofn.nFilterIndex = 1;
             ofn.lpstrFileTitle = NULL;
             ofn.nMaxFileTitle = 0;
@@ -659,7 +659,7 @@ INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
             ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
             // ofn.lpTemplateName =  MAKEINTRESOURCE(ID_TEMP_DIALOG);
-            // æ˜¾ç¤ºæ‰“å¼€é€‰æ‹©æ–‡ä»¶å¯¹è¯æ¡†ã€‚
+            // ÏÔÊ¾´ò¿ªÑ¡ÔñÎÄ¼ş¶Ô»°¿ò¡£
             if (GetOpenFileName(&ofn))
             {
                 CStringW filePath(szFile);
@@ -675,7 +675,7 @@ INT_PTR CALLBACK InputCallbackEx(HWND hDlg, UINT message, WPARAM wParam, LPARAM 
                 else
                 {
                     SetDlgItemText(hDlg, IDC_DATA_FILE, L"");
-                    MessageBox(hDlg, resultInfo, L"é”™è¯¯", MB_OK);
+                    MessageBox(hDlg, resultInfo, L"´íÎó", MB_OK);
                 }
             }
         }
@@ -709,7 +709,7 @@ INT_PTR CALLBACK ComputeDeepthCallback(HWND hDlg, UINT message, WPARAM wParam, L
 
         ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-        // è®¾å®šåˆå€¼
+        // Éè¶¨³õÖµ
         CStringW place;
         int boat = 0;
         int water = 0;
@@ -727,7 +727,7 @@ INT_PTR CALLBACK ComputeDeepthCallback(HWND hDlg, UINT message, WPARAM wParam, L
         SetDlgItemInt(hDlg, IDC_WATER_TWO, water, true);
         SetDlgItemInt(hDlg, IDC_SEA_TWO, sea, true);
 
-        // æ›´æ–°ç»“æœ
+        // ¸üĞÂ½á¹û
         updateResultOne(hDlg, false);
         updateResultTwo(hDlg, false);
     }
@@ -869,7 +869,110 @@ void updateResultTwo(HWND hDlg, bool needSave)
     SetDlgItemText(hDlg, IDC_RESULT_TWO, strResult);
 }
 
-// è®¡ç®—ä¸Šè¡Œï¼šåŒ—æ§½èˆ¹èˆ¶æœ€å¤§åƒæ°´
+void updateDraftResultOne(HWND hDlg, bool needSave)
+{
+    wchar_t* wc = new wchar_t[MAX_PATH];
+    wmemset(wc, 0, MAX_PATH);
+
+    const int UNKOWN = -10000;
+    int avaible = UNKOWN;
+    int seaWater = UNKOWN;
+    float ratio = UNKOWN;
+    int result = 0;
+    CStringW strResult(L"");
+
+
+    GetDlgItemText(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        avaible = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
+
+    GetDlgItemText(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        seaWater = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
+
+    GetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        ratio = _wtof(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
+
+    delete[] wc;
+    wc = NULL;
+
+    if (avaible != UNKOWN && seaWater != UNKOWN && abs(ratio + UNKOWN) > 0.000001)
+    {
+        result = game.calculateBeiCaoDraft(ratio, avaible, seaWater);
+        strResult.Format(L"%d", result);
+
+        if (needSave)
+        {
+            //game.setRichness(true, place, boat, water, sea);
+        }
+    }
+
+    SetDlgItemText(hDlg, IDC_UP_RESULT_ONE, strResult);
+}
+
+
+void updateDraftResultTwo(HWND hDlg, bool needSave)
+{
+    wchar_t* wc = new wchar_t[MAX_PATH];
+    wmemset(wc, 0, MAX_PATH);
+
+    const int UNKOWN = -10000;
+    int avaible = UNKOWN;
+    int seaWater = UNKOWN;
+    float ratio = UNKOWN;
+    int result = 0;
+    CStringW strResult(L"");
+
+
+    GetDlgItemText(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        avaible = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
+
+    GetDlgItemText(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        seaWater = _wtoi(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
+
+    GetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, wc, MAX_PATH);
+    if (wcslen(wc) > 0)
+    {
+        ratio = _wtof(wc);
+        wmemset(wc, 0, MAX_PATH);
+    }
+
+    delete[] wc;
+    wc = NULL;
+
+    if (avaible != UNKOWN && seaWater != UNKOWN && abs(ratio + UNKOWN) > 0.000001)
+    {
+        result = game.calculateBeiCaoDraft(ratio, avaible, seaWater);
+        strResult.Format(L"%d", result);
+
+        if (needSave)
+        {
+            //game.setRichness(true, place, boat, water, sea);
+        }
+    }
+
+    SetDlgItemText(hDlg, IDC_UP_RESULT_TWO, strResult);
+}
+
+// ¼ÆËãÉÏĞĞ£º±±²Û´¬²°×î´ó³ÔË®
 INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -887,8 +990,27 @@ INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, 
         int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
         ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-    }
 
+        // Éè¶¨³õÖµ
+        CStringW ratio;
+		ratio.Format(L"%.2f", 1.12);
+		int up, upDWT, down;
+		game.getAvailableDraftTide(up, upDWT, down);
+        SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, up, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, 1250, true);
+        SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
+        SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
+		
+		ratio.Format(L"%.2f", 1.15);
+        SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, up, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, 1250, true);
+        SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
+        SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
+
+        // ¸üĞÂ½á¹û
+		updateDraftResultOne(hDlg, false);
+        updateDraftResultTwo(hDlg, false);
+    }
         return (INT_PTR)TRUE;
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
@@ -896,11 +1018,18 @@ INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, 
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
-
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_ONE)
+        {
+            updateDraftResultOne(hDlg, true);
+        }
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_TWO)
+        {
+            updateDraftResultTwo(hDlg, true);
+        }
         else if (LOWORD(wParam) == IDOK)
         {
-            updateWaterHeightResultOne(hDlg);
-            updateWaterHeightResultTwo(hDlg);
+            updateDraftResultOne(hDlg, true);
+            updateDraftResultTwo(hDlg, true);
         }
 
         break;
@@ -908,7 +1037,7 @@ INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, 
     return (INT_PTR)FALSE;
 }
 
-// è®¡ç®—ä¸Šè¡Œï¼šåŒ—æ§½DWTå¤§äº7.5ä¸‡å¨èˆ¹èˆ¶æœ€å¤§åƒæ°´
+// ¼ÆËãÉÏĞĞ£º±±²ÛDWT´óÓÚ7.5Íò¶Ö´¬²°×î´ó³ÔË®
 INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -926,6 +1055,26 @@ INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wPara
         int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
         ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+
+        // Éè¶¨³õÖµ
+        CStringW ratio;
+		ratio.Format(L"%.2f", 1.12);
+		int up, upDWT, down;
+		game.getAvailableDraftTide(up, upDWT, down);
+        SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, upDWT, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, 1250, true);
+        SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
+        SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
+		
+		ratio.Format(L"%.2f", 1.15);
+        SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, upDWT, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, 1250, true);
+        SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
+        SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
+
+        // ¸üĞÂ½á¹û
+		updateDraftResultOne(hDlg, false);
+        updateDraftResultTwo(hDlg, false);
     }
 
         return (INT_PTR)TRUE;
@@ -935,11 +1084,18 @@ INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wPara
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
-
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_ONE)
+        {
+            updateDraftResultOne(hDlg, true);
+        }
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_TWO)
+        {
+            updateDraftResultTwo(hDlg, true);
+        }
         else if (LOWORD(wParam) == IDOK)
         {
-            updateWaterHeightResultOne(hDlg);
-            updateWaterHeightResultTwo(hDlg);
+            updateDraftResultOne(hDlg, true);
+            updateDraftResultTwo(hDlg, true);
         }
 
         break;
@@ -947,7 +1103,7 @@ INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wPara
     return (INT_PTR)FALSE;
 }
 
-// è®¡ç®—ä¸‹è¡Œï¼šåŒ—æ§½èˆ¹èˆ¶æœ€å¤§åƒæ°´
+// ¼ÆËãÏÂĞĞ£º±±²Û´¬²°×î´ó³ÔË®
 INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam);
@@ -965,8 +1121,27 @@ INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam
         int y = int(rcParent.top + ((rcParent.bottom - rcParent.top) - (rcDlg.bottom - rcDlg.top)) / 2);
 
         ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
-    }
 
+        // Éè¶¨³õÖµ
+        CStringW ratio;
+		ratio.Format(L"%.2f", 1.12);
+		int up, upDWT, down;
+		game.getAvailableDraftTide(up, upDWT, down);
+        SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, down, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, 1250, true);
+        SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
+        SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
+		
+		ratio.Format(L"%.2f", 1.15);
+        SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, down, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, 1250, true);
+        SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
+        SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
+
+        // ¸üĞÂ½á¹û
+		updateDraftResultOne(hDlg, false);
+        updateDraftResultTwo(hDlg, false);
+    }
         return (INT_PTR)TRUE;
 
     case WM_COMMAND:
@@ -975,11 +1150,18 @@ INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
-
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_ONE)
+        {
+            updateDraftResultOne(hDlg, true);
+        }
+        else if (LOWORD(wParam) == IDC_CEW_COMPUTER_TWO)
+        {
+            updateDraftResultTwo(hDlg, true);
+        }
         else if (LOWORD(wParam) == IDOK)
         {
-            updateWaterHeightResultOne(hDlg);
-            updateWaterHeightResultTwo(hDlg);
+            updateDraftResultOne(hDlg, true);
+            updateDraftResultTwo(hDlg, true);
         }
 
         break;
@@ -1006,7 +1188,7 @@ INT_PTR CALLBACK ComputeEatWaterCallback(HWND hDlg, UINT message, WPARAM wParam,
 
         ::SetWindowPos(hDlg, HWND_TOP, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
-        // è®¾å®šåˆå€¼
+        // Éè¶¨³õÖµ
         CStringW place;
         int tide = 0;
         int water = 0;
@@ -1024,7 +1206,7 @@ INT_PTR CALLBACK ComputeEatWaterCallback(HWND hDlg, UINT message, WPARAM wParam,
         SetDlgItemInt(hDlg, IDC_CEW_SEA_TWO, sea, true);
         SetDlgItemInt(hDlg, IDC_CEW_WATER_TWO, water, true);
 
-        // æ›´æ–°ç»“æœ
+        // ¸üĞÂ½á¹û
         updateWaterHeightResultOne(hDlg, false);
         updateWaterHeightResultTwo(hDlg, false);
     }
@@ -1247,17 +1429,17 @@ INT_PTR CALLBACK ModifyCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
             if (!game.checkPassword(oldPwd))
             {
-                MessageBox(hDlg, L"åŸå¯†ç ä¸æ­£ç¡®ï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"Ô­ÃÜÂë²»ÕıÈ·£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 SetDlgItemText(hDlg, IDC_OLD_PWD, L"");
             }
             else if (newPwd.IsEmpty())
             {
-                MessageBox(hDlg, L"æ–°å¯†ç ä¸èƒ½ä¸ºç©ºï¼Œè¯·è¾“å…¥æ–°å¯†ç ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ĞÂÃÜÂë²»ÄÜÎª¿Õ£¬ÇëÊäÈëĞÂÃÜÂë£¡", L"´íÎó", MB_OK);
                 SetDlgItemText(hDlg, IDC_NEW_PWD, L"");
             }
             else if (newPwd.GetLength() > 24)
             {
-                MessageBox(hDlg, L"æ–°å¯†ç é•¿åº¦ä¸èƒ½è¶…è¿‡12ï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ĞÂÃÜÂë³¤¶È²»ÄÜ³¬¹ı12£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 SetDlgItemText(hDlg, IDC_NEW_PWD, L"");
             }
             else
@@ -1266,7 +1448,7 @@ INT_PTR CALLBACK ModifyCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM l
 
                 game.modifyPassword(newPwd);
 
-                MessageBox(hDlg, L"æ–°å¯†ç è®¾ç½®æˆåŠŸï¼Œä¸‹å›è¯·ç”¨æ–°å¯†ç ï¼", L"æ­å–œ", MB_OK);
+                MessageBox(hDlg, L"ĞÂÃÜÂëÉèÖÃ³É¹¦£¬ÏÂ»ØÇëÓÃĞÂÃÜÂë£¡", L"¹§Ï²", MB_OK);
             }
 
             return (INT_PTR)TRUE;
@@ -1329,7 +1511,7 @@ INT_PTR CALLBACK LookCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lPa
             }
             else
             {
-                MessageBox(hDlg, L"è¾“å…¥æ—¥æœŸæ ¼å¼ä¸æ­£ç¡®ï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÊäÈëÈÕÆÚ¸ñÊ½²»ÕıÈ·£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 SetDlgItemText(hDlg, IDC_DATE, L"");
             }
 
@@ -1393,7 +1575,7 @@ INT_PTR CALLBACK LoginCallback(HWND hDlg, UINT message, WPARAM wParam, LPARAM lP
             }
             else
             {
-                MessageBox(hDlg, L"å¯†ç ä¸æ­£ç¡®ï¼Œè¯·é‡æ–°è¾“å…¥ï¼", L"é”™è¯¯", MB_OK);
+                MessageBox(hDlg, L"ÃÜÂë²»ÕıÈ·£¬ÇëÖØĞÂÊäÈë£¡", L"´íÎó", MB_OK);
                 SetDlgItemText(hDlg, IDC_PWD, L"");
             }
 
@@ -1417,7 +1599,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE prevInstance, PSTR cmdLine, in
 {
     hInst = hinstance;
 
-    HWND hwnd = WinUtility::InitWindow(hinstance, _T("ç”µå­æ½®æ±å›¾è¡¨"), 820, 650, true);  //, 600, true);
+    HWND hwnd = WinUtility::InitWindow(hinstance, _T("µç×Ó³±Ï«Í¼±í"), 820, 650, true);  //, 600, true);
     if (!hwnd)
     {
         ::MessageBox(0, _T("Init game window - FAILED"), 0, 0);
