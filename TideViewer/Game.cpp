@@ -419,11 +419,12 @@ void Game::start(LPCWSTR string)
         scriptManager.getUint32(cewSeaTwo, "cew_sea_two");
         scriptManager.getUint32(cewWaterOne, "cew_water_one");
         scriptManager.getUint32(cewWaterTwo, "cew_water_two");
+        scriptManager.getString(strPlaceOne, L"cew_place_one");
+        scriptManager.getString(strPlaceTwo, L"cew_place_two");
+
         scriptManager.getFloat(ratioOne, "chart_ratio_one", 1.12f);
         scriptManager.getFloat(ratioTwo, "chart_ratio_two", 1.15f);
         scriptManager.getUint32(chartDepth, "chart_depth", 1250);
-        scriptManager.getString(strPlaceOne, L"cew_place_one");
-        scriptManager.getString(strPlaceTwo, L"cew_place_two");
 
         swprintf_s(cewPlaceOne, MAX_PATH, strPlaceOne);
         swprintf_s(cewPlaceTwo, MAX_PATH, strPlaceTwo);
@@ -858,13 +859,13 @@ bool Game::loadBeiCaoMaxDraftData()
         draft.availableUpDWTDraftTide = fourHoursAgoTide;
         draft.availableDownDraftTide = min(twoHalfHoursAgoTide, twoHoursLaterTide);
 
-        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, 1250);
-        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, 1250);
-        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, 1250);
-        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, 1250);
+        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, chartDepth);
+        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, chartDepth);
+        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, chartDepth);
+        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, chartDepth);
 
-        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, 1250);
-        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, 1250);
+        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, chartDepth);
+        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, chartDepth);
 
         beiCaoDraftData.push_back(draft);
 
