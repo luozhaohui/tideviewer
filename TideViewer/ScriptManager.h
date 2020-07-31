@@ -1,14 +1,14 @@
-/*   
-*   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)   
-*   All rights reserved.   
-*     
-*   ÎÄ¼şÃû³Æ£ºScriptManager.h   
-*   Õª    Òª£º½Å±¾¶ÁÈ¡Í·ÎÄ¼ş
-*     
-*   µ±Ç°°æ±¾£º1.1   
-*   ×÷    Õß£ºÆ®Æ®°×ÔÆ   
-*   Íê³ÉÈÕÆÚ£º2008/11/30
-*/
+/*
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
+ *   All rights reserved.
+ *
+ *   æ–‡ä»¶åç§°ï¼šScriptManager.h
+ *   æ‘˜    è¦ï¼šè„šæœ¬è¯»å–å¤´æ–‡ä»¶
+ *
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
+ */
 
 #pragma once
 #include "WinUtility.h"
@@ -19,37 +19,39 @@
 class ScriptManager
 {
 public:
-	ScriptManager();
-	~ScriptManager(void);
+    ScriptManager();
+    ~ScriptManager(void);
 
-	bool open(const CStringW& filePath, const CStringW& fileName);
-	void close();
+    bool open(const CStringW& filePath, const CStringW& fileName);
+    void close();
 
-	void getUint32(int& v, const CStringW& name);
-	void getUint32(std::vector<int>& v, const CStringW& name);
-	void getString(CStringW& v, const CStringW& name);
-	void getString(std::vector<CStringW>& v, const CStringW& name);
+    void getFloat(float& v, const CStringW& name, float default_value = 0.0f);
+    void getFloat(std::vector<float>& v, const CStringW& name);
+    void getUint32(int& v, const CStringW& name);
+    void getUint32(std::vector<int>& v, const CStringW& name);
+    void getString(CStringW& v, const CStringW& name);
+    void getString(std::vector<CStringW>& v, const CStringW& name);
 #if 0
-	static CStringW CStringA2CStringW(const CStringA& strA)
-	{
-		CStringW strW;
-		wchar_t wc[MAX_PATH];
-		ZeroMemory(wc,MAX_PATH);
-		MultiByteToWideChar(CP_ACP, 0, (LPCSTR) strA, MAX_PATH, (LPWSTR) wc, MAX_PATH);
-		strW.Format(L"%s", wc);
-		return strW;
-	}
+    static CStringW CStringA2CStringW(const CStringA& strA)
+    {
+        CStringW strW;
+        wchar_t wc[MAX_PATH];
+        ZeroMemory(wc,MAX_PATH);
+        MultiByteToWideChar(CP_ACP, 0, (LPCSTR) strA, MAX_PATH, (LPWSTR) wc, MAX_PATH);
+        strW.Format(L"%s", wc);
+        return strW;
+    }
 
-	static CStringA CStringW2CStringA(const CStringW& strW)
-	{
-		CStringA strA;
-		char mb[MAX_PATH];
-		ZeroMemory(mb,MAX_PATH);
-		WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) strW, -1, mb, MAX_PATH, NULL, NULL);
-		strA.Format("%s", mb);
-		return strA;
-	}
+    static CStringA CStringW2CStringA(const CStringW& strW)
+    {
+        CStringA strA;
+        char mb[MAX_PATH];
+        ZeroMemory(mb,MAX_PATH);
+        WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) strW, -1, mb, MAX_PATH, NULL, NULL);
+        strA.Format("%s", mb);
+        return strA;
+    }
 #endif
 private:
-	void* handle;
+    void* handle;
 };

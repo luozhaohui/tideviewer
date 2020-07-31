@@ -1,13 +1,13 @@
 /*
- *   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
  *   All rights reserved.
  *
- *   ÎÄ¼şÃû³Æ£ºGame.h
- *   Õª    Òª£ºÂß¼­¿ò¼ÜÍ·ÎÄ¼ş
+ *   æ–‡ä»¶åç§°ï¼šGame.h
+ *   æ‘˜    è¦ï¼šé€»è¾‘æ¡†æ¶å¤´æ–‡ä»¶
  *
- *   µ±Ç°°æ±¾£º1.1
- *   ×÷    Õß£ºÆ®Æ®°×ÔÆ
- *   Íê³ÉÈÕÆÚ£º2008/11/30
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
  */
 
 #pragma once
@@ -28,78 +28,78 @@ public:
 
     //////////////////////////////////////////////////////////////////////////
 
-    /* ÏìÓ¦¼üÅÌ°´¼üÏûÏ¢ */
+    /* å“åº”é”®ç›˜æŒ‰é”®æ¶ˆæ¯ */
     void onKeyDown(int keyCode, const Point& pt);
 
-    /* ÏìÓ¦Êó±ê×ó¼üÏûÏ¢ */
+    /* å“åº”é¼ æ ‡å·¦é”®æ¶ˆæ¯ */
     void onLeftButtonDown(const Point& pt);
 
-    /* ÏìÓ¦Êó±êÓÒ¼üÏûÏ¢ */
+    /* å“åº”é¼ æ ‡å³é”®æ¶ˆæ¯ */
     void onRightButtonDown(const Point& pt);
 
-    /* ÏìÓ¦Êó±êÒÆ¶¯ÏûÏ¢ */
+    /* å“åº”é¼ æ ‡ç§»åŠ¨æ¶ˆæ¯ */
     void onMouseMove(const Point& pt);
 
-    /* Ãè»æ */
+    /* æç»˜ */
     void draw();
 
-    /* ÍË³öÓ¦ÓÃ³ÌĞò */
+    /* é€€å‡ºåº”ç”¨ç¨‹åº */
     void exit();
 
-    /* ÔØÈë½ñÌìµÄ³±¸ßÊı¾İ */
+    /* è½½å…¥ä»Šå¤©çš„æ½®é«˜æ•°æ® */
     void loadToday();
 
-    /* ÔØÈëÇ°Ò»ÌìµÄ³±¸ßÊı¾İ */
+    /* è½½å…¥å‰ä¸€å¤©çš„æ½®é«˜æ•°æ® */
     void loadPrev();
 
-    /* ÔØÈëºóÒ»ÌìµÄ³±¸ßÊı¾İ*/
+    /* è½½å…¥åä¸€å¤©çš„æ½®é«˜æ•°æ®*/
     void loadNext();
 
-    /* ÔØÈëÖ¸¶¨ÈÕÆÚµÄ³±¸ßÊı¾İ */
+    /* è½½å…¥æŒ‡å®šæ—¥æœŸçš„æ½®é«˜æ•°æ® */
     void loadDay(const CStringW& dateString);
 
-    /* ÏÔÊ¾³±¸ßÊı¾İ */
+    /* æ˜¾ç¤ºæ½®é«˜æ•°æ® */
     void start(LPCWSTR dateString = NULL);
 
-    /* È¡µÃÓÒ¼ü²Ëµ¥µÄ²Ëµ¥ÊıÄ¿ */
+    /* å–å¾—å³é”®èœå•çš„èœå•æ•°ç›® */
     int getMenuMax()
     {
         return (int)(MENU_ID_START + places.size());
     }
 
-    /* ¼ì²éÃÜÂëÊ¦¸µÆ¥Åä */
+    /* æ£€æŸ¥å¯†ç å¸ˆå‚…åŒ¹é… */
     bool checkPassword(const CStringW& password);
 
-    /* ¼ì²éÈÕÆÚµÄºÏ·¨ĞÔ */
+    /* æ£€æŸ¥æ—¥æœŸçš„åˆæ³•æ€§ */
     static bool checkDate(const CStringW& date);
 
-    /* ²åÈëÍùµØÖ·±íÖĞ²åÈëµØÖ· */
+    /* æ’å…¥å¾€åœ°å€è¡¨ä¸­æ’å…¥åœ°å€ */
     bool inputPlace(const CStringW& place);
 
-    /* ¸ñÊ½»¯Â¼ÈëÊı¾İ */
+    /* æ ¼å¼åŒ–å½•å…¥æ•°æ® */
     bool formatInputData(CStringW& inputData);
 
-    /* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ */
+    /* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§ */
     bool checkInputData(const CStringW& inputData);
 
-    /* Â¼ÈëÊı¾İ */
+    /* å½•å…¥æ•°æ® */
     bool inputData(const CStringW& place, const CStringW& date, const CStringW& data);
 
-    /* ĞŞ¸ÄÃÜÂë */
+    /* ä¿®æ”¹å¯†ç  */
     void modifyPassword(const CStringW& password);
 
-    /* ÅĞ¶ÏÊÇ·ñÒÑ¾­µÇÂ¼ */
+    /* åˆ¤æ–­æ˜¯å¦å·²ç»ç™»å½• */
     bool isLogined()
     {
         return loginFlag;
     }
 
-    /* ÔØÈëÓÒ¼ü²Ëµ¥Ö¸¶¨µØµãµÄ³±¸ßÊı¾İ */
+    /* è½½å…¥å³é”®èœå•æŒ‡å®šåœ°ç‚¹çš„æ½®é«˜æ•°æ® */
     void processMenu(int menuId);
 
-    /* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ:ex */
+    /* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§:ex */
     bool checkInputDataEx(const CStringW& filePath, CStringW& place, CStringW& date, CStringW& resultInfo);
-    /* Â¼ÈëÊı¾İ:ex */
+    /* å½•å…¥æ•°æ®:ex */
     bool inputDataEx(const CStringW& filePath, const CStringW& place, CStringW& resultInfo);
 
     void setRichness(bool isPlaceOne, const CStringW& place, int boat, int water, int sea);
@@ -108,8 +108,13 @@ public:
     void setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water);
     void getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water);
 
-	void getAvailableDraftTide(int& up, int& upDWT, int& down);
-	static int calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 1250.0f);
+    float getRatioOne();
+    void setRatioOne(float ratio);
+    float getRatioTwo();
+    void setRatioTwo(float ratio);
+
+    std::vector<BeiCaoDraftData>& getBeiCaoDraftData();
+    static int calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 1250.0f);
 
     enum
     {
@@ -119,7 +124,7 @@ public:
         FILE_MATOU,
         FILE_HANGDAO,
     };
-    int fileId;  // ²é¿´ÎÄ±¾ÎÄ¼şµÄË÷Òı
+    int fileId;  // æŸ¥çœ‹æ–‡æœ¬æ–‡ä»¶çš„ç´¢å¼•
 
 protected:
     bool writeToScript(const CStringW& place, const CStringW& date, std::vector<std::vector<int>> data);
@@ -159,7 +164,11 @@ private:
               upDWTDraftOne(0),
               upDWTDraftTwo(0),
               downDraftOne(0),
-              downDraftTwo(0){};
+              downDraftTwo(0),
+              availableUpDraftTide(0),
+              availableUpDWTDraftTide(0),
+              availableDownDraftTide(0),
+              {};
 
         float time;
         float upDraftOne;
@@ -168,6 +177,14 @@ private:
         float upDWTDraftTwo;
         float downDraftOne;
         float downDraftTwo;
+        float availableUpDraftTide;
+        float availableUpDWTDraftTide;
+        float availableDownDraftTide;
+
+        bool operator<(const BeiCaoDraftData& data) const
+        {
+            return ((int)time < (int)data.time);
+        }
     };
 
     std::vector<BeiCaoDraftData> beiCaoDraftData;
@@ -205,6 +222,9 @@ private:
 
     wchar_t strForbidTimeOne[MAX_PATH];
     wchar_t strForbidTimeTwo[MAX_PATH];
+
+    float ratioOne;
+    float ratioTwo;
 
     float lastTime;
     float curTime;
@@ -269,8 +289,4 @@ private:
     std::vector<CStringW> places;
 
     bool loginFlag;
-
-	int availableUpDraftTide;
-	int availableUpDWTDraftTide;
-	int availableDownDraftTide;
 };

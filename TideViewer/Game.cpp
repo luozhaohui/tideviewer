@@ -1,13 +1,13 @@
 /*
- *   Copyright (c) 2008, Æ®Æ®°×ÔÆ(kesalin@gmail.com)
+ *   Copyright (c) 2008, é£˜é£˜ç™½äº‘(kesalin@gmail.com)
  *   All rights reserved.
  *
- *   ÎÄ¼şÃû³Æ£ºGame.cpp
- *   Õª    Òª£ºÂß¼­¿ò¼ÜÎÄ¼ş
+ *   æ–‡ä»¶åç§°ï¼šGame.cpp
+ *   æ‘˜    è¦ï¼šé€»è¾‘æ¡†æ¶æ–‡ä»¶
  *
- *   µ±Ç°°æ±¾£º1.1
- *   ×÷    Õß£ºÆ®Æ®°×ÔÆ
- *   Íê³ÉÈÕÆÚ£º2008/11/30
+ *   å½“å‰ç‰ˆæœ¬ï¼š1.1
+ *   ä½œ    è€…ï¼šé£˜é£˜ç™½äº‘
+ *   å®Œæˆæ—¥æœŸï¼š2008/11/30
  */
 
 #include "WinUtility.h"
@@ -16,6 +16,7 @@
 #include "ScriptManager.h"
 #include "ScriptExporter.h"
 #include "md5.h"
+#include <algorithm>
 
 const static int SCREEN_WIDTH = 820;
 const static int SCREEN_HEIGHT = 640;
@@ -54,14 +55,14 @@ int getLineFuncX(float y, float x1, float y1, float x2, float y2)
 }
 
 const static CStringW sysString[] = {
-    "Ê±¼ä", "³±¸ß", "µÚÒ»´Î¸ß³±", "µÚÒ»´ÎµÍ³±", "µÚ¶ş´Î¸ß³±", "µÚ¶ş´ÎµÍ³±",
+    "æ—¶é—´", "æ½®é«˜", "ç¬¬ä¸€æ¬¡é«˜æ½®", "ç¬¬ä¸€æ¬¡ä½æ½®", "ç¬¬äºŒæ¬¡é«˜æ½®", "ç¬¬äºŒæ¬¡ä½æ½®",
 };
 
 const static CStringW strNums[] = {
-    "³õÒ»",   "³õ¶ş",   "³õÈı",   "³õËÄ",   "³õÎå",   "³õÁù",   "³õÆß",   "³õ°Ë",
-    "³õ¾Å",   "³õÊ®",   "Ê®Ò»",   "Ê®¶ş",   "Ê®Èı",   "Ê®ËÄ",   "Ê®Îå",   "Ê®Áù",
-    "Ê®Æß",   "Ê®°Ë",   "Ê®¾Å",   "¶şÊ®",   "¶şÊ®Ò»", "¶şÊ®¶ş", "¶şÊ®Èı", "¶şÊ®ËÄ",
-    "¶şÊ®Îå", "¶şÊ®Áù", "¶şÊ®Æß", "¶şÊ®°Ë", "¶şÊ®¾Å", "ÈıÊ®",   "ÈıÊ®Ò»",
+    "åˆä¸€",   "åˆäºŒ",   "åˆä¸‰",   "åˆå››",   "åˆäº”",   "åˆå…­",   "åˆä¸ƒ",   "åˆå…«",
+    "åˆä¹",   "åˆå",   "åä¸€",   "åäºŒ",   "åä¸‰",   "åå››",   "åäº”",   "åå…­",
+    "åä¸ƒ",   "åå…«",   "åä¹",   "äºŒå",   "äºŒåä¸€", "äºŒåäºŒ", "äºŒåä¸‰", "äºŒåå››",
+    "äºŒåäº”", "äºŒåå…­", "äºŒåä¸ƒ", "äºŒåå…«", "äºŒåä¹", "ä¸‰å",   "ä¸‰åä¸€",
 };
 
 enum
@@ -99,12 +100,11 @@ Game::Game()
       cewSeaTwo(0),
       cewWaterOne(0),
       cewWaterTwo(0),
+      ratioOne(1.12f),
+      ratioTwo(1.15f),
       isShowTime(true),
       isShowCurrentTide(true),
-      fileId(0),
-	  availableUpDraftTide(0),
-	  availableUpDWTDraftTide(0),
-	  availableDownDraftTide(0)
+      fileId(0)
 {
     mousePoint.X = mousePoint.Y = 0;
     zeroPoint.X = zeroPoint.Y = 0;
@@ -299,6 +299,42 @@ void Game::setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int 
     }
 }
 
+float Game::getRatioOne()
+{
+    return ratioOne;
+}
+
+void Game::setRatioOne(float ratio)
+{
+    ratioOne = ratio;
+    ScriptExporter::modifyFloat(fullPath, L"system.lzh", L"chart_ratio_one", ratio);
+
+    for (auto& draft : beiCaoDraftData)
+    {
+        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, 1250);
+        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, 1250);
+        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, 1250);
+    }
+}
+
+float Game::getRatioTwo()
+{
+    return ratioTwo;
+}
+
+void Game::setRatioTwo(float ratio)
+{
+    ratioTwo = ratio;
+    ScriptExporter::modifyFloat(fullPath, L"system.lzh", L"chart_ratio_two", ratio);
+
+    for (auto& draft : beiCaoDraftData)
+    {
+        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, 1250);
+        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, 1250);
+        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, 1250);
+    }
+}
+
 void Game::start(LPCWSTR string)
 {
     if (!isInited)
@@ -308,7 +344,7 @@ void Game::start(LPCWSTR string)
 
     CStringW place(L"");
     CStringW info;
-    CStringW title(L"´íÎó");
+    CStringW title(L"é”™è¯¯");
 
     wchar_t fullPath[MAX_PATH];
     GetModuleFileNameW(0, fullPath, MAX_PATH);
@@ -327,8 +363,8 @@ void Game::start(LPCWSTR string)
         }
         else {
     #if 0
-            info.Format(L"ÎŞ·¨´ò¿ªÏµÍ³ÎÄ¼ş¡£\n%s\\dat!", path);
-            ::MessageBox(hWnd, info, title, MB_OK)£»
+            info.Format(L"æ— æ³•æ‰“å¼€ç³»ç»Ÿæ–‡ä»¶ã€‚\n%s\\dat!", path);
+            ::MessageBox(hWnd, info, title, MB_OK)ï¼›
             exit();
             return;
     #endif
@@ -361,6 +397,8 @@ void Game::start(LPCWSTR string)
         scriptManager.getUint32(cewSeaTwo, "cew_sea_two");
         scriptManager.getUint32(cewWaterOne, "cew_water_one");
         scriptManager.getUint32(cewWaterTwo, "cew_water_two");
+        scriptManager.getFloat(ratioOne, "chart_ratio_one", 1.12f);
+        scriptManager.getFloat(ratioTwo, "chart_ratio_two", 1.15f);
         scriptManager.getString(strPlaceOne, L"cew_place_one");
         scriptManager.getString(strPlaceTwo, L"cew_place_two");
 
@@ -371,7 +409,7 @@ void Game::start(LPCWSTR string)
     }
     else
     {
-        info.Format(L"ÎŞ·¨´ò¿ªÎÄ¼ş»òÎÄ¼ş¸ñÊ½´íÎó¡£\n%s\\system.lzh!", fullPath);
+        info.Format(L"æ— æ³•æ‰“å¼€æ–‡ä»¶æˆ–æ–‡ä»¶æ ¼å¼é”™è¯¯ã€‚\n%s\\system.lzh!", fullPath);
 
         if (::MessageBox(hWnd, info, title, MB_OK) == IDOK)
         {
@@ -382,7 +420,7 @@ void Game::start(LPCWSTR string)
 
     if (place.IsEmpty() && places.size() <= 0)
     {
-        info.Format(L"´ÓÎÄ¼şÖĞ¶ÁÈ¡placeÊı¾İ´íÎó¡£\n%s\\system.lzh!", fullPath);
+        info.Format(L"ä»æ–‡ä»¶ä¸­è¯»å–placeæ•°æ®é”™è¯¯ã€‚\n%s\\system.lzh!", fullPath);
 
         if (::MessageBox(hWnd, info, title, MB_OK) == IDOK)
         {
@@ -417,7 +455,7 @@ void Game::start(LPCWSTR string)
     loadToday();
 }
 
-/* ²åÈëÍùµØÖ·±íÖĞ²åÈëµØÖ· */
+/* æ’å…¥å¾€åœ°å€è¡¨ä¸­æ’å…¥åœ°å€ */
 bool Game::inputPlace(const CStringW& place)
 {
     if (place.IsEmpty() || place == L"")
@@ -450,7 +488,7 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
     }
 
     CStringW info;
-    CStringW title(L"´íÎó");
+    CStringW title(L"é”™è¯¯");
 
     GetModuleFileNameW(0, fullPath, MAX_PATH);
     PathRemoveFileSpecW(fullPath);
@@ -479,7 +517,7 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
     }
     else
     {
-        info.Format(L"ÎŞ·¨´ò¿ªÎÄ¼ş%s\\%s£¬\nÇë¼ì²é¸ÃÎÄ¼şÊÇ·ñ´æÔÚ»ò¸ñÊ½ÊÇ·ñÕıÈ·£¡", sptPath, fileName);
+        info.Format(L"æ— æ³•æ‰“å¼€æ–‡ä»¶%s\\%sï¼Œ\nè¯·æ£€æŸ¥è¯¥æ–‡ä»¶æ˜¯å¦å­˜åœ¨æˆ–æ ¼å¼æ˜¯å¦æ­£ç¡®ï¼", sptPath, fileName);
 
         if (::MessageBox(hWnd, info, title, MB_OK) == IDOK)
         {
@@ -490,7 +528,7 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
 
     if (sptData.size() < 33)
     {
-        info.Format(L"ÎŞ·¨´ÓÎÄ¼ş%s\\%sÖĞ\nÕıÈ·¶ÁÈ¡³±¸ßÊı¾İ[%s]£¬\nÇë¼ì²éÎÄ¼şÖĞµÄ[%s]Êı¾İÊÇ·ñÕıÈ·£¡",
+        info.Format(L"æ— æ³•ä»æ–‡ä»¶%s\\%sä¸­\næ­£ç¡®è¯»å–æ½®é«˜æ•°æ®[%s]ï¼Œ\nè¯·æ£€æŸ¥æ–‡ä»¶ä¸­çš„[%s]æ•°æ®æ˜¯å¦æ­£ç¡®ï¼",
                     sptPath, fileName, curItem, curItem);
 
         if (::MessageBox(hWnd, info, title, MB_OK) == IDOK)
@@ -531,7 +569,7 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
 
     std::sort(result.begin(), result.end(), less);
 
-    // Å©Àú
+    // å†œå†
     nongLi.Format(L"");
     if (sptData.size() >= 8 + 25 + 1)
     {
@@ -563,7 +601,7 @@ bool Game::getHighTideHeights(const std::vector<int>& maxMinData, std::vector<in
     int time = 0, tide = 0;
     int maxIndex = -1;
 
-	int size = maxMinData.size()/2;
+    int size = maxMinData.size() / 2;
     for (int i = 0; i < size; ++i)
     {
         if (maxMinData[i + size] > tide)
@@ -579,7 +617,7 @@ bool Game::getHighTideHeights(const std::vector<int>& maxMinData, std::vector<in
         highData.push_back(time);
         highData.push_back(tide);
 
-		CLog::output("³¤ĞËµÚÒ»¸ß³±Ê±¼ä£º%02d:%02d£¬³±¸ß£º%d cm\n", int(time / 100), time % 100, tide);
+        CLog::output("é•¿å…´ç¬¬ä¸€é«˜æ½®æ—¶é—´ï¼š%02d:%02dï¼Œæ½®é«˜ï¼š%d cm\n", int(time / 100), time % 100, tide);
 
         int secondTime = 0, secondTide = 0;
         int secondIndex = -1;
@@ -598,7 +636,8 @@ bool Game::getHighTideHeights(const std::vector<int>& maxMinData, std::vector<in
         {
             highData.push_back(secondTime);
             highData.push_back(secondTide);
-			CLog::output("³¤ĞËµÚ¶ş¸ß³±Ê±¼ä£º%02d:%02d£¬³±¸ß£º%d cm\n", int(secondTime / 100), secondTime % 100, secondTide);
+            CLog::output("é•¿å…´ç¬¬äºŒé«˜æ½®æ—¶é—´ï¼š%02d:%02dï¼Œæ½®é«˜ï¼š%d cm\n", int(secondTime / 100),
+                         secondTime % 100, secondTide);
         }
     }
 
@@ -607,7 +646,7 @@ bool Game::getHighTideHeights(const std::vector<int>& maxMinData, std::vector<in
 
 bool Game::getOffsetDateTime(const CStringW& date, int time, int offset, CStringW& offDate, int& offTime)
 {
-    int timeHour = int(time * 1.0f/ 100);
+    int timeHour = int(time * 1.0f / 100);
     int timeMinute = time % 100;
     int offsetHour = int(offset * 1.0f / 100);
     int offsetMinute = offset % 100;
@@ -628,21 +667,22 @@ bool Game::getOffsetDateTime(const CStringW& date, int time, int offset, CString
 
     if (resultHour < 0)
     {
-		offTime = 2400 + resultHour * 100 + resultMinute;
+        offTime = 2400 + resultHour * 100 + resultMinute;
         offDate = prevDateString(date);
     }
     else if (resultHour > 2400)
     {
-		offTime = - 2400 + resultHour * 100 + resultMinute;
+        offTime = -2400 + resultHour * 100 + resultMinute;
         offDate = nextDateString(date);
     }
-	else {
-		offTime = resultHour * 100 + resultMinute;
-		offDate = date;
-	}
+    else
+    {
+        offTime = resultHour * 100 + resultMinute;
+        offDate = date;
+    }
 
-    CLog::output("Ê±¼ä£º%02d:%02d, ¼ä¸ôÊ±¼ä: %d ===> Ä¿±êÊ±¼ä£º%02d:%02d\n", 
-                 int(time * 1.0f / 100.0f), time % 100, offset, int(offTime * 1.0f / 100.0f), offTime % 100);
+    CLog::output("æ—¶é—´ï¼š%02d:%02d, é—´éš”æ—¶é—´: %d ===> ç›®æ ‡æ—¶é—´ï¼š%02d:%02d\n", int(time * 1.0f / 100.0f),
+                 time % 100, offset, int(offTime * 1.0f / 100.0f), offTime % 100);
     return true;
 }
 
@@ -660,13 +700,13 @@ bool Game::getTideAt(const CStringW& place, const CStringW& dateStr, int time, i
     if (!loadRawData(dateStr, place, rawData, maxMin, strNongLiTemp))
     {
         CStringW info;
-        info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬ÈÕÆÚ£º%s", place, dateStr);
-        ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+        info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¥æœŸï¼š%s", place, dateStr);
+        ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
         return false;
     }
 
-	tide = getTideByTime(time, rawData);
-	CLog::output("»ñÈ¡ %02d:%02d µÄ³±¸ß£º%d cm\n", int(time * 1.0f / 100.0f), (time) % 100, tide);
+    tide = getTideByTime(time, rawData);
+    CLog::output("è·å– %02d:%02d çš„æ½®é«˜ï¼š%d cm\n", int(time * 1.0f / 100.0f), (time) % 100, tide);
     return true;
 }
 
@@ -674,8 +714,8 @@ bool Game::loadBeiCaoMaxDraftData()
 {
     beiCaoDraftData.clear();
 
-	CStringW placeChangXin(L"³¤ĞË£¨31¡ã22.9¡äN£¬121¡ã40.9¡äE£©");
-	CStringW placeJiGuJiao(L"¼¦¹Ç½¸£¨31¡ã10.4¡äN£¬122¡ã22.9¡äE£©");
+    CStringW placeChangXin(L"é•¿å…´ï¼ˆ31Â°22.9â€²Nï¼Œ121Â°40.9â€²Eï¼‰");
+    CStringW placeJiGuJiao(L"é¸¡éª¨ç¤ï¼ˆ31Â°10.4â€²Nï¼Œ122Â°22.9â€²Eï¼‰");
     CStringW strDateW(strDate);
     CStringW strNongLiTemp;
 
@@ -685,8 +725,8 @@ bool Game::loadBeiCaoMaxDraftData()
     if (!loadRawData(strDateW, placeChangXin, changXingCurTideData, changXingCurMaxMin, strNongLiTemp))
     {
         CStringW info;
-        info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬ÈÕÆÚ£º%s", placeChangXin, strDateW);
-        ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+        info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¥æœŸï¼š%s", placeChangXin, strDateW);
+        ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
         return false;
     }
 
@@ -695,17 +735,17 @@ bool Game::loadBeiCaoMaxDraftData()
     if (!getHighTideHeights(changXingCurMaxMin, changXingHighHeights))
     {
         CStringW info;
-        info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄ¸ßµÍ³±Êı¾İ£¬ÈÕÆÚ£º%s", placeChangXin, strDateW);
-        ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+        info.Format(L"æ— æ³•è¯»å–%sçš„é«˜ä½æ½®æ•°æ®ï¼Œæ—¥æœŸï¼š%s", placeChangXin, strDateW);
+        ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
         return false;
     }
 
-	int offset = changXingHighHeights.size() / 2;
+    int offset = changXingHighHeights.size() / 2;
     for (int i = 0; i < offset; ++i)
     {
         int time = changXingHighHeights[i * offset + 0];
         int tide = changXingHighHeights[i * offset + 1];
-        CLog::output("³¤ĞË¸ß³±Ê±¼ä: %02d:%02d£¬³±¸ß£º%d cm\n", int(time *1.0f / 100.0f), (time) % 100, tide);
+        CLog::output("é•¿å…´é«˜æ½®æ—¶é—´: %02d:%02dï¼Œæ½®é«˜ï¼š%d cm\n", int(time * 1.0f / 100.0f), (time) % 100, tide);
 
         // Up: 5 hours ago
         CStringW fiveHoursAgoDate(L"");
@@ -715,11 +755,12 @@ bool Game::loadBeiCaoMaxDraftData()
         bool ret = false;
         int fiveHoursAgoTide = 0;
         ret = getTideAt(placeJiGuJiao, fiveHoursAgoDate, fiveHoursAgoTime, fiveHoursAgoTide);
-        if (!ret) {
+        if (!ret)
+        {
             CStringW info;
-            info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬Ê±¼ä£º%s %02d:%02d\n", placeJiGuJiao,
-                fiveHoursAgoDate, int(fiveHoursAgoTime * 1.0f / 100), fiveHoursAgoTime % 100);
-            ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+            info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¶é—´ï¼š%s %02d:%02d\n", placeJiGuJiao, fiveHoursAgoDate,
+                        int(fiveHoursAgoTime * 1.0f / 100), fiveHoursAgoTime % 100);
+            ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
             continue;
         }
 
@@ -730,11 +771,12 @@ bool Game::loadBeiCaoMaxDraftData()
 
         int fourHoursAgoTide = 0;
         ret = getTideAt(placeJiGuJiao, fourHoursAgoDate, fourHoursAgoTime, fourHoursAgoTide);
-        if (!ret) {
+        if (!ret)
+        {
             CStringW info;
-            info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬Ê±¼ä£º%s %02d:%02d\n", placeJiGuJiao,
-                fourHoursAgoDate, int(fourHoursAgoTime * 1.0f / 100), fourHoursAgoTime % 100);
-            ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+            info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¶é—´ï¼š%s %02d:%02d\n", placeJiGuJiao, fourHoursAgoDate,
+                        int(fourHoursAgoTime * 1.0f / 100), fourHoursAgoTime % 100);
+            ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
             continue;
         }
 
@@ -745,11 +787,12 @@ bool Game::loadBeiCaoMaxDraftData()
 
         int oneHoursLaterTide = 0;
         ret = getTideAt(placeChangXin, oneHoursLaterDate, oneHoursLaterTime, oneHoursLaterTide);
-        if (!ret) {
+        if (!ret)
+        {
             CStringW info;
-            info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬Ê±¼ä£º%s %02d:%02d\n", placeChangXin,
-                oneHoursLaterDate, int(oneHoursLaterTime * 1.0f / 100), oneHoursLaterTime % 100);
-            ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+            info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¶é—´ï¼š%s %02d:%02d\n", placeChangXin, oneHoursLaterDate,
+                        int(oneHoursLaterTime * 1.0f / 100), oneHoursLaterTime % 100);
+            ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
             continue;
         }
 
@@ -759,12 +802,13 @@ bool Game::loadBeiCaoMaxDraftData()
         getOffsetDateTime(strDateW, time, -230, twoHalfHoursAgoDate, twoHalfHoursAgoTime);
 
         int twoHalfHoursAgoTide = 0;
-        ret = getTideAt(placeJiGuJiao, twoHalfHoursAgoDate, twoHalfHoursAgoTime, twoHalfHoursAgoTide);
-        if (!ret) {
+        ret = getTideAt(placeChangXin, twoHalfHoursAgoDate, twoHalfHoursAgoTime, twoHalfHoursAgoTide);
+        if (!ret)
+        {
             CStringW info;
-            info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬Ê±¼ä£º%s %02d:%02d\n", placeJiGuJiao,
-                twoHalfHoursAgoDate, int(twoHalfHoursAgoTime * 1.0f / 100), twoHalfHoursAgoTime % 100);
-            ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+            info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¶é—´ï¼š%s %02d:%02d\n", placeChangXin, twoHalfHoursAgoDate,
+                        int(twoHalfHoursAgoTime * 1.0f / 100), twoHalfHoursAgoTime % 100);
+            ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
             continue;
         }
 
@@ -774,69 +818,69 @@ bool Game::loadBeiCaoMaxDraftData()
         getOffsetDateTime(strDateW, time, 200, twoHoursLaterDate, twoHoursLaterTime);
 
         int twoHoursLaterTide = 0;
-        ret = getTideAt(placeChangXin, twoHoursLaterDate, twoHoursLaterTime, twoHoursLaterTide);
-        if (!ret) {
+        ret = getTideAt(placeJiGuJiao, twoHoursLaterDate, twoHoursLaterTime, twoHoursLaterTide);
+        if (!ret)
+        {
             CStringW info;
-            info.Format(L"ÎŞ·¨¶ÁÈ¡%sµÄÊı¾İ£¬Ê±¼ä£º%s %02d:%02d\n", placeChangXin,
-                twoHoursLaterDate, int(twoHoursLaterTime * 1.0f / 100), twoHoursLaterTime % 100);
-            ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+            info.Format(L"æ— æ³•è¯»å–%sçš„æ•°æ®ï¼Œæ—¶é—´ï¼š%s %02d:%02d\n", placeJiGuJiao, twoHoursLaterDate,
+                        int(twoHoursLaterTime * 1.0f / 100), twoHoursLaterTime % 100);
+            ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
             continue;
         }
 
-		BeiCaoDraftData draft;
-		draft.time = time;
+        BeiCaoDraftData draft;
+        draft.time = time;
 
-		availableUpDraftTide = min(fourHoursAgoTide, oneHoursLaterTide);
-		availableUpDWTDraftTide = fiveHoursAgoTide;
-        draft.upDraftOne = calculateBeiCaoDraft(1.12, availableUpDraftTide, 1250);
-        draft.upDraftTwo = calculateBeiCaoDraft(1.15, availableUpDraftTide, 1250);
-        draft.upDWTDraftOne = calculateBeiCaoDraft(1.12, availableUpDWTDraftTide, 1250);
-        draft.upDWTDraftTwo = calculateBeiCaoDraft(1.15, availableUpDWTDraftTide, 1250);
+        draft.availableUpDraftTide = min(fiveHoursAgoTide, oneHoursLaterTide);
+        draft.availableUpDWTDraftTide = fourHoursAgoTide;
+        draft.availableDownDraftTide = min(twoHalfHoursAgoTide, twoHoursLaterTide);
 
-		availableDownDraftTide = min(twoHalfHoursAgoTide, twoHoursLaterTide);
-        draft.downDraftOne = calculateBeiCaoDraft(1.12, availableDownDraftTide, 1250);
-        draft.downDraftTwo = calculateBeiCaoDraft(1.15, availableDownDraftTide, 1250);
+        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, 1250);
+        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, 1250);
+        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, 1250);
+        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, 1250);
+
+        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, 1250);
+        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, 1250);
 
         beiCaoDraftData.push_back(draft);
 
-		if (beiCaoDraftData.size() >= 2) {
-			break;
-		}
-    }
-
-/*
-    // demo
-    {
-        for (int i = 0; i < 2; ++i)
+        if (beiCaoDraftData.size() >= 2)
         {
-            BeiCaoDraftData dataOne;
-            if (i == 0)
-            {
-                dataOne.time = 59;
-            }
-            else
-            {
-                dataOne.time = 1337;
-            }
-
-            dataOne.upDraftOne = 479 + i * 80;
-            dataOne.upDraftTwo = 379 + i * 80;
-            dataOne.upDWTDraftOne = 279 + i * 80;
-            dataOne.upDWTDraftTwo = 179 + i * 80;
-            dataOne.downDraftOne = 579 + i * 80;
-            dataOne.downDraftTwo = 679 + i * 80;
-
-            beiCaoDraftData.push_back(dataOne);
+            std::sort(beiCaoDraftData.begin(), beiCaoDraftData.end());
+            break;
         }
     }
-	*/
+
+    /*
+        // demo
+        {
+            for (int i = 0; i < 2; ++i)
+            {
+                BeiCaoDraftData dataOne;
+                if (i == 0)
+                {
+                    dataOne.time = 59;
+                }
+                else
+                {
+                    dataOne.time = 1337;
+                }
+                dataOne.upDraftOne = 479 + i * 80;
+                dataOne.upDraftTwo = 379 + i * 80;
+                dataOne.upDWTDraftOne = 279 + i * 80;
+                dataOne.upDWTDraftTwo = 179 + i * 80;
+                dataOne.downDraftOne = 579 + i * 80;
+                dataOne.downDraftTwo = 679 + i * 80;
+                beiCaoDraftData.push_back(dataOne);
+            }
+        }
+        */
 }
 
-void Game::getAvailableDraftTide(int& up, int& upDWT, int& down)
+std::vector<BeiCaoDraftData>& Game::getBeiCaoDraftData()
 {
-	up = availableUpDraftTide;
-	upDWT = availableUpDWTDraftTide;
-	down = availableDownDraftTide;
+    return beiCaoDraftData;
 }
 
 void Game::loadData(const CStringW& dateString, const CStringW& place)
@@ -855,16 +899,16 @@ void Game::loadData(const CStringW& dateString, const CStringW& place)
 
 void Game::getForbidTime(const CStringW& path, const CStringW& dateStr)
 {
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     ZeroMemory(&strForbidTimeOne, MAX_PATH * sizeof(wchar_t));
     ZeroMemory(&strForbidTimeTwo, MAX_PATH * sizeof(wchar_t));
 
-    // È¡µÃÂ·¾¶
+    // å–å¾—è·¯å¾„
     wchar_t filePath[MAX_PATH];
     swprintf_s(filePath, MAX_PATH, L"%s", path);
     PathAppendW(filePath, L"gz.lzh");
 
-    // ¶ÁÈ¡ÎÄ¼ş
+    // è¯»å–æ–‡ä»¶
     FILE* fp = NULL;
     _tsetlocale(LC_ALL, _T("chinese-simplified"));
     errno_t err = _wfopen_s(&fp, filePath, L"rt");
@@ -1065,7 +1109,7 @@ void Game::draw()
 
         drawTideLine(&g, &blackPen, pt1, pt2);
 
-        info.Format(L"%.1f", (OFFSET_Y + i * TIDE_STEP) * 1.0f/100.0f);
+        info.Format(L"%.1f", (OFFSET_Y + i * TIDE_STEP) * 1.0f / 100.0f);
         drawTideString(&g, gdiFont, crBlack, info, -30, pt1.Y + 8, true);
     }
 
@@ -1076,14 +1120,14 @@ void Game::draw()
             CStringW dateW(strDate);
             if (strWNongLi.IsEmpty() || strWNongLi == L"")
             {
-                info.Format(L"%sÄê%sÔÂ%sÈÕ£¬%s³±¸ß·Ö²¼Í¼", dateW.Mid(0, 4), dateW.Mid(4, 2),
+                info.Format(L"%så¹´%sæœˆ%sæ—¥ï¼Œ%sæ½®é«˜åˆ†å¸ƒå›¾", dateW.Mid(0, 4), dateW.Mid(4, 2),
                             dateW.Mid(6, 2), strPlace);
                 // drawTideString(&g, gdiBigFont, crBlack, info, 120, yLen + 70, true);
                 drawCenterString(&g, gdiBigFont, crBlack, info, yLen + 70);
             }
             else
             {
-                info.Format(L"%sÄê%sÔÂ%sÈÕ£¬Å©Àú%s£¬%s³±¸ß·Ö²¼Í¼", dateW.Mid(0, 4), dateW.Mid(4, 2),
+                info.Format(L"%så¹´%sæœˆ%sæ—¥ï¼Œå†œå†%sï¼Œ%sæ½®é«˜åˆ†å¸ƒå›¾", dateW.Mid(0, 4), dateW.Mid(4, 2),
                             dateW.Mid(6, 2), strWNongLi, strPlace);
                 // drawTideString(&g, gdiBigFont, crBlack, info, 50, yLen + 70, true);
                 drawCenterString(&g, gdiBigFont, crBlack, info, yLen + 70);
@@ -1100,7 +1144,7 @@ void Game::draw()
                     continue;
                 }
 
-                info.Format(L"(%02d:%02d£¬ %.2f m)", int(maxMinTide[i] / 100),
+                info.Format(L"(%02d:%02dï¼Œ %.2f m)", int(maxMinTide[i] / 100),
                             int(maxMinTide[i]) % 100, maxMinTide[i + 4] * 1.0f / 100.0f);
                 float x = 300.0f + i % 2 * 200;
                 float y = yLen + 18 + (1 - (i) / 2) * 20;
@@ -1126,10 +1170,10 @@ void Game::draw()
 
             float x = 60;
             float y = yLen + 38;
-            info.Format(L"ÏÖÔÚÊ±¼ä£º%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
+            info.Format(L"ç°åœ¨æ—¶é—´ï¼š%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
 
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
-            info.Format(L"ÏÖÔÚ³±¸ß£º%.2f m", tideValue * 1.0f / 100.0f);
+            info.Format(L"ç°åœ¨æ½®é«˜ï¼š%.2f m", tideValue * 1.0f / 100.0f);
 
             y = y - 20;
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
@@ -1143,7 +1187,7 @@ void Game::draw()
             if (isShowCurrentTide)
             {
                 info.Format(L"(%02d:%02d %.2f m)", int(data.time / 100), int(data.time) % 100,
-                            data.tide * 1.0f/ 100.0f);
+                            data.tide * 1.0f / 100.0f);
                 drawTideString(&g, gdiFont, crBlack, info, pt1.X - 44, pt1.Y + 20, false);
             }
 
@@ -1157,11 +1201,12 @@ void Game::draw()
 
         float x = 0, y = 0;
 
-        // Ãè»æ±±²Û×î´ó³ÔË®
-        if (beiCaoDraftData.size() > 0 ) {
+        // æç»˜åŒ—æ§½æœ€å¤§åƒæ°´
+        if (beiCaoDraftData.size() > 0)
+        {
             x = 16;
             y = yLen - 5;
-            CStringW beicaoMaxDraft("±±²Û´¬²°×î´ó³ÔË®£º");
+            CStringW beicaoMaxDraft("åŒ—æ§½èˆ¹èˆ¶æœ€å¤§åƒæ°´ï¼š");
             drawTideString(&g, gdiFont, crBlack, beicaoMaxDraft, x, y, false);
 
             for (int i = 0; i < beiCaoDraftData.size(); ++i)
@@ -1172,16 +1217,16 @@ void Game::draw()
                 x = 20;
                 y -= 20;
 
-                draftInfo.Format(L"³¤ĞË¸ß³±Ê±£º%02d:%02d  ÉÏĞĞ£º%4.2f m", int(data.time / 100),
+                draftInfo.Format(L"é•¿å…´é«˜æ½®æ—¶ï¼š%02d:%02d  ä¸Šè¡Œï¼š%4.2f m", int(data.time / 100),
                                  int(data.time) % 100, data.upDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x += 290;
-                draftInfo.Format(L"ÉÏĞĞ(DWT´óÓÚ7.5Íò¶Ö)£º%4.2f m", data.upDWTDraftOne / 100);
+                draftInfo.Format(L"ä¸Šè¡Œ(DWTå¤§äº7.5ä¸‡å¨)ï¼š%4.2f m", data.upDWTDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x += 278;
-                draftInfo.Format(L"ÏÂĞĞ£º%4.2f m", data.downDraftOne / 100);
+                draftInfo.Format(L"ä¸‹è¡Œï¼š%4.2f m", data.downDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x = 20;
@@ -1199,7 +1244,7 @@ void Game::draw()
             }
         }
 
-        // Ãè»æ¹ÜÖÆÊ±¼ä
+        // æç»˜ç®¡åˆ¶æ—¶é—´
         x = 220;
         y = yLen - 5;
         CStringW forbidOne(strForbidTimeOne);
@@ -1208,7 +1253,7 @@ void Game::draw()
             int pos1 = forbidOne.Find(L'-');
             pos1 = forbidOne.Find(L' ', pos1 + 2);
             int pos2 = forbidOne.Find(L' ', pos1 + 1);
-            forbidOne.Format(L"¹ÜÖÆÊ±¶Î£º%s  ÔÊĞí×î´ó³ÔË®£º½ø %s£¬³ö %s",
+            forbidOne.Format(L"ç®¡åˆ¶æ—¶æ®µï¼š%s  å…è®¸æœ€å¤§åƒæ°´ï¼šè¿› %sï¼Œå‡º %s",
                              forbidOne.Left(pos1),
                              forbidOne.Mid(pos1 + 1, pos2 - pos1 - 1),
                              forbidOne.Mid(pos2 + 1));
@@ -1223,7 +1268,7 @@ void Game::draw()
             int pos1 = forbidOne.Find(L'-');
             pos1 = forbidOne.Find(L' ', pos1 + 2);
             int pos2 = forbidOne.Find(L' ', pos1 + 1);
-            forbidOne.Format(L"¹ÜÖÆÊ±¶Î£º%s  ÔÊĞí×î´ó³ÔË®£º½ø %s£¬³ö %s",
+            forbidOne.Format(L"ç®¡åˆ¶æ—¶æ®µï¼š%s  å…è®¸æœ€å¤§åƒæ°´ï¼šè¿› %sï¼Œå‡º %s",
                              forbidOne.Left(pos1),
                              forbidOne.Mid(pos1 + 1, pos2 - pos1 - 1),
                              forbidOne.Mid(pos2 + 1));
@@ -1273,7 +1318,7 @@ void Game::draw()
 
                 int mouseTide = (int)getTide(mousePoint.Y);
 
-                info.Format(L"%.2f", mouseTide * 1.0f /100.f);
+                info.Format(L"%.2f", mouseTide * 1.0f / 100.f);
                 drawTideString(&g, gdiFont, crBlue, info, xLen + 24 /*zero.X - 30*/, mousePoint.Y + 8, false);
 
                 if (isShowTime)
@@ -1597,7 +1642,7 @@ bool Game::checkPassword(const CStringW& pwd)
 void Game::modifyPassword(const CStringW& newPwd)
 {
     CStringW info;
-    CStringW title(L"´íÎó");
+    CStringW title(L"é”™è¯¯");
 
     wchar_t path[MAX_PATH];
     GetModuleFileNameW(0, path, MAX_PATH);
@@ -1613,7 +1658,7 @@ void Game::modifyPassword(const CStringW& newPwd)
     }
     else
     {
-        info.Format(L"ÎŞ·¨´ò¿ªÏµÍ³ÎÄ¼ş¡£\n%s\\dat!", path);
+        info.Format(L"æ— æ³•æ‰“å¼€ç³»ç»Ÿæ–‡ä»¶ã€‚\n%s\\dat!", path);
 
         if (::MessageBox(hWnd, info, title, MB_OK) == IDOK)
         {
@@ -1642,7 +1687,7 @@ void Game::loadToday()
 {
     loginFlag = true;
 
-    // ¸üĞÂÈÕÆÚ
+    // æ›´æ–°æ—¥æœŸ
     CStringW dateString = getDateString();
     swprintf_s(today, MAX_PATH, L"%s", dateString);
     swprintf_s(strDate, MAX_PATH, L"%s", dateString);
@@ -1735,8 +1780,8 @@ void Game::loadPrev()
     else
     {
         CStringW info;
-        info.Format(L"ÈÕÆÚ %s ²»ºÏ·¨£¬Çë¼ì²éÊı¾İ¶Î%sÊÇ·ñºÏÀí¡£", prevDate, strDate);
-        ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+        info.Format(L"æ—¥æœŸ %s ä¸åˆæ³•ï¼Œè¯·æ£€æŸ¥æ•°æ®æ®µ%sæ˜¯å¦åˆç†ã€‚", prevDate, strDate);
+        ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
     }
 }
 
@@ -1750,8 +1795,8 @@ void Game::loadNext()
     else
     {
         CStringW info;
-        info.Format(L"ÈÕÆÚ %s ²»ºÏ·¨£¬Çë¼ì²éÊı¾İ¶Î%sÊÇ·ñºÏÀí¡£", nextDate, strDate);
-        ::MessageBox(hWnd, info, L"´íÎó", MB_OK);
+        info.Format(L"æ—¥æœŸ %s ä¸åˆæ³•ï¼Œè¯·æ£€æŸ¥æ•°æ®æ®µ%sæ˜¯å¦åˆç†ã€‚", nextDate, strDate);
+        ::MessageBox(hWnd, info, L"é”™è¯¯", MB_OK);
     }
 }
 
@@ -1970,8 +2015,8 @@ bool Game::inputData(const CStringW& place, const CStringW& date, const CStringW
             if (failed)
             {
                 CStringW info;
-                info.Format(L"ÎŞ·¨¿½±´ÎÄ¼ş%s\nÖÁ%s¡£\n", defaultFile, fullPath);
-                ::MessageBoxW(hWnd, info, L"´íÎó£¡", MB_OK);
+                info.Format(L"æ— æ³•æ‹·è´æ–‡ä»¶%s\nè‡³%sã€‚\n", defaultFile, fullPath);
+                ::MessageBoxW(hWnd, info, L"é”™è¯¯ï¼", MB_OK);
 
                 return false;
             }
@@ -1983,8 +2028,8 @@ bool Game::inputData(const CStringW& place, const CStringW& date, const CStringW
     if (!sptMng.open(dataPath, fileName))
     {
         CStringW info;
-        info.Format(L"ÎÄ¼ş%s\n¸ñÊ½²»ÕıÈ·¡£\n", fullPath);
-        ::MessageBoxW(hWnd, info, L"´íÎó£¡", MB_OK);
+        info.Format(L"æ–‡ä»¶%s\næ ¼å¼ä¸æ­£ç¡®ã€‚\n", fullPath);
+        ::MessageBoxW(hWnd, info, L"é”™è¯¯ï¼", MB_OK);
         return false;
     }
     sptMng.close();
@@ -2082,8 +2127,8 @@ bool Game::writeToScript(const CStringW& place, const CStringW& date, std::vecto
             if (failed)
             {
                 CStringW info;
-                info.Format(L"ÎŞ·¨¿½±´ÎÄ¼ş%s\nÖÁ%s¡£\n", defaultFile, fullPath);
-                ::MessageBoxW(hWnd, info, L"´íÎó£¡", MB_OK);
+                info.Format(L"æ— æ³•æ‹·è´æ–‡ä»¶%s\nè‡³%sã€‚\n", defaultFile, fullPath);
+                ::MessageBoxW(hWnd, info, L"é”™è¯¯ï¼", MB_OK);
 
                 return false;
             }
@@ -2095,8 +2140,8 @@ bool Game::writeToScript(const CStringW& place, const CStringW& date, std::vecto
     if (!sptMng.open(dataPath, fileName))
     {
         CStringW info;
-        info.Format(L"ÎÄ¼ş%s\n¸ñÊ½²»ÕıÈ·¡£\n", fullPath);
-        ::MessageBoxW(hWnd, info, L"´íÎó£¡", MB_OK);
+        info.Format(L"æ–‡ä»¶%s\næ ¼å¼ä¸æ­£ç¡®ã€‚\n", fullPath);
+        ::MessageBoxW(hWnd, info, L"é”™è¯¯ï¼", MB_OK);
         return false;
     }
     sptMng.close();
@@ -2115,20 +2160,20 @@ bool Game::writeToScript(const CStringW& place, const CStringW& date, std::vecto
     for (int i = 0; i < dayCount; i++)
     {
         std::vector<int> values;
-        // 4¸ö¸ßµÍ³±Êı¾İÒÔ¼°Ê±¼ä
+        // 4ä¸ªé«˜ä½æ½®æ•°æ®ä»¥åŠæ—¶é—´
         for (int j = 0; j < 8; j++)
         {
             values.push_back(data[2 + 24 + j][i]);
         }
 
-        // 24¸ö³±¸ßÊı¾İ
+        // 24ä¸ªæ½®é«˜æ•°æ®
         for (int j = 0; j < 24; j++)
         {
             values.push_back(data[2 + j][i]);
         }
 
-        values.push_back(data[34][i]);  // µÚ25¸öÊı¾İ
-        values.push_back(data[1][i]);   // Å©ÀúÈÕ
+        values.push_back(data[34][i]);  // ç¬¬25ä¸ªæ•°æ®
+        values.push_back(data[1][i]);   // å†œå†æ—¥
 
         CStringW item;
         item.Format(L"day%s%02d", date.Left(6), data[0][i]);
@@ -2159,13 +2204,13 @@ bool Game::writeToScript(const CStringW& place, const CStringW& date, std::vecto
     return true;
 }
 
-/* ¼ì²éÂ¼ÈëÊı¾İµÄºÏ·¨ĞÔ:ex */
+/* æ£€æŸ¥å½•å…¥æ•°æ®çš„åˆæ³•æ€§:ex */
 bool Game::checkInputDataEx(const CStringW& filePath, CStringW& place, CStringW& date, CStringW& resultInfo)
 {
     place.Empty();
     date.Empty();
 
-    resultInfo.Format(L"¡¾´íÎó¡¿£º\"%s\" ÎÄ¼ş¸ñÊ½²»ÕıÈ·¡£Çë¼ì²éÖØĞÂÊäÈë¡£", filePath);
+    resultInfo.Format(L"ã€é”™è¯¯ã€‘ï¼š\"%s\" æ–‡ä»¶æ ¼å¼ä¸æ­£ç¡®ã€‚è¯·æ£€æŸ¥é‡æ–°è¾“å…¥ã€‚", filePath);
     std::vector<std::vector<int>> tideData;
 
     int dayCount = 0;
@@ -2296,15 +2341,15 @@ bool Game::checkInputDataEx(const CStringW& filePath, CStringW& place, CStringW&
         }
     }
 
-    resultInfo.Format(L"¡¾³É¹¦¡¿£º³É¹¦µ¼ÈëÊı¾İÎÄ¼ş \"%s\"£¬¿ÉÂ¼Èë %s.%s.%02d ÖÁ %s.%s.%02d ÆÚ¼ä %d ÌìµÄÊı¾İ¡£Çëµã»÷¡¾Â¼ÈëÊı¾İ¡¿°´Å¥Â¼ÈëÊı¾İ¡£",
+    resultInfo.Format(L"ã€æˆåŠŸã€‘ï¼šæˆåŠŸå¯¼å…¥æ•°æ®æ–‡ä»¶ \"%s\"ï¼Œå¯å½•å…¥ %s.%s.%02d è‡³ %s.%s.%02d æœŸé—´ %d å¤©çš„æ•°æ®ã€‚è¯·ç‚¹å‡»ã€å½•å…¥æ•°æ®ã€‘æŒ‰é’®å½•å…¥æ•°æ®ã€‚",
                       filePath, year, month, tideData[0][0], year, month, tideData[0][dayCount - 1], dayCount);
     return true;
 }
 
-/* Â¼ÈëÊı¾İ:ex */
+/* å½•å…¥æ•°æ®:ex */
 bool Game::inputDataEx(const CStringW& filePath, const CStringW& place2, CStringW& resultInfo)
 {
-    resultInfo.Format(L"¡¾´íÎó¡¿£º´ÓÎÄ¼ş \"%s\" Â¼ÈëÊı¾İ´íÎó£¬Çë¼ì²éÎÄ¼ş¸ñÊ½ÖØÊÔ¡£", filePath);
+    resultInfo.Format(L"ã€é”™è¯¯ã€‘ï¼šä»æ–‡ä»¶ \"%s\" å½•å…¥æ•°æ®é”™è¯¯ï¼Œè¯·æ£€æŸ¥æ–‡ä»¶æ ¼å¼é‡è¯•ã€‚", filePath);
 
     CStringW strMode;
     strMode.Format(L"r, ccs=UTF-8");
@@ -2328,7 +2373,7 @@ bool Game::inputDataEx(const CStringW& filePath, const CStringW& place2, CString
     month.Empty();
     the25th.Empty();
 
-    //´æ´¢Êı¾İ£º¹«ÀúÈÕ + Å©ÀúÈÕ + 24 Ğ¡Ê±µÄÊı¾İ + 8¸öÊ±¼äµãÒÔ¼°³±¸ß
+    //å­˜å‚¨æ•°æ®ï¼šå…¬å†æ—¥ + å†œå†æ—¥ + 24 å°æ—¶çš„æ•°æ® + 8ä¸ªæ—¶é—´ç‚¹ä»¥åŠæ½®é«˜
     std::vector<std::vector<int>> tideData;
 
     wchar_t readBytes[MAX_SIZE] = {
@@ -2390,14 +2435,14 @@ bool Game::inputDataEx(const CStringW& filePath, const CStringW& place2, CString
         }
     }
 
-    // ¹Ø±ÕÎÄ¼ş¾ä±ú
+    // å…³é—­æ–‡ä»¶å¥æŸ„
     if (file)
     {
         fclose(file);
         file = NULL;
     }
 
-    // ²åÈë25ºÅÊı¾İ
+    // æ’å…¥25å·æ•°æ®
     dayCount = tideData[0].size();
     std::vector<int> lastData;
     for (int i = 0; i < dayCount - 1; i++)
@@ -2407,14 +2452,14 @@ bool Game::inputDataEx(const CStringW& filePath, const CStringW& place2, CString
     lastData.push_back(_wtoi(the25th));
     tideData.push_back(lastData);
 
-    // Ğ´Èë½Å±¾ÎÄ¼ş
+    // å†™å…¥è„šæœ¬æ–‡ä»¶
     date.Format(L"%s%s", year, month);
     if (writeToScript(place2, date, tideData) == false)
     {
         return false;
     }
 
-    resultInfo.Format(L"¡¾³É¹¦¡¿:³É¹¦´ÓÎÄ¼ş \"%s\" Â¼Èë %s.%s.%02d - %s.%s.%02d ÆÚ¼ä %d ÌìµÄ³±¸ßÊı¾İ¡£", filePath,
+    resultInfo.Format(L"ã€æˆåŠŸã€‘:æˆåŠŸä»æ–‡ä»¶ \"%s\" å½•å…¥ %s.%s.%02d - %s.%s.%02d æœŸé—´ %d å¤©çš„æ½®é«˜æ•°æ®ã€‚", filePath,
                       year, month, tideData[0][0], year, month, tideData[0][dayCount - 1], dayCount);
     return true;
 }
