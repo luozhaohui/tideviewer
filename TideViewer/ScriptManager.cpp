@@ -140,10 +140,10 @@ void ScriptManager::getFloat(std::vector<float>& v, const CStringW& name)
     }
 }
 
-void ScriptManager::getUint32(int& v, const CStringW& name)
+void ScriptManager::getUint32(int& v, const CStringW& name, int default_value)
 {
     HSQUIRRELVM vm = static_cast<HSQUIRRELVM>(handle);
-    v = 0;
+    v = default_value;
 
     SQInteger val;
 

@@ -112,6 +112,8 @@ public:
     void setRatioOne(float ratio);
     float getRatioTwo();
     void setRatioTwo(float ratio);
+    int getChartDepth();
+    void setChartDepth(int value);
 
     std::vector<BeiCaoDraftData>& getBeiCaoDraftData();
     static int calculateBeiCaoDraft(float ratio, float maxTideHeight, float height = 1250.0f);
@@ -225,6 +227,7 @@ private:
 
     float ratioOne;
     float ratioTwo;
+    int chartDepth;
 
     float lastTime;
     float curTime;

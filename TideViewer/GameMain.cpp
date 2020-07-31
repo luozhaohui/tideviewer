@@ -926,6 +926,8 @@ void updateDraftResult(HWND hDlg, int index, bool needSave, bool isRatioOne)
 
         if (needSave)
         {
+            game.setChartDepth(seaWater);
+
             if (isRatioOne)
             {
                 game.setRatioOne(ratio);
@@ -983,6 +985,7 @@ INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, 
         auto& draftData = game.getBeiCaoDraftData();
         float ratioOne = game.getRatioOne();
         float ratioTwo = game.getRatioTwo();
+        int chartDepth = game.getChartDepth();
         int draftOne = draftData.size() > 0 ? draftData[0].availableUpDraftTide : 0;
         int draftTwo = draftData.size() > 1 ? draftData[1].availableUpDraftTide : 0;
 
@@ -990,25 +993,25 @@ INT_PTR CALLBACK ComputeUpDraftCallback(HWND hDlg, UINT message, WPARAM wParam, 
 
         ratio.Format(L"%.2f", ratioOne);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, draftOne, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
 
         ratio.Format(L"%.2f", ratioTwo);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, draftOne, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_TWO, 0, true);
 
         ratio.Format(L"%.2f", ratioOne);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_THREE, draftTwo, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_THREE, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_THREE, 0, true);
 
         ratio.Format(L"%.2f", ratioTwo);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_FOUR, draftTwo, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_FOUR, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_FOUR, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_FOUR, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_FOUR, 0, true);
 
@@ -1077,6 +1080,7 @@ INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wPara
         auto& draftData = game.getBeiCaoDraftData();
         float ratioOne = game.getRatioOne();
         float ratioTwo = game.getRatioTwo();
+        int chartDepth = game.getChartDepth();
         int draftOne = draftData.size() > 0 ? draftData[0].availableUpDWTDraftTide : 0;
         int draftTwo = draftData.size() > 1 ? draftData[1].availableUpDWTDraftTide : 0;
 
@@ -1084,19 +1088,19 @@ INT_PTR CALLBACK ComputeUpDWTDraftCallback(HWND hDlg, UINT message, WPARAM wPara
 
         ratio.Format(L"%.2f", ratioOne);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, draftOne, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
 
         ratio.Format(L"%.2f", ratioTwo);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, draftOne, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_TWO, 0, true);
 
         ratio.Format(L"%.2f", ratioOne);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_THREE, draftTwo, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_THREE, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_THREE, 0, true);
 
@@ -1171,6 +1175,7 @@ INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam
         auto& draftData = game.getBeiCaoDraftData();
         float ratioOne = game.getRatioOne();
         float ratioTwo = game.getRatioTwo();
+        int chartDepth = game.getChartDepth();
         int draftOne = draftData.size() > 0 ? draftData[0].availableDownDraftTide : 0;
         int draftTwo = draftData.size() > 1 ? draftData[1].availableDownDraftTide : 0;
 
@@ -1178,25 +1183,25 @@ INT_PTR CALLBACK ComputeDownDraftCallback(HWND hDlg, UINT message, WPARAM wParam
 
         ratio.Format(L"%.2f", ratioOne);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, draftOne, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
 
         ratio.Format(L"%.2f", ratioTwo);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, draftOne, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_TWO, 0, true);
 
         ratio.Format(L"%.2f", ratioOne);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_THREE, draftTwo, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_THREE, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_THREE, 0, true);
 
         ratio.Format(L"%.2f", ratioTwo);
         SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_FOUR, draftTwo, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_FOUR, 1250, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_FOUR, chartDepth, true);
         SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_FOUR, ratio);
         SetDlgItemInt(hDlg, IDC_UP_RESULT_FOUR, 0, true);
 

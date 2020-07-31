@@ -102,6 +102,7 @@ Game::Game()
       cewWaterTwo(0),
       ratioOne(1.12f),
       ratioTwo(1.15f),
+      chartDepth(1250),
       isShowTime(true),
       isShowCurrentTide(true),
       fileId(0)
@@ -299,6 +300,27 @@ void Game::setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int 
     }
 }
 
+int Game::getChartDepth()
+{
+    return chartDepth;
+}
+
+void Game::setChartDepth(int value)
+{
+    chartDepth = value;
+    ScriptExporter::modifyUint32(fullPath, L"system.lzh", L"chart_depth", chartDepth);
+
+    for (auto& draft : beiCaoDraftData)
+    {
+        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, chartDepth);
+        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, chartDepth);
+        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, chartDepth);
+        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, chartDepth);
+        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, chartDepth);
+        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, chartDepth);
+    }
+}
+
 float Game::getRatioOne()
 {
     return ratioOne;
@@ -311,9 +333,9 @@ void Game::setRatioOne(float ratio)
 
     for (auto& draft : beiCaoDraftData)
     {
-        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, 1250);
-        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, 1250);
-        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, 1250);
+        draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, chartDepth);
+        draft.upDWTDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDWTDraftTide, chartDepth);
+        draft.downDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableDownDraftTide, chartDepth);
     }
 }
 
@@ -329,9 +351,9 @@ void Game::setRatioTwo(float ratio)
 
     for (auto& draft : beiCaoDraftData)
     {
-        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, 1250);
-        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, 1250);
-        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, 1250);
+        draft.upDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDraftTide, chartDepth);
+        draft.upDWTDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableUpDWTDraftTide, chartDepth);
+        draft.downDraftTwo = calculateBeiCaoDraft(ratioTwo, draft.availableDownDraftTide, chartDepth);
     }
 }
 
@@ -399,6 +421,7 @@ void Game::start(LPCWSTR string)
         scriptManager.getUint32(cewWaterTwo, "cew_water_two");
         scriptManager.getFloat(ratioOne, "chart_ratio_one", 1.12f);
         scriptManager.getFloat(ratioTwo, "chart_ratio_two", 1.15f);
+        scriptManager.getUint32(chartDepth, "chart_depth", 1250);
         scriptManager.getString(strPlaceOne, L"cew_place_one");
         scriptManager.getString(strPlaceTwo, L"cew_place_two");
 

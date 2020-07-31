@@ -27,6 +27,7 @@ public:
 
     void getFloat(float& v, const CStringW& name, float default_value = 0.0f);
     void getFloat(std::vector<float>& v, const CStringW& name);
+    void getUint32(int& v, const CStringW& name, int default_value = 0);
     void getUint32(int& v, const CStringW& name);
     void getUint32(std::vector<int>& v, const CStringW& name);
     void getString(CStringW& v, const CStringW& name);
