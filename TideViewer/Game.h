@@ -12,6 +12,7 @@
 
 #pragma once
 #include "WinUtility.h"
+#include <vector>
 
 using namespace Gdiplus;
 
@@ -108,6 +109,38 @@ public:
     void setWaterHeight(bool isPlaceOne, const CStringW& place, int tide, int sea, int water);
     void getWaterHeight(bool isPlaceOne, CStringW& place, int& tide, int& sea, int& water);
 
+    struct BeiCaoDraftData
+    {
+        BeiCaoDraftData()
+            : time(0),
+              upDraftOne(0),
+              upDraftTwo(0),
+              upDWTDraftOne(0),
+              upDWTDraftTwo(0),
+              downDraftOne(0),
+              downDraftTwo(0),
+              availableUpDraftTide(0),
+              availableUpDWTDraftTide(0),
+              availableDownDraftTide(0)
+        {};
+
+        float time;
+        float upDraftOne;
+        float upDraftTwo;
+        float upDWTDraftOne;
+        float upDWTDraftTwo;
+        float downDraftOne;
+        float downDraftTwo;
+        float availableUpDraftTide;
+        float availableUpDWTDraftTide;
+        float availableDownDraftTide;
+
+        bool operator<(const BeiCaoDraftData& data) const
+        {
+            return ((int)time < (int)data.time);
+        }
+    };
+
     float getRatioOne();
     void setRatioOne(float ratio);
     float getRatioTwo();
@@ -155,38 +188,6 @@ private:
 
         float tide;
         float time;
-    };
-
-    struct BeiCaoDraftData
-    {
-        BeiCaoDraftData()
-            : time(0),
-              upDraftOne(0),
-              upDraftTwo(0),
-              upDWTDraftOne(0),
-              upDWTDraftTwo(0),
-              downDraftOne(0),
-              downDraftTwo(0),
-              availableUpDraftTide(0),
-              availableUpDWTDraftTide(0),
-              availableDownDraftTide(0),
-              {};
-
-        float time;
-        float upDraftOne;
-        float upDraftTwo;
-        float upDWTDraftOne;
-        float upDWTDraftTwo;
-        float downDraftOne;
-        float downDraftTwo;
-        float availableUpDraftTide;
-        float availableUpDWTDraftTide;
-        float availableDownDraftTide;
-
-        bool operator<(const BeiCaoDraftData& data) const
-        {
-            return ((int)time < (int)data.time);
-        }
     };
 
     std::vector<BeiCaoDraftData> beiCaoDraftData;

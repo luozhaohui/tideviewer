@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by TideWatch.rc
 //
+#define IDCANCEL2                       3
 #define IDR_MENU1                       101
 #define IDI_ICON1                       106
 #define IDI_ICON2                       107
@@ -15,9 +16,9 @@
 #define IDD_COMPUTE                     115
 #define IDD_COMPUTER_EAT_WATER          116
 #define IDD_UP_DRAFT                    117
-#define IDD_UP_DWT_DRAFT                118
 #define IDD_DWN_DRAFT                   119
-#define IDD_DOWN_DRAFT                  119
+#define IDD_UP_DWT_DRAFT                120
+#define IDD_DOWN_DRAFT                  121
 #define IDC_PWD                         1001
 #define IDC_OLD_PWD                     1002
 #define IDC_NEW_PWD                     1003
@@ -68,18 +69,32 @@
 #define IDC_CEW_WATER_ONE               1049
 #define IDC_CEW_WATER_TWO               1050
 #define IDC_UP_WATER_RATIO_TWO          1050
+#define IDC_UP_WATER_RATIO_FOUR         1051
 #define IDC_CEW_COMPUTER_ONE            1054
 #define IDC_CEW_COMPUTER_TWO            1055
 #define IDC_CEW_COMPUTER_ONE2           1055
 #define IDC_CEW_RESULT_ONE              1056
+#define IDC_CEW_COMPUTER_THREE          1056
 #define IDC_CEW_RESULT_TWO              1057
+#define IDC_CEW_COMPUTER_FOUR           1057
 #define IDC_UP_MAX_TIDE_HEIGHT_ONE      1058
-#define IDC_UP_SEA_CHART_DEPTH_ONE      1059
 #define IDC_UP_RESULT_ONE               1060
 #define IDC_UP_MAX_TIDE_HEIGHT_TWO      1061
 #define IDC_UP_SEA_CHART_DEPTH_TWO      1062
 #define IDC_UP_RESULT_TWO               1063
 #define IDC_UP_WATER_RATIO_ONE          1064
+#define IDC_UP_MAX_TIDE_HEIGHT_THREE    1065
+#define IDC_UP_WATER_RATIO_THREE        1067
+#define IDC_UP_RESULT_THREE             1068
+#define IDC_UP_MAX_TIDE_HEIGHT_FOUR     1069
+#define IDC_UP_SEA_CHART_DEPTH_FOUR     1070
+#define IDC_UP_RESULT_FOUR              1071
+#define IDC_SEA_CHART_DEPTH             1073
+#define IDC_WATER_RATIO_ONE             1074
+#define IDC_WATER_RATIO_TWO             1075
+#define IDC_UP_SEA_CHART_DEPTH_ONE      1076
+#define IDC_UP_SEA_CHART_DEPTH_THREE    1077
+#define ID_SET                          1078
 #define ID_40001                        40001
 #define ID_40002                        40002
 #define ID_START                        40003
@@ -125,7 +140,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40039
-#define _APS_NEXT_CONTROL_VALUE         1065
+#define _APS_NEXT_CONTROL_VALUE         1079
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

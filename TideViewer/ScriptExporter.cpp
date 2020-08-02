@@ -182,7 +182,7 @@ bool ScriptExporter::modifyFloat(const CStringW& fullPath, const CStringW& fileN
 {
     std::vector<float> vec;
     vec.push_back((float)v);
-    return modifyUint32(fullPath, fileName, item, vec);
+    return modifyFloat(fullPath, fileName, item, vec);
 }
 
 bool ScriptExporter::modifyFloat(const CStringW& fullPath,
