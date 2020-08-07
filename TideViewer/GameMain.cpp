@@ -990,8 +990,8 @@ void saveDraftParameters(HWND hDlg)
 
         SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, chartDepth, true);
         SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, chartDepth, true);
-        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, chartDepth, true);
         SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, chartDepth, true);
+        SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_FOUR, chartDepth, true);
     }
 
     GetDlgItemText(hDlg, IDC_WATER_RATIO_ONE, wc, MAX_PATH);
@@ -1043,29 +1043,42 @@ void initDraftDialog(HWND hDlg, int draftOne, int draftTwo)
     int chartDepth = game.getChartDepth();
 
     CStringW ratio;
+								 
+    ratio.Format(L"%02d:%02d", int(draftData[0].time/100), int(draftData[0].time) % 100); 
+    SetDlgItemText(hDlg, IDC_HEIGHT_ONE, ratio);		 
+    SetDlgItemText(hDlg, IDC_HEIGHT_TWO, ratio);
 
-    ratio.Format(L"%.2f", ratioOne);	  
-    SetDlgItemText(hDlg, IDC_WATER_RATIO_ONE, ratio);	   
-    SetDlgItemInt(hDlg, IDC_SEA_CHART_DEPTH, chartDepth, true);
+	if (draftData.size() > 1) {		 
+		ratio.Format(L"%02d:%02d", int(draftData[1].time/100), int(draftData[1].time) % 100);		
+	}
+	else {
+		ratio.Format(L"00:00");
+	}	  
+    SetDlgItemText(hDlg, IDC_HEIGHT_THREE, ratio);		 
+    SetDlgItemText(hDlg, IDC_HEIGHT_FOUR, ratio);
+
+    ratio.Format(L"%.2f", ratioOne);	      	  
+    SetDlgItemText(hDlg, IDC_WATER_RATIO_ONE, ratio);	 
+    SetDlgItemInt(hDlg, IDC_SEA_CHART_DEPTH, chartDepth, true);	  
     SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_ONE, draftOne, true);	
     SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_ONE, chartDepth, true);	
     SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_ONE, ratio);
     SetDlgItemInt(hDlg, IDC_UP_RESULT_ONE, 0, true);
 
-    ratio.Format(L"%.2f", ratioTwo);	  
+    ratio.Format(L"%.2f", ratioTwo);	   		
     SetDlgItemText(hDlg, IDC_WATER_RATIO_TWO, ratio);
     SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_TWO, draftOne, true);
     SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_TWO, chartDepth, true); 
     SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_TWO, ratio);
     SetDlgItemInt(hDlg, IDC_UP_RESULT_TWO, 0, true);
 
-    ratio.Format(L"%.2f", ratioOne);
+    ratio.Format(L"%.2f", ratioOne);						
     SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_THREE, draftTwo, true);
     SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_THREE, chartDepth, true);
     SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_THREE, ratio);
     SetDlgItemInt(hDlg, IDC_UP_RESULT_THREE, 0, true);
 
-    ratio.Format(L"%.2f", ratioTwo);
+    ratio.Format(L"%.2f", ratioTwo);			 
     SetDlgItemInt(hDlg, IDC_UP_MAX_TIDE_HEIGHT_FOUR, draftTwo, true);
     SetDlgItemInt(hDlg, IDC_UP_SEA_CHART_DEPTH_FOUR, chartDepth, true);
     SetDlgItemText(hDlg, IDC_UP_WATER_RATIO_FOUR, ratio);

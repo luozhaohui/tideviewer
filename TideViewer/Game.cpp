@@ -660,7 +660,7 @@ bool Game::getHighTideHeights(const std::vector<int>& maxMinData, std::vector<in
 
         // time interval over 10 hours
 		int timeInterval = abs(time - secondTime);
-        if (secondIndex >= 0 && timeInterval < 1000)
+        if (secondIndex >= 0 && timeInterval > 1000)
         {
             highData.push_back(secondTime);
             highData.push_back(secondTide);
@@ -776,7 +776,7 @@ bool Game::loadBeiCaoMaxDraftData()
         // Up: 5 hours ago
         CStringW fiveHoursAgoDate(L"");
         int fiveHoursAgoTime;
-        getOffsetDateTime(strDateW, time, -400, fiveHoursAgoDate, fiveHoursAgoTime);
+        getOffsetDateTime(strDateW, time, -500, fiveHoursAgoDate, fiveHoursAgoTime);
 
         bool ret = false;
         int fiveHoursAgoTide = 0;
@@ -857,8 +857,8 @@ bool Game::loadBeiCaoMaxDraftData()
         BeiCaoDraftData draft;
         draft.time = time;
 
-        draft.availableUpDraftTide = min(fiveHoursAgoTide, oneHoursLaterTide);
-        draft.availableUpDWTDraftTide = fourHoursAgoTide;
+        draft.availableUpDraftTide = min(fourHoursAgoTide, oneHoursLaterTide);
+        draft.availableUpDWTDraftTide = fiveHoursAgoTide;
         draft.availableDownDraftTide = min(twoHalfHoursAgoTide, twoHoursLaterTide);
 
         draft.upDraftOne = calculateBeiCaoDraft(ratioOne, draft.availableUpDraftTide, chartDepth);
@@ -1108,8 +1108,8 @@ void Game::draw()
     CStringW info;
     info.Format(L"%s H", sysString[STR_TIME]);
     drawTideString(&g, gdiFont, crBlack, info, xLen + 4, 8, true);
-    info.Format(L"%s M", sysString[STR_TIDE]);
-    drawTideString(&g, gdiFont, crBlack, info, -20, yLen + 20, true);
+    info.Format(L"%s CM", sysString[STR_TIDE]);
+    drawTideString(&g, gdiFont, crBlack, info, -36, yLen + 20, true);
 
     for (int i = 1; i < 25; i++)
     {
@@ -1135,7 +1135,7 @@ void Game::draw()
 
         drawTideLine(&g, &blackPen, pt1, pt2);
 
-        info.Format(L"%.1f", (OFFSET_Y + i * TIDE_STEP) * 1.0f / 100.0f);
+        info.Format(L"%d", int(OFFSET_Y + i * TIDE_STEP));
         drawTideString(&g, gdiFont, crBlack, info, -30, pt1.Y + 8, true);
     }
 
@@ -1170,8 +1170,8 @@ void Game::draw()
                     continue;
                 }
 
-                info.Format(L"(%02d:%02d， %.2f m)", int(maxMinTide[i] / 100),
-                            int(maxMinTide[i]) % 100, maxMinTide[i + 4] * 1.0f / 100.0f);
+                info.Format(L"(%02d:%02d， %d cm)", int(maxMinTide[i] / 100),
+                            int(maxMinTide[i]) % 100, (int)maxMinTide[i + 4]);
                 float x = 300.0f + i % 2 * 200;
                 float y = yLen + 18 + (1 - (i) / 2) * 20;
                 drawTideString(&g, gdiFont, crBlack, info, x, y, true);
@@ -1199,7 +1199,7 @@ void Game::draw()
             info.Format(L"现在时间：%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
 
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
-            info.Format(L"现在潮高：%.2f m", tideValue * 1.0f / 100.0f);
+            info.Format(L"现在潮高：%d cm", (int)tideValue);
 
             y = y - 20;
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
@@ -1212,8 +1212,8 @@ void Game::draw()
 
             if (isShowCurrentTide)
             {
-                info.Format(L"(%02d:%02d %.2f m)", int(data.time / 100), int(data.time) % 100,
-                            data.tide * 1.0f / 100.0f);
+                info.Format(L"(%02d:%02d %d cm)", int(data.time / 100), int(data.time) % 100,
+                            (int)data.tide);
                 drawTideString(&g, gdiFont, crBlack, info, pt1.X - 44, pt1.Y + 20, false);
             }
 
@@ -1334,8 +1334,8 @@ void Game::draw()
                 data.tide = currentTide;
                 pt1 = getPosition(data);
 
-                info.Format(L"(%02d:%02d %.2f m)", int(data.time / 100), int(data.time) % 100,
-                            data.tide * 1.0f / 100.0f);
+                info.Format(L"(%02d:%02d %d cm)", int(data.time / 100), int(data.time) % 100,
+                            (int)data.tide);
                 drawTideString(&g, gdiFont, crBlack, info, pt1.X - 44, pt1.Y + 20, false);
 
                 pt1.X -= 3;
@@ -1344,7 +1344,7 @@ void Game::draw()
 
                 int mouseTide = (int)getTide(mousePoint.Y);
 
-                info.Format(L"%.2f", mouseTide * 1.0f / 100.f);
+                info.Format(L"%d", mouseTide);
                 drawTideString(&g, gdiFont, crBlue, info, xLen + 24 /*zero.X - 30*/, mousePoint.Y + 8, false);
 
                 if (isShowTime)

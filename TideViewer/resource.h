@@ -2,7 +2,6 @@
 // Microsoft Visual C++ generated include file.
 // Used by TideWatch.rc
 //
-#define IDCANCEL2                       3
 #define IDR_MENU1                       101
 #define IDI_ICON1                       106
 #define IDI_ICON2                       107
@@ -95,6 +94,11 @@
 #define IDC_UP_SEA_CHART_DEPTH_ONE      1076
 #define IDC_UP_SEA_CHART_DEPTH_THREE    1077
 #define ID_SET                          1078
+#define IDC_HEIGHT_ONE                  1079
+#define IDC_HEIGHT_TWO                  1080
+#define IDC_HEIGHT_THREE                1081
+#define IDC_HEIGHT_ONE4                 1082
+#define IDC_HEIGHT_FOUR                 1082
 #define ID_40001                        40001
 #define ID_40002                        40002
 #define ID_START                        40003
@@ -140,7 +144,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        117
 #define _APS_NEXT_COMMAND_VALUE         40039
-#define _APS_NEXT_CONTROL_VALUE         1079
+#define _APS_NEXT_CONTROL_VALUE         1080
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
