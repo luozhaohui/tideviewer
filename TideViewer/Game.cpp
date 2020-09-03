@@ -1243,29 +1243,29 @@ void Game::draw()
                 x = 20;
                 y -= 20;
 
-                draftInfo.Format(L"长兴高潮时：%02d:%02d  上行：%4.2f m", int(data.time / 100),
+                draftInfo.Format(L"长兴高潮时：%02d:%02d  上行：%4.2f/", int(data.time / 100),
                                  int(data.time) % 100, data.upDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x += 290;
-                draftInfo.Format(L"上行(DWT大于7.5万吨)：%4.2f m", data.upDWTDraftOne / 100);
+                draftInfo.Format(L"DWT大于7.5万吨：%4.2f/", data.upDWTDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
-                x += 278;
-                draftInfo.Format(L"下行：%4.2f m", data.downDraftOne / 100);
+                x += 240;
+                draftInfo.Format(L"下行：%4.2f/", data.downDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x = 20;
-                x += 240;
-                draftInfo.Format(L"%4.2f m", data.upDraftTwo / 100);
+                x += 220;
+                draftInfo.Format(L"%4.2f，", data.upDraftTwo / 100);
                 drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
 
-                x += 276;
-                draftInfo.Format(L"%4.2f m", data.upDWTDraftTwo / 100);
+                x += 236;
+                draftInfo.Format(L"%4.2f；", data.upDWTDraftTwo / 100);
                 drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
 
                 x += 154;
-                draftInfo.Format(L"%4.2f m", data.downDraftTwo / 100);
+                draftInfo.Format(L"%4.2f", data.downDraftTwo / 100);
                 drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
             }
         }
