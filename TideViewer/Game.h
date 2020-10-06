@@ -287,6 +287,8 @@ private:
     void loadData(const CStringW& dateString, const CStringW& place);
 
     bool loadRawData(const CStringW& dateString, const CStringW& place, std::vector<TIDE_DATA>& result,
+                     std::vector<int>& maxMinResult, CStringW& nongLi);	  
+    bool loadVirtualIslandData(const CStringW& dateString, const CStringW& place, std::vector<TIDE_DATA>& result,
                      std::vector<int>& maxMinResult, CStringW& nongLi);
     bool loadBeiCaoMaxDraftData();
 

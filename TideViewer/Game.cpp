@@ -18,6 +18,9 @@
 #include "md5.h"
 #include <algorithm>
 
+#pragma warning(disable:4244)	 
+#pragma warning(disable:4018)
+
 const static int SCREEN_WIDTH = 820;
 const static int SCREEN_HEIGHT = 640;
 const static int MAX_SIZE = 1024;
@@ -64,6 +67,10 @@ const static CStringW strNums[] = {
     "十七",   "十八",   "十九",   "二十",   "二十一", "二十二", "二十三", "二十四",
     "二十五", "二十六", "二十七", "二十八", "二十九", "三十",   "三十一",
 };
+
+static CStringW virtualIsland;
+
+static std::vector<CStringW> virtualIslandSources;
 
 enum
 {
@@ -404,6 +411,9 @@ void Game::start(LPCWSTR string)
         scriptManager.getString(places, L"places");
         // scriptManager.getString(serial, L"serial");
 
+		scriptManager.getString(virtualIsland, L"virtual_place");	  
+		scriptManager.getString(virtualIslandSources, L"virtual_place_sources");
+
         scriptManager.getUint32(boatOne, "boat_one");
         scriptManager.getUint32(boatTwo, "boat_two");
         scriptManager.getUint32(waterOne, "richness_percent");
@@ -459,6 +469,29 @@ void Game::start(LPCWSTR string)
     {
         place = places[0];
     }
+
+	if (virtualIsland.IsEmpty() || virtualIslandSources.size() < 2) {
+		virtualIsland = L"浮山岛";
+		virtualIslandSources.clear();
+		virtualIslandSources.push_back(L"陈山（30°36′N，121°05′E）");	
+		virtualIslandSources.push_back(L"滩浒山（31°36.5ˊN，121°37.2ˊE）");
+	}
+
+	if (!virtualIsland.IsEmpty() && virtualIslandSources.size() >= 2) {
+		bool createVirtual = true;
+		for (int i = 0; i < virtualIslandSources.size(); ++i) {
+			auto it = std::find(places.begin(), places.end(), virtualIslandSources[i]);
+			if (it == places.end()) {
+				createVirtual = false;
+				break;
+			}
+		}
+
+		if (createVirtual) {
+			places.push_back(virtualIsland);
+		}
+	}
+
     /*
         if (serial.GetLength() == 0){
             CStringW pwd(L"123456");
@@ -505,6 +538,69 @@ bool Game::inputPlace(const CStringW& place)
 
     return true;
 }
+		  
+bool Game::loadVirtualIslandData(const CStringW& dateString, const CStringW& place,
+                       std::vector<TIDE_DATA>& result, std::vector<int>& maxMinResult, CStringW& nongLi)
+{
+    CStringW info;
+    CStringW title(L"错误");
+
+	if (virtualIslandSources.size() < 2) {
+        info.Format(L"没有正确地设置虚拟站点%s的数据来源站点！", place);
+
+        if (::MessageBox(hWnd, info, title, MB_OK) == IDOK)
+        {
+            // exit();
+        }
+        return false;
+	}
+
+	std::vector<TIDE_DATA> resultSrc1, resultSrc2;
+	std::vector<int> maxMinResult1, maxMinResult2;
+	CStringW nongLi1, nongLi2;
+
+	bool ret = loadRawData(dateString, virtualIslandSources[0], resultSrc1, maxMinResult1, nongLi1);
+	if (!ret) {
+        info.Format(L"无法装载%s的数据，请检查数据是否正确！", virtualIslandSources[0]);
+        return false;
+	}	 
+	
+	ret = loadRawData(dateString, virtualIslandSources[1], resultSrc2, maxMinResult2, nongLi2);
+	if (!ret) {
+        info.Format(L"无法装载%s的数据，请检查数据是否正确！", virtualIslandSources[1]);
+        return false;
+	}
+
+	maxMinResult.clear();
+    maxMinResult.resize(8, 0);
+
+	maxMinResult = maxMinResult1;
+	nongLi = nongLi1;
+
+    result.clear();
+    for (int i = 0; i < 25; i++)
+    {
+		int time = i * 100;
+		float tide1 = getTideByTime(time, resultSrc1);
+		float tide2 = getTideByTime(time, resultSrc2);
+        TIDE_DATA data;
+		data.tide = (tide1 + tide2)/2.0f;
+        data.time = time;
+									
+		result.push_back(data);
+    }
+
+    // Log tide data
+    for (auto it = result.begin(); it != result.end(); it++)
+    {
+        const TIDE_DATA& data = (*it);
+        PointF pt = getPosition(data);
+
+        CLog::output("position info - %02d:%02d(%d) : (%3.2f, %3.2f)\n", int(data.time / 100.0f),
+                     ((int)data.time) % 100, int(data.tide), pt.X, pt.Y);
+    }
+	return true;
+}
 
 bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
                        std::vector<TIDE_DATA>& result, std::vector<int>& maxMinResult, CStringW& nongLi)
@@ -513,6 +609,10 @@ bool Game::loadRawData(const CStringW& dateString, const CStringW& place,
     {
         return false;
     }
+
+	if (place == virtualIsland) {
+		return loadVirtualIslandData(dateString, place, result,maxMinResult, nongLi);
+	}
 
     CStringW info;
     CStringW title(L"错误");
@@ -1161,7 +1261,7 @@ void Game::draw()
         }
 
         // draw first and second high/low tide.
-        if (maxMinTide.size() >= 8)
+        if (maxMinTide.size() >= 8 && strPlace != virtualIsland)
         {
             for (int i = 0; i < 4; i++)
             {
@@ -1232,7 +1332,7 @@ void Game::draw()
         {
             x = 16;
             y = yLen - 5;
-            CStringW beicaoMaxDraft("北槽船舶最大吃水：");
+            CStringW beicaoMaxDraft("北槽船舶最大吃水：（m）");
             drawTideString(&g, gdiFont, crBlack, beicaoMaxDraft, x, y, false);
 
             for (int i = 0; i < beiCaoDraftData.size(); ++i)
@@ -1243,28 +1343,28 @@ void Game::draw()
                 x = 20;
                 y -= 20;
 
-                draftInfo.Format(L"长兴高潮时：%02d:%02d  上行：%4.2f/", int(data.time / 100),
+                draftInfo.Format(L"长兴高潮时：%02d:%02d  上行：%4.2f /", int(data.time / 100),
                                  int(data.time) % 100, data.upDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x += 290;
-                draftInfo.Format(L"DWT大于7.5万吨：%4.2f/", data.upDWTDraftOne / 100);
+                draftInfo.Format(L"DWT > 7.5万吨：%4.2f /", data.upDWTDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x += 240;
-                draftInfo.Format(L"下行：%4.2f/", data.downDraftOne / 100);
+                draftInfo.Format(L"下行：%4.2f /", data.downDraftOne / 100);
                 drawTideString(&g, gdiFont, crBlack, draftInfo, x, y, false);
 
                 x = 20;
-                x += 220;
+                x += 232;
                 draftInfo.Format(L"%4.2f，", data.upDraftTwo / 100);
                 drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
 
-                x += 236;
+                x += 224;
                 draftInfo.Format(L"%4.2f；", data.upDWTDraftTwo / 100);
                 drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
 
-                x += 154;
+                x += 168;
                 draftInfo.Format(L"%4.2f", data.downDraftTwo / 100);
                 drawTideString(&g, gdiFont, crRed, draftInfo, x, y, false);
             }
