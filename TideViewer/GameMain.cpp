@@ -1702,7 +1702,7 @@ int WINAPI WinMain(HINSTANCE hinstance, HINSTANCE prevInstance, PSTR cmdLine, in
 {
     hInst = hinstance;
 
-    HWND hwnd = WinUtility::InitWindow(hinstance, _T("电子潮汐图表"), 820, 650, true);  //, 600, true);
+    HWND hwnd = WinUtility::InitWindow(hinstance, _T("电子潮汐图表"), 820, 720, true);  //, 600, true);
     if (!hwnd)
     {
         ::MessageBox(0, _T("Init game window - FAILED"), 0, 0);

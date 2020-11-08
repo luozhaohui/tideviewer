@@ -22,7 +22,7 @@
 #pragma warning(disable:4018)
 
 const static int SCREEN_WIDTH = 820;
-const static int SCREEN_HEIGHT = 640;
+const static int SCREEN_HEIGHT = 710;
 const static int MAX_SIZE = 1024;
 
 const static float timeW = 28.0f;
@@ -1239,6 +1239,8 @@ void Game::draw()
         drawTideString(&g, gdiFont, crBlack, info, -30, pt1.Y + 8, true);
     }
 
+	// draw text information
+	float textYLen = yLen + 64;
     if (loginFlag && tideData.size() > 0)
     {
         if (wcslen(strPlace) > 0 && wcslen(strDate) >= 8)
@@ -1249,14 +1251,14 @@ void Game::draw()
                 info.Format(L"%s年%s月%s日，%s潮高分布图", dateW.Mid(0, 4), dateW.Mid(4, 2),
                             dateW.Mid(6, 2), strPlace);
                 // drawTideString(&g, gdiBigFont, crBlack, info, 120, yLen + 70, true);
-                drawCenterString(&g, gdiBigFont, crBlack, info, yLen + 70);
+                drawCenterString(&g, gdiBigFont, crBlack, info, textYLen + 70);
             }
             else
             {
                 info.Format(L"%s年%s月%s日，农历%s，%s潮高分布图", dateW.Mid(0, 4), dateW.Mid(4, 2),
                             dateW.Mid(6, 2), strWNongLi, strPlace);
                 // drawTideString(&g, gdiBigFont, crBlack, info, 50, yLen + 70, true);
-                drawCenterString(&g, gdiBigFont, crBlack, info, yLen + 70);
+                drawCenterString(&g, gdiBigFont, crBlack, info, textYLen + 70);
             }
         }
 
@@ -1273,7 +1275,7 @@ void Game::draw()
                 info.Format(L"(%02d:%02d， %d cm)", int(maxMinTide[i] / 100),
                             int(maxMinTide[i]) % 100, (int)maxMinTide[i + 4]);
                 float x = 300.0f + i % 2 * 200;
-                float y = yLen + 18 + (1 - (i) / 2) * 20;
+                float y = textYLen + 18 + (1 - (i) / 2) * 20;
                 drawTideString(&g, gdiFont, crBlack, info, x, y, true);
             }
         }
@@ -1295,7 +1297,7 @@ void Game::draw()
             float tideValue = getTideByTime(timeValue);
 
             float x = 60;
-            float y = yLen + 38;
+            float y = textYLen + 38;
             info.Format(L"现在时间：%s:%s", curTimeString.Left(2), curTimeString.Mid(2));
 
             drawTideString(&g, gdiFont, crBlack, info, x, y, true);
@@ -1331,7 +1333,7 @@ void Game::draw()
         if (beiCaoDraftData.size() > 0)
         {
             x = 16;
-            y = yLen - 5;
+            y = textYLen - 5;
             CStringW beicaoMaxDraft("北槽船舶最大吃水：（m）");
             drawTideString(&g, gdiFont, crBlack, beicaoMaxDraft, x, y, false);
 
@@ -1372,7 +1374,7 @@ void Game::draw()
 
         // 描绘管制时间
         x = 220;
-        y = yLen - 5;
+        y = textYLen - 5;
         CStringW forbidOne(strForbidTimeOne);
         if (!forbidOne.IsEmpty() && forbidOne != L"")
         {
